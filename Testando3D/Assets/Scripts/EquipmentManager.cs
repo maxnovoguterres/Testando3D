@@ -49,7 +49,10 @@ public class EquipmentManager : MonoBehaviour {
         SkinnedMeshRenderer newMesh = Instantiate(newItem.mesh);
         newMesh.transform.parent = targetMesh.transform;
 
-        newMesh.GetComponent<GunComponent>().player = player;
+        var gunComponent = newMesh.GetComponent<GunComponent>();
+        gunComponent.player = player;
+        //gunComponent.bocal = newMesh.transform.Find("Bocal");
+
         newMesh.bones = targetMesh.bones;
         newMesh.rootBone = targetMesh.rootBone;
         currentMeshes[slotIndex] = newMesh;

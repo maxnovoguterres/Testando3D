@@ -13,5 +13,6 @@ namespace Assets.Scripts.Components
     {
         public CountDown countDown;
         public GameObject player;
+        public Transform bocal;
     }
 }

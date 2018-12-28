@@ -16,9 +16,11 @@ namespace Assets.Scripts.Systems
     {
         public struct Gun
         {
-            public GunComponent gunComponent;
-            public Transform transform;
-            public PickupComponent pickupComponent;
+            public ComponentArray<GunComponent> gunComponent;
+            public ComponentArray<Transform> transform;
+            public ComponentArray<PickupComponent> pickupComponent;
+            public EntityArray Entities;
+            public readonly int Length;
         }
 
         public struct Player
@@ -31,6 +33,8 @@ namespace Assets.Scripts.Systems
             public CharacterController characterController;
         }
 
+        [Inject] Gun gun;
+
         protected override void OnCreateManager()
         {
 
@@ -38,27 +42,28 @@ namespace Assets.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            foreach (var gun in GetEntities<Gun>())
+            //foreach (var gun in GetEntities<Gun>())
+            for(var i = 0; i < gun.Length; i++)
             {
-                Fire(gun);
-                Picked(gun.transform, gun);
+                Fire(gun.gunComponent[i], gun.gunComponent[i].bocal);
+                Picked(gun.transform[i], gun.gunComponent[i], gun.pickupComponent[i]);
             }
         }
 
-        void Fire(Gun gun)
+        void Fire(GunComponent gunComponent, Transform bocalT)
         {
-            if (gun.gunComponent.player == null) return;
+            if (gunComponent.player == null) return;
 
-            if (gun.gunComponent.player.GetComponent<InputComponent>().Shoot)
+            if (gunComponent.player.GetComponent<InputComponent>().Shoot)
             {
-                NativeArray<Entity> bullet = new NativeArray<Entity>(1, Allocator.Temp);
-                GameManager.entityManager.Instantiate(GameManager.bullet, bullet);
-                GameManager.entityManager.AddComponentData(bullet[0], new SpeedComponent { Value = 0.1f });
-                GameManager.entityManager.SetComponentData(bullet[0], new Position { Value = gun.transform.transform.position });
-                GameManager.entityManager.SetComponentData(bullet[0], new Rotation { Value = GameManager.bullet.transform.rotation });
-                GameManager.entityManager.SetComponentData(bullet[0], new Scale { Value = GameManager.bullet.transform.localScale });
+                NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
+                GameManager.entityManager.Instantiate(GameManager.bullet, _bullet);
+                GameManager.entityManager.SetComponentData(_bullet[0], new _SpeedComponent { Value = 0.1f });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = GameManager.bullet.transform.rotation });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Scale { Value = GameManager.bullet.transform.localScale });
+                _bullet.Dispose();
 
-                bullet.Dispose();
                 RaycastHit[] hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -68,23 +73,25 @@ namespace Assets.Scripts.Systems
                     Rigidbody body = _item.collider.attachedRigidbody;
                     if (body != null)
                     {
-                        Debug.Log(_item.transform.name);
                         body.AddForceAtPosition(Vector3.forward, _item.point, ForceMode.Impulse);
                     }
                 }
             }
         }
 
-        void Picked(Transform transform, Gun gun)
+        void Picked(Transform transform, GunComponent gunComponent, PickupComponent pickupComponent)
         {
-            if (gun.gunComponent.player != null) return;
+            if (gunComponent.player != null) return;
 
             Collider[] hits;
-            hits = Physics.OverlapSphere(transform.position, gun.pickupComponent.radius);
+            hits = Physics.OverlapSphere(transform.position, pickupComponent.radius);
             foreach (var hit in hits)
             {
                 if (hit.GetComponent<InputComponent>() == null) continue;
-                EquipmentManager.instance.Equip(gun.pickupComponent.equipment, hit.gameObject);
+
+                Debug.Log(transform.childCount);
+
+                EquipmentManager.instance.Equip(pickupComponent.equipment, hit.gameObject);
                 break;
             }
             //StandardMethods.Destroy(transform.gameObject);

@@ -8,11 +8,12 @@ using Unity.Entities;
 
 namespace Assets.Scripts.Components
 {
-    public struct SpeedComponent : IComponentData
+    [Serializable]
+    public struct _SpeedComponent : IComponentData
     {
         public float Value;
 
     }
-    public class _SpeedComponent : ComponentDataWrapper<SpeedComponent> { }
+    public class SpeedComponent : ComponentDataWrapper<_SpeedComponent> { }
 
 }

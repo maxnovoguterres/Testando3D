@@ -17,11 +17,11 @@ namespace Assets.Scripts.Systems
     public class MoveForwardSystem : JobComponentSystem
     {
         [BurstCompile]
-        private struct ItemsJob : IJobProcessComponentData<Position, SpeedComponent, Rotation>
+        private struct ItemsJob : IJobProcessComponentData<Position, _SpeedComponent, Rotation>
         {
             public float deltaTime;
 
-            public void Execute(ref Position position, [ReadOnly]ref SpeedComponent speed, ref Rotation rotation)
+            public void Execute(ref Position position, [ReadOnly]ref _SpeedComponent speed, ref Rotation rotation)
             {
                 var _position = position.Value;
                 _position += speed.Value * math.forward(rotation.Value) * deltaTime;
