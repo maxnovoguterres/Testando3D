@@ -12,5 +12,6 @@ namespace Assets.Scripts.Components
     public class GunComponent : MonoBehaviour
     {
         public CountDown countDown;
+        public GameObject player;
     }
 }
