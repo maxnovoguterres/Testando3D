@@ -66,5 +66,17 @@ namespace Assets.Scripts.Systems
                 }
             }
         }
+
+        void Picked(Transform transform, PickupComponent pickupComponent)
+        {
+            Collider[] hits;
+            hits = Physics.OverlapSphere(transform.position, pickupComponent.radius);
+            foreach(var hit in hits)
+            {
+                if (hit.GetComponent<InputComponent>() == null) continue;
+                EquipmentManager.instance.Equip(pickupComponent.equipment);
+                break;
+            }
+        }
     }
 }
