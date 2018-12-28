@@ -14,7 +14,7 @@ public class Equipment : Item
     public override void Use()
     {
         base.Use();
-        EquipmentManager.instance.Equip(this);
+        //EquipmentManager.instance.Equip(this);
     }
 }
 

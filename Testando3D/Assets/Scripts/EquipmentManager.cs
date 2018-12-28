@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Components;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ public class EquipmentManager : MonoBehaviour {
         
     }
 
-    public void Equip(Equipment newItem)
+    public void Equip(Equipment newItem, GameObject player)
     {
         int slotIndex = (int)newItem.equipSlot;
         Equipment oldItem = Unequip(slotIndex);
@@ -48,6 +49,7 @@ public class EquipmentManager : MonoBehaviour {
         SkinnedMeshRenderer newMesh = Instantiate(newItem.mesh);
         newMesh.transform.parent = targetMesh.transform;
 
+        newMesh.GetComponent<GunComponent>().player = player;
         newMesh.bones = targetMesh.bones;
         newMesh.rootBone = targetMesh.rootBone;
         currentMeshes[slotIndex] = newMesh;
@@ -97,7 +99,7 @@ public class EquipmentManager : MonoBehaviour {
     {
         foreach (Equipment item in defaultItems)
         {
-            Equip(item);
+            //Equip(item);
         }
     }
 
