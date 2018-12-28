@@ -82,11 +82,13 @@ namespace Assets.Scripts.Systems
             //Debug.Log(speedPercent);
             //item.animator.SetFloat("speedPercent", speedPercent, .1f, Time.deltaTime);
 
-            if (Input.GetButton("Fire1"))
+            if (Input.GetButtonDown("Fire1"))
             {
-                Debug.Log(GameManager.bullet);
-
                 item.inputComponent.Shoot = true;
+            }
+            if (Input.GetButtonUp("Fire1"))
+            {
+                item.inputComponent.Shoot = false;
             }
         }
 
