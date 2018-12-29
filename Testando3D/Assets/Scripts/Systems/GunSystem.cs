@@ -9,6 +9,9 @@ using Assets.Scripts.Components;
 using Unity.Transforms;
 using Unity.Collections;
 using Assets.Scripts.Helpers;
+using Unity.Mathematics;
+using PhysicsEngine;
+using Unity.Rendering;
 
 namespace Assets.Scripts.Systems
 {
@@ -45,7 +48,7 @@ namespace Assets.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            for(var i = 0; i < gun.Length; i++)
+            for (var i = 0; i < gun.Length; i++)
             {
                 if (gun.gunComponent[i].countDown == null)
                     gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
@@ -63,11 +66,31 @@ namespace Assets.Scripts.Systems
 
             if (gunComponent.player.GetComponent<InputComponent>().Shoot)
             {
-                NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
-                GameManager.entityManager.Instantiate(GameManager.bullet, _bullet);
-                GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
-                GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = gunComponent.player.transform.Find("FisrtPersonCamera").rotation });
-                _bullet.Dispose();
+                //NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
+                //GameManager.entityManager.Instantiate(GameManager.bullet, _bullet);
+                //GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
+                //GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = gunComponent.player.transform.Find("FisrtPersonCamera").rotation });
+
+                Entity rigidBody = GameManager.entityManager.CreateEntity(GameManager.KineticRigidBodyArchetype);
+                GameManager.entityManager.SetComponentData(rigidBody, new Position { Value = bocalT.position });
+                GameManager.entityManager.SetComponentData(rigidBody, new RigidBody { IsKinematic = 0, InverseMass = 1f, MomentOfInertia = float3x3.identity });
+                GameManager.entityManager.SetComponentData(rigidBody, new Velocity { Value = 0 });
+                GameManager.entityManager.SetComponentData(rigidBody, new Rotation { Value = gunComponent.player.transform.Find("FisrtPersonCamera").rotation });
+                GameManager.entityManager.SetComponentData(rigidBody, new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
+                //GameManager.entityManager.AddComponentData(rigidBody, new _SpeedComponent { Value = 100 });
+
+                Entity sphereCollider = GameManager.entityManager.CreateEntity(GameManager.SphereColliderArchetype);
+                GameManager.entityManager.SetComponentData(sphereCollider, new PhysicsEngine.Collider { RigidBodyEntity = rigidBody });
+                GameManager.entityManager.SetComponentData(sphereCollider, new PhysicsEngine.SphereCollider { Radius = 0.5f });
+                GameManager.entityManager.SetComponentData(sphereCollider, new PhysicsEngine.ColliderPhysicsProperties { Friction = 0f, CoefficientOfRestitution = 0f });
+
+                Entity sphereRender = GameManager.entityManager.CreateEntity(GameManager.SimpleRendererArchetype);
+                GameManager.entityManager.SetSharedComponentData(sphereRender, GameManager.bullet.GetComponent<MeshInstanceRendererComponent>().Value);
+                GameManager.entityManager.SetComponentData(sphereRender, new Unity.Transforms.Position { Value = bocalT.position });
+                GameManager.entityManager.SetComponentData(sphereRender, new FollowRigidBody { RigidBodyEntity = rigidBody });
+                GameManager.entityManager.SetComponentData(sphereRender, new Rotation { Value = gunComponent.player.transform.Find("FisrtPersonCamera").rotation });
+                GameManager.entityManager.SetComponentData(sphereRender, new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
+                //GameManager.entityManager.AddComponentData(sphereRender, new _SpeedComponent { Value = 100 });
 
                 RaycastHit[] hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -90,7 +113,7 @@ namespace Assets.Scripts.Systems
         {
             if (gunComponent.player != null) return;
 
-            Collider[] hits;
+            UnityEngine.Collider[] hits;
             hits = Physics.OverlapSphere(transform.position, pickupComponent.radius);
             foreach (var hit in hits)
             {
