@@ -64,7 +64,7 @@ MonoBehaviour:
     Value:
       x: 0
       y: 0
-      z: 0
+      z: 355.3131
 --- !u!114 &7764498156856747331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedData:
     Value:
-      x: 0.04
+      x: 0.01
       y: 0.02
       z: 0.02
 --- !u!114 &9173120484585612879
@@ -132,4 +132,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SerializedData:
-    Value: 5
+    Value: 100

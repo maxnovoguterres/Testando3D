@@ -37,14 +37,19 @@ namespace Assets.Scripts.Systems
 
         protected override void OnCreateManager()
         {
-
+            for (var i = 0; i < gun.Length; i++)
+            {
+                gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
+            }
         }
 
         protected override void OnUpdate()
         {
-            //foreach (var gun in GetEntities<Gun>())
             for(var i = 0; i < gun.Length; i++)
             {
+                if (gun.gunComponent[i].countDown == null)
+                    gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
+
                 Fire(gun.gunComponent[i], gun.gunComponent[i].bocal);
                 Picked(gun.transform[i], gun.gunComponent[i], gun.pickupComponent[i]);
             }
@@ -52,16 +57,16 @@ namespace Assets.Scripts.Systems
 
         void Fire(GunComponent gunComponent, Transform bocalT)
         {
-            if (gunComponent.player == null) return;
+            CountDown.DecreaseTime(gunComponent.countDown);
+
+            if (gunComponent.player == null || gunComponent.countDown.CoolDown > 0) return;
 
             if (gunComponent.player.GetComponent<InputComponent>().Shoot)
             {
                 NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
                 GameManager.entityManager.Instantiate(GameManager.bullet, _bullet);
-                //GameManager.entityManager.SetComponentData(_bullet[0], new _SpeedComponent { Value = 0.1f });
                 GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
-                //GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = GameManager.bullet.transform.rotation });
-                //GameManager.entityManager.SetComponentData(_bullet[0], new Scale { Value = GameManager.bullet.transform.localScale });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = gunComponent.player.transform.Find("FisrtPersonCamera").rotation });
                 _bullet.Dispose();
 
                 RaycastHit[] hit;
@@ -76,6 +81,8 @@ namespace Assets.Scripts.Systems
                         body.AddForceAtPosition(Vector3.forward, _item.point, ForceMode.Impulse);
                     }
                 }
+
+                gunComponent.countDown.StartToCount();
             }
         }
 

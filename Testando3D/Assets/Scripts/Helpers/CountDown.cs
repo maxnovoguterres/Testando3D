@@ -16,14 +16,14 @@ namespace Assets.Scripts.Helpers
         {
             CoolDown = 0;
             Rate = 1;
-            ReturnedToZero = false;
+            ReturnedToZero = true;
         }
 
         public CountDown(double rate)
         {
             Rate = rate;
             CoolDown = 0;
-            ReturnedToZero = false;
+            ReturnedToZero = true;
         }
 
         public void StartToCount()

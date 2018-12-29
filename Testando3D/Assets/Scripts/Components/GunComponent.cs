@@ -11,6 +11,7 @@ namespace Assets.Scripts.Components
 {
     public class GunComponent : MonoBehaviour
     {
+        public double countDownRate;
         public CountDown countDown;
         public GameObject player;
         public Transform bocal;
