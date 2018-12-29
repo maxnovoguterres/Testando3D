@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4492219851719466954}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.861, y: 1.8230381, z: -0.05993271}
-  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
+  m_LocalScale: {x: 0.04, y: 0.02, z: 0.02}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -116,9 +116,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedData:
     Value:
-      x: 0.04
-      y: 0.02
-      z: 0.02
+      x: 0
+      y: 0
+      z: 0
 --- !u!114 &9173120484585612879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,4 +132,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SerializedData:
-    Value: 0.1
+    Value: 5

@@ -47,7 +47,10 @@ public class EquipmentManager : MonoBehaviour {
 
         currentEquipment[slotIndex] = newItem;
         SkinnedMeshRenderer newMesh = Instantiate(newItem.mesh);
+
         newMesh.transform.parent = targetMesh.transform;
+        newMesh.transform.position = new Vector3();
+        newMesh.transform.localPosition = new Vector3(0.278f, 0.703f, 0.79f);
 
         var gunComponent = newMesh.GetComponent<GunComponent>();
         gunComponent.player = player;

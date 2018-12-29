@@ -58,10 +58,10 @@ namespace Assets.Scripts.Systems
             {
                 NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
                 GameManager.entityManager.Instantiate(GameManager.bullet, _bullet);
-                GameManager.entityManager.SetComponentData(_bullet[0], new _SpeedComponent { Value = 0.1f });
+                //GameManager.entityManager.SetComponentData(_bullet[0], new _SpeedComponent { Value = 0.1f });
                 GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
-                GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = GameManager.bullet.transform.rotation });
-                GameManager.entityManager.SetComponentData(_bullet[0], new Scale { Value = GameManager.bullet.transform.localScale });
+                //GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = GameManager.bullet.transform.rotation });
+                //GameManager.entityManager.SetComponentData(_bullet[0], new Scale { Value = GameManager.bullet.transform.localScale });
                 _bullet.Dispose();
 
                 RaycastHit[] hit;
@@ -88,8 +88,6 @@ namespace Assets.Scripts.Systems
             foreach (var hit in hits)
             {
                 if (hit.GetComponent<InputComponent>() == null) continue;
-
-                Debug.Log(transform.childCount);
 
                 EquipmentManager.instance.Equip(pickupComponent.equipment, hit.gameObject);
                 break;
