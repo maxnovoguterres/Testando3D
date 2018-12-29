@@ -78,9 +78,9 @@ namespace Assets.Scripts.Systems
 
             item.movementComponent.collisionFlags = item.characterController.Move(item.inputComponent.movement * Time.fixedDeltaTime);
 
-            //float speedPercent = item.characterController.velocity.magnitude / item.movementComponent.speed;
-            //Debug.Log(speedPercent);
-            //item.animator.SetFloat("speedPercent", speedPercent, .1f, Time.deltaTime);
+            float speedPercent = item.characterController.velocity.magnitude / item.movementComponent.speed;
+            Debug.Log(speedPercent);
+            item.animator.SetFloat("speedPercent", speedPercent, .1f, Time.deltaTime);
 
             if (Input.GetButtonDown("Fire1"))
             {

@@ -74,7 +74,7 @@ namespace Assets.Scripts.Systems
                 cameraComponent.m_CyclePositionY = cameraComponent.m_CyclePositionY - cameraComponent._m_Time;
             }
 
-            return new Vector3(xPos, yPos, 0f);
+            return new Vector3(xPos, yPos, 0.1f);
         }
 
         public void LookRotation(Transform character, Transform camera, CameraComponent cameraComponent)
@@ -100,7 +100,47 @@ namespace Assets.Scripts.Systems
                 camera.localRotation = cameraComponent.m_CameraTargetRot;
             }
 
-            //UpdateCursorLock();
+            UpdateCursorLock(cameraComponent);
+        }
+
+        public void SetCursorLock(bool value, CameraComponent cameraComponent)
+        {
+            cameraComponent.lockCursor = value;
+            if (!cameraComponent.lockCursor)
+            {//we force unlock the cursor if the user disable the cursor locking helper
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+        }
+
+        public void UpdateCursorLock(CameraComponent cameraComponent)
+        {
+            //if the user set "lockCursor" we check & properly lock the cursos
+            if (cameraComponent.lockCursor)
+                InternalLockUpdate(cameraComponent);
+        }
+
+        private void InternalLockUpdate(CameraComponent cameraComponent)
+        {
+            if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                cameraComponent.m_cursorIsLocked = false;
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                cameraComponent.m_cursorIsLocked = true;
+            }
+
+            if (cameraComponent.m_cursorIsLocked)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            else if (!cameraComponent.m_cursorIsLocked)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
 
         Quaternion ClampRotationAroundXAxis(Quaternion q)

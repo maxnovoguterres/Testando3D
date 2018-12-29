@@ -57,7 +57,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			m_MouseLook.Init(transform , m_Camera.transform);
         }
 
-
+        //Feito
         // Update is called once per frame
         private void Update()
         {
@@ -91,7 +91,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_NextStep = m_StepCycle + .5f;
         }
 
-
+        //Feito
         private void FixedUpdate()
         {
             float speed;
@@ -176,7 +176,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_FootstepSounds[0] = m_AudioSource.clip;
         }
 
-
+        //Feito
         private void UpdateCameraPosition(float speed)
         {
             Vector3 newCameraPosition;
@@ -233,13 +233,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
         }
 
-
+        //Feito
         private void RotateView()
         {
             m_MouseLook.LookRotation (transform, m_Camera.transform);
         }
 
-
+        //Feito
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
             Rigidbody body = hit.collider.attachedRigidbody;

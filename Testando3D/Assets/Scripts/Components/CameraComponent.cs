@@ -23,5 +23,8 @@ namespace Assets.Scripts.Components
         //public Transform _CameraTransform;
         public Quaternion? _m_CameraTargetRot;
         public Quaternion m_CameraTargetRot { get { _m_CameraTargetRot = _m_CameraTargetRot ?? Camera.main.transform.localRotation; return _m_CameraTargetRot.Value; } set { _m_CameraTargetRot = value; } } //{ get { return 1; } set; }
+        public bool lockCursor = true;
+        public bool m_cursorIsLocked = true;
+
     }
 }
