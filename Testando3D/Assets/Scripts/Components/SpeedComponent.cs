@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Entities;
+using Assets.Scripts.Helpers;
 
 namespace Assets.Scripts.Components
 {
     [Serializable]
-    public struct _SpeedComponent : IComponentData
+    public struct Speed : IComponentData
     {
         public float Value;
-
     }
-    public class SpeedComponent : ComponentDataWrapper<_SpeedComponent> { }
+    public class SpeedComponent : ComponentDataWrapper<Speed> { }
 
 }

@@ -10,11 +10,12 @@ using Unity.Transforms;
 using Unity.Collections;
 using Assets.Scripts.Helpers;
 using Unity.Mathematics;
-using PhysicsEngine;
 using Unity.Rendering;
+using Unity.Burst;
 
 namespace Assets.Scripts.Systems
 {
+    [BurstCompile]
     public class GunSystem : ComponentSystem
     {
         public struct Gun
@@ -24,16 +25,6 @@ namespace Assets.Scripts.Systems
             public ComponentArray<PickupComponent> pickupComponent;
             public EntityArray Entities;
             public readonly int Length;
-        }
-
-        public struct Player
-        {
-            public InputComponent inputComponent;
-            public MovementComponent movementComponent;
-            public Transform transform;
-            public Animator animator;
-            public Rigidbody rb;
-            public CharacterController characterController;
         }
 
         [Inject] Gun gun;
@@ -66,31 +57,24 @@ namespace Assets.Scripts.Systems
 
             if (gunComponent.player.GetComponent<InputComponent>().Shoot)
             {
-                //NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
-                //GameManager.entityManager.Instantiate(GameManager.bullet, _bullet);
-                //GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
-                //GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = gunComponent.player.transform.Find("FisrtPersonCamera").rotation });
+                var rotation = gunComponent.player.transform.Find("FirstPersonCamera").rotation;
+                float3 pos = bocalT.position;
+                var _pos = pos + (gunComponent.bulletSpeed * math.forward(rotation) * Time.deltaTime);
 
-                Entity rigidBody = GameManager.entityManager.CreateEntity(GameManager.KineticRigidBodyArchetype);
-                GameManager.entityManager.SetComponentData(rigidBody, new Position { Value = bocalT.position });
-                GameManager.entityManager.SetComponentData(rigidBody, new RigidBody { IsKinematic = 0, InverseMass = 1f, MomentOfInertia = float3x3.identity });
-                GameManager.entityManager.SetComponentData(rigidBody, new Velocity { Value = 0 });
-                GameManager.entityManager.SetComponentData(rigidBody, new Rotation { Value = gunComponent.player.transform.Find("FisrtPersonCamera").rotation });
-                GameManager.entityManager.SetComponentData(rigidBody, new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
-                //GameManager.entityManager.AddComponentData(rigidBody, new _SpeedComponent { Value = 100 });
+                NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
+                GameManager.entityManager.Instantiate(GameManager.bullet, _bullet);
+                GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = rotation });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Speed { Value = gunComponent.bulletSpeed });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
+                var gravity = GameManager.entityManager.GetComponentData<Gravity>(_bullet[0]);
 
-                Entity sphereCollider = GameManager.entityManager.CreateEntity(GameManager.SphereColliderArchetype);
-                GameManager.entityManager.SetComponentData(sphereCollider, new PhysicsEngine.Collider { RigidBodyEntity = rigidBody });
-                GameManager.entityManager.SetComponentData(sphereCollider, new PhysicsEngine.SphereCollider { Radius = 0.5f });
-                GameManager.entityManager.SetComponentData(sphereCollider, new PhysicsEngine.ColliderPhysicsProperties { Friction = 0f, CoefficientOfRestitution = 0f });
-
-                Entity sphereRender = GameManager.entityManager.CreateEntity(GameManager.SimpleRendererArchetype);
-                GameManager.entityManager.SetSharedComponentData(sphereRender, GameManager.bullet.GetComponent<MeshInstanceRendererComponent>().Value);
-                GameManager.entityManager.SetComponentData(sphereRender, new Unity.Transforms.Position { Value = bocalT.position });
-                GameManager.entityManager.SetComponentData(sphereRender, new FollowRigidBody { RigidBodyEntity = rigidBody });
-                GameManager.entityManager.SetComponentData(sphereRender, new Rotation { Value = gunComponent.player.transform.Find("FisrtPersonCamera").rotation });
-                GameManager.entityManager.SetComponentData(sphereRender, new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
-                //GameManager.entityManager.AddComponentData(sphereRender, new _SpeedComponent { Value = 100 });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Gravity {
+                    InitPosY = bocalT.position.y,
+                    InitVel = (_pos.y - pos.y) / Time.deltaTime,
+                    Mass = gravity.Mass,
+                    Time = 0
+                });
 
                 RaycastHit[] hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

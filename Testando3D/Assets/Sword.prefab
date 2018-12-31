@@ -92,6 +92,7 @@ MonoBehaviour:
   countDownRate: 0.1
   player: {fileID: 0}
   bocal: {fileID: 3998742126542700276}
+  bulletSpeed: 100
 --- !u!114 &6779501654367114557
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -491,8 +491,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b589d09bd528c040afdd84ed26e4c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  countDownRate: 0
   player: {fileID: 0}
   bocal: {fileID: 0}
+  bulletSpeed: 0
 --- !u!114 &136715359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2696,7 +2698,7 @@ GameObject:
   - component: {fileID: 534669907}
   - component: {fileID: 534669906}
   m_Layer: 0
-  m_Name: FisrtPersonCamera
+  m_Name: FirstPersonCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2833,6 +2835,8 @@ MonoBehaviour:
   m_CyclePositionY: 0
   m_BobBaseInterval: 2
   _CharacterTransform: {fileID: 76343706}
+  lockCursor: 1
+  m_cursorIsLocked: 1
 --- !u!114 &534669907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2931,7 +2935,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566347472}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.40643787, y: 2.5, z: -0.019999996}
+  m_LocalPosition: {x: 0, y: 2.5, z: -0.019999996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

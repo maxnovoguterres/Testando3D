@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Assets.Scripts.Helpers
+{
+    public enum MoveFowardDirection
+    {
+        X = 1,
+        Y = 2,
+        Z = 3,
+    }
+}
