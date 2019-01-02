@@ -14,6 +14,7 @@ using Unity.Rendering;
 using Unity.Burst;
 using Assets.Scripts.Utils;
 using Assets.Scripts.Buffers;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Systems
 {
@@ -28,6 +29,7 @@ namespace Assets.Scripts.Systems
             public EntityArray Entities;
             public readonly int Length;
         }
+        float timer = 0;
 
         [Inject] Gun gun;
 
@@ -36,6 +38,8 @@ namespace Assets.Scripts.Systems
             for (var i = 0; i < gun.Length; i++)
             {
                 gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
+                gun.gunComponent[i].animator = GameObject.Find("GunHolder").GetComponent<Animator>();
+                gun.gunComponent[i].scopeOverlay = GameObject.Find("ScopeOverlay").GetComponent<Image>();
             }
         }
 
@@ -46,8 +50,30 @@ namespace Assets.Scripts.Systems
                 if (gun.gunComponent[i].countDown == null)
                     gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
 
-                Fire(gun.gunComponent[i], gun.gunComponent[i].bocal);
-                Picked(gun.transform[i], gun.gunComponent[i], gun.pickupComponent[i]);
+                //Fire(gun.gunComponent[i], gun.gunComponent[i].bocal);
+                //Picked(gun.transform[i], gun.gunComponent[i], gun.pickupComponent[i]);
+
+                if (Input.GetButtonDown("Fire2"))
+                {
+                    timer = 0;
+                    gun.gunComponent[i].isScoped = true;
+                    gun.gunComponent[i].animator.SetBool("Scoped", gun.gunComponent[i].isScoped);
+                }
+                if (Input.GetButtonUp("Fire2"))
+                {
+                    gun.gunComponent[i].isScoped = false;
+                    OnUnscoped(gun.gunComponent[i]);
+                }
+
+                if (gun.gunComponent[i].isScoped)
+                {
+                    timer += Time.deltaTime;
+                    if (timer >= 0.15f)
+                    {
+                        OnScoped(gun.gunComponent[i]);
+                        gun.gunComponent[i].isScoped = false;
+                    }
+                }
             }
         }
 
@@ -126,6 +152,21 @@ namespace Assets.Scripts.Systems
                 break;
             }
             //StandardMethods.Destroy(transform.gameObject);
+        }
+
+        void OnScoped(GunComponent gunComponent)
+        {
+            gunComponent.scopeOverlay.enabled = true;
+            Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
+            gunComponent.normalFOV = Camera.main.fieldOfView;
+            Camera.main.fieldOfView = gunComponent.scopedFOV;
+        }
+
+        void OnUnscoped(GunComponent gunComponent)
+        {
+            gunComponent.scopeOverlay.enabled = false;
+            Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
+            Camera.main.fieldOfView = gunComponent.normalFOV;
         }
     }
 }

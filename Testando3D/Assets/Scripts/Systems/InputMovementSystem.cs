@@ -53,6 +53,8 @@ namespace Assets.Scripts.Systems
                                item.characterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
+            item.movementComponent.isWalking = !Input.GetButton("Sprint");
+            item.movementComponent.speed = item.movementComponent.isWalking ? item.movementComponent.walkSpeed : item.movementComponent.runSpeed;
             item.inputComponent.movement.x = desiredMove.x * item.movementComponent.speed;
             item.inputComponent.movement.z = desiredMove.z * item.movementComponent.speed;
 
@@ -74,11 +76,9 @@ namespace Assets.Scripts.Systems
 
             //ProgressStepCycle(speed);
 
-            //m_MouseLook.UpdateCursorLock();
-
             item.movementComponent.collisionFlags = item.characterController.Move(item.inputComponent.movement * Time.fixedDeltaTime);
 
-            float speedPercent = item.characterController.velocity.magnitude / item.movementComponent.speed;
+            float speedPercent = item.characterController.velocity.magnitude / item.movementComponent.runSpeed;
             item.animator.SetFloat("speedPercent", speedPercent, .1f, Time.deltaTime);
 
             if (Input.GetButtonDown("Fire1"))
@@ -88,6 +88,19 @@ namespace Assets.Scripts.Systems
             if (Input.GetButtonUp("Fire1"))
             {
                 item.inputComponent.Shoot = false;
+            }
+
+            if (Input.GetButtonDown("Crouch"))
+            {
+                //Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y / 2, Camera.main.transform.position.z), Time.deltaTime * 1);
+                item.characterController.height = 0.9f;
+                //item.transform.position = new Vector3(item.transform.position.x, item.transform.position.y - 0.5f, item.transform.position.z);
+            }
+            if (Input.GetButtonUp("Crouch"))
+            {
+                //Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y * 2, Camera.main.transform.position.z), Time.deltaTime * 1);
+                item.characterController.height = 1.8f;
+                //item.transform.position = new Vector3(item.transform.position.x, item.transform.position.y + 0.5f, item.transform.position.z);
             }
         }
 

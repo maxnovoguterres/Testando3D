@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Entities;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Components
 {
@@ -16,5 +17,10 @@ namespace Assets.Scripts.Components
         public GameObject player;
         public Transform bocal;
         public float bulletSpeed;
+        public Image scopeOverlay;
+        public Animator animator;
+        public float scopedFOV = 15f;
+        public float normalFOV;
+        public bool isScoped;
     }
 }
