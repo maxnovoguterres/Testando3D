@@ -50,8 +50,8 @@ namespace Assets.Scripts.Systems
                 if (gun.gunComponent[i].countDown == null)
                     gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
 
-                //Fire(gun.gunComponent[i], gun.gunComponent[i].bocal);
-                //Picked(gun.transform[i], gun.gunComponent[i], gun.pickupComponent[i]);
+                Fire(gun.gunComponent[i], gun.gunComponent[i].bocal);
+                Picked(gun.transform[i], gun.gunComponent[i], gun.pickupComponent[i]);
 
                 if (Input.GetButtonDown("Fire2"))
                 {

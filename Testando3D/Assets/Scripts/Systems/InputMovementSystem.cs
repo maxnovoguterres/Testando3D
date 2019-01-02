@@ -93,14 +93,14 @@ namespace Assets.Scripts.Systems
             if (Input.GetButtonDown("Crouch"))
             {
                 item.movementComponent.isCrouching = true;
-                item.characterController.center = new Vector3(item.characterController.center.x, 0.4f, item.characterController.center.z);
-                item.characterController.height = 0.9f;
+                item.characterController.center = new Vector3(item.characterController.center.x, 0.465f, item.characterController.center.z);
+                item.characterController.height = 0.855f;
             }
             if (Input.GetButtonUp("Crouch"))
             {
                 item.movementComponent.isCrouching = false;
-                item.characterController.center = new Vector3(item.characterController.center.x, 0.8f, item.characterController.center.z);
-                item.characterController.height = 1.8f;
+                item.characterController.center = new Vector3(item.characterController.center.x, 0.93f, item.characterController.center.z);
+                item.characterController.height = 1.71f;
             }
             if (item.movementComponent.isCrouching)
                 Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, 0.7265f, Camera.main.transform.localPosition.z), Time.deltaTime * 6);

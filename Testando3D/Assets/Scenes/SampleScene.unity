@@ -201,13 +201,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.8
-  m_Radius: 0.5
+  m_Height: 1.71
+  m_Radius: 0.4
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.8, z: 0}
+  m_Center: {x: 0, y: 0.93, z: 0}
 --- !u!95 &76343704
 Animator:
   serializedVersion: 3
@@ -330,7 +330,7 @@ PrefabInstance:
     - target: {fileID: 5017323462758772115, guid: d981734fb86c53a499a472c071af530d,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5017323462759264691, guid: d981734fb86c53a499a472c071af530d,
         type: 3}
@@ -416,7 +416,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &136715355
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -497,8 +497,8 @@ MonoBehaviour:
   player: {fileID: 0}
   bocal: {fileID: 0}
   bulletSpeed: 0
-  scopeOverlay: {fileID: 0}
-  animator: {fileID: 0}
+  scopeOverlay: {fileID: 655243144}
+  animator: {fileID: 1459967981}
   scopedFOV: 15
   normalFOV: 0
   isScoped: 0
