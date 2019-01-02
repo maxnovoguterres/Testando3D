@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Entities;
 using Assets.Scripts.Helpers;
+using Unity.Mathematics;
 
 namespace Assets.Scripts.Components
 {

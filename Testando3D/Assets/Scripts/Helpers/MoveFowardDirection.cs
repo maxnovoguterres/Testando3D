@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Helpers
 {
-    public enum MoveFowardDirection
+    public enum Direction
     {
         X = 1,
         Y = 2,

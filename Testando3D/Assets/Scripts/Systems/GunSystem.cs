@@ -12,6 +12,8 @@ using Assets.Scripts.Helpers;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Burst;
+using Assets.Scripts.Utils;
+using Assets.Scripts.Buffers;
 
 namespace Assets.Scripts.Systems
 {
@@ -66,15 +68,32 @@ namespace Assets.Scripts.Systems
                 GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
                 GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = rotation });
                 GameManager.entityManager.SetComponentData(_bullet[0], new Speed { Value = gunComponent.bulletSpeed });
+                GameManager.entityManager.SetComponentData(_bullet[0], new Components.Collision { Radius = 0.1f });
+                GameManager.entityManager.AddBuffer<MoveForwardDirectionBuffer>(_bullet[0]);
+                var buffer = GameManager.entityManager.GetBuffer<MoveForwardDirectionBuffer>(_bullet[0]);
+
+                CollisionSystem.entities.Add(_bullet[0]);
+
+                var moveForwardDirectionBuffer = new MoveForwardDirectionBuffer[2];
+                moveForwardDirectionBuffer[0].Value = Direction.X;
+                moveForwardDirectionBuffer[1].Value = Direction.Z;
+
+                var bufferArray = new NativeArray<MoveForwardDirectionBuffer>(moveForwardDirectionBuffer, Allocator.TempJob);
+                buffer.AddRange(bufferArray);
+
                 GameManager.entityManager.SetComponentData(_bullet[0], new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
                 var gravity = GameManager.entityManager.GetComponentData<Gravity>(_bullet[0]);
 
-                GameManager.entityManager.SetComponentData(_bullet[0], new Gravity {
+                GameManager.entityManager.SetComponentData(_bullet[0], new Gravity
+                {
                     InitPosY = bocalT.position.y,
                     InitVel = (_pos.y - pos.y) / Time.deltaTime,
-                    Mass = gravity.Mass,
+                    Mass = 0,//gravity.Mass,
                     Time = 0
                 });
+
+                _bullet.Dispose();
+                bufferArray.Dispose();
 
                 RaycastHit[] hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

@@ -10,12 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1636872786916276538}
   - component: {fileID: 501646111189811098}
-  - component: {fileID: 7084975437258411548}
   - component: {fileID: 7764498156856747331}
   - component: {fileID: 9162246292198405308}
   - component: {fileID: 8594305330419475635}
   - component: {fileID: 9173120484585612879}
+  - component: {fileID: 9111919654188949760}
   - component: {fileID: 494715477415719069}
+  - component: {fileID: 7280111959942725965}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -49,23 +50,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf10cdea1344482e91a4f2b58506b77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7084975437258411548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4492219851719466954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0af0db853e732453799566a0e597993c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SerializedData:
-    Value:
-      x: 0
-      y: 0
-      z: 355.3131
 --- !u!114 &7764498156856747331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +117,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SerializedData:
-    Value: 100
+    Value: 1
+--- !u!114 &9111919654188949760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4492219851719466954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af0db853e732453799566a0e597993c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedData:
+    Value:
+      x: 0
+      y: 0
+      z: 0
 --- !u!114 &494715477415719069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,7 +148,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SerializedData:
-    Mass: 0.05
+    Mass: 0.01
     InitPosY: 0
     InitVel: 0
     Time: 0
+--- !u!114 &7280111959942725965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4492219851719466954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e1272886ea85204a8ce7120b4fe54f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedData:
+    Radius: 1
+    PreviousPos:
+      x: 0
+      y: 0
+      z: 0
