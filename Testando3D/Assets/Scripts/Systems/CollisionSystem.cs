@@ -83,12 +83,13 @@ namespace Assets.Scripts.Systems
 
             var raycastDependency = RaycastCommand.ScheduleBatch(raycastCommands, raycastHits, 32, setupDependency);
 
-            var _Collision = new IntegratePhysics()
-            {
-                Hits = raycastHits
-            }.Schedule(PreviousPos.Length, 32, raycastDependency);
+            //var _Collision = new IntegratePhysics()
+            //{
+            //    Hits = raycastHits
+            //}.Schedule(PreviousPos.Length, 32, raycastDependency);
 
-            _Collision.Complete();
+            //_Collision.Complete();
+            raycastDependency.Complete();
 
             for (var i = 0; i < raycastHits.Length; i++)
             {
