@@ -25,7 +25,6 @@ namespace Assets.Scripts.Systems
         {
             public ComponentArray<GunComponent> gunComponent;
             public ComponentArray<Transform> transform;
-            public ComponentArray<PickupComponent> pickupComponent;
             public EntityArray Entities;
             public readonly int Length;
         }
@@ -51,7 +50,6 @@ namespace Assets.Scripts.Systems
                     gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
 
                 Fire(gun.gunComponent[i], gun.gunComponent[i].bocal);
-                Picked(gun.transform[i], gun.gunComponent[i], gun.pickupComponent[i]);
 
                 if (Input.GetButtonDown("Fire2"))
                 {
@@ -136,22 +134,6 @@ namespace Assets.Scripts.Systems
 
                 gunComponent.countDown.StartToCount();
             }
-        }
-
-        void Picked(Transform transform, GunComponent gunComponent, PickupComponent pickupComponent)
-        {
-            if (gunComponent.player != null) return;
-
-            UnityEngine.Collider[] hits;
-            hits = Physics.OverlapSphere(transform.position, pickupComponent.radius);
-            foreach (var hit in hits)
-            {
-                if (hit.GetComponent<InputComponent>() == null) continue;
-
-                EquipmentManager.instance.Equip(pickupComponent.equipment, hit.gameObject);
-                break;
-            }
-            //StandardMethods.Destroy(transform.gameObject);
         }
 
         void OnScoped(GunComponent gunComponent)

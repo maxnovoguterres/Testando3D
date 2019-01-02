@@ -394,6 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2662309903326495352, guid: d981734fb86c53a499a472c071af530d, type: 3}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: d981734fb86c53a499a472c071af530d, type: 3}
 --- !u!1 &136715354
 GameObject:
@@ -406,7 +407,6 @@ GameObject:
   m_Component:
   - component: {fileID: 136715360}
   - component: {fileID: 136715359}
-  - component: {fileID: 136715358}
   - component: {fileID: 136715357}
   - component: {fileID: 136715355}
   - component: {fileID: 136715356}
@@ -480,28 +480,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 1
   equipment: {fileID: 11400000, guid: 8babc5737360bab41bcd39a02fee2741, type: 2}
---- !u!114 &136715358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 7879748824954306353, guid: d981734fb86c53a499a472c071af530d,
-    type: 3}
-  m_PrefabInstance: {fileID: 136715353}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 136715354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b589d09bd528c040afdd84ed26e4c59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  countDownRate: 0
-  player: {fileID: 0}
-  bocal: {fileID: 0}
-  bulletSpeed: 0
-  scopeOverlay: {fileID: 655243144}
-  animator: {fileID: 1459967981}
-  scopedFOV: 15
-  normalFOV: 0
-  isScoped: 0
 --- !u!114 &136715359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2633,20 +2611,6 @@ MonoBehaviour:
   scopedFOV: 15
   normalFOV: 36
   isScoped: 0
---- !u!114 &311764737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 311764734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba3d93919b2a41840bc701a0a691c4ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 0
-  equipment: {fileID: 0}
 --- !u!114 &311764738
 MonoBehaviour:
   m_ObjectHideFlags: 0

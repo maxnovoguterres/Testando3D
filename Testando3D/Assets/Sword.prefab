@@ -41,7 +41,6 @@ GameObject:
   - component: {fileID: 1307407207137902294}
   - component: {fileID: 3044487624224250416}
   - component: {fileID: 1214488645142359551}
-  - component: {fileID: 6779501654367114557}
   - component: {fileID: 1437167580320793752}
   m_Layer: 0
   m_Name: Sword
@@ -93,20 +92,11 @@ MonoBehaviour:
   player: {fileID: 0}
   bocal: {fileID: 3998742126542700276}
   bulletSpeed: 100
---- !u!114 &6779501654367114557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4513556028257109408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba3d93919b2a41840bc701a0a691c4ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 1
-  equipment: {fileID: 11400000, guid: 8babc5737360bab41bcd39a02fee2741, type: 2}
+  scopeOverlay: {fileID: 0}
+  animator: {fileID: 0}
+  scopedFOV: 15
+  normalFOV: 0
+  isScoped: 0
 --- !u!137 &1437167580320793752
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
