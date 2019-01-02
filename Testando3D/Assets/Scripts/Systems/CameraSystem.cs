@@ -44,7 +44,7 @@ namespace Assets.Scripts.Systems
             {
                 transform.localPosition =
                     DoHeadBob(characterController.velocity.magnitude +
-                                      (movementComponent.speed * (Input.GetAxis("Sprint") != 0 ? 1f : 0.5f)), transform, cameraComponent);
+                                      (movementComponent.walkSpeed * (Input.GetAxis("Sprint") != 0 ? 1f : 0.5f)), transform, cameraComponent);
                 newCameraPosition = transform.localPosition;
                 newCameraPosition.y = transform.localPosition.y;
             }
@@ -74,7 +74,7 @@ namespace Assets.Scripts.Systems
                 cameraComponent.m_CyclePositionY = cameraComponent.m_CyclePositionY - cameraComponent._m_Time;
             }
 
-            return new Vector3(xPos, yPos, 0.1f);
+            return new Vector3(xPos, yPos, 0.3f);
         }
 
         public void LookRotation(Transform character, Transform camera, CameraComponent cameraComponent)
