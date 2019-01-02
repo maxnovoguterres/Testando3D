@@ -181,7 +181,6 @@ GameObject:
   - component: {fileID: 76343709}
   - component: {fileID: 76343708}
   - component: {fileID: 76343710}
-  - component: {fileID: 76343703}
   - component: {fileID: 76343704}
   - component: {fileID: 76343702}
   m_Layer: 0
@@ -208,20 +207,6 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.8, z: 0}
---- !u!136 &76343703
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 76343701}
-  m_Material: {fileID: 13400000, guid: f6a43af8864833043b89e2c346a86713, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1.8
-  m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!95 &76343704
 Animator:
@@ -3223,6 +3208,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 7323e97d6130f0b41bf5f159f7c82664, type: 3}
       propertyPath: m_Name
       value: L96_Sniper_Rifle
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 7323e97d6130f0b41bf5f159f7c82664, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7323e97d6130f0b41bf5f159f7c82664, type: 3}
       propertyPath: m_LocalPosition.x

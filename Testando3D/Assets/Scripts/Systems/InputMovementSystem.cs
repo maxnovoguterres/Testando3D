@@ -92,16 +92,20 @@ namespace Assets.Scripts.Systems
 
             if (Input.GetButtonDown("Crouch"))
             {
-                //Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y / 2, Camera.main.transform.position.z), Time.deltaTime * 1);
+                item.movementComponent.isCrouching = true;
+                item.characterController.center = new Vector3(item.characterController.center.x, 0.4f, item.characterController.center.z);
                 item.characterController.height = 0.9f;
-                //item.transform.position = new Vector3(item.transform.position.x, item.transform.position.y - 0.5f, item.transform.position.z);
             }
             if (Input.GetButtonUp("Crouch"))
             {
-                //Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y * 2, Camera.main.transform.position.z), Time.deltaTime * 1);
+                item.movementComponent.isCrouching = false;
+                item.characterController.center = new Vector3(item.characterController.center.x, 0.8f, item.characterController.center.z);
                 item.characterController.height = 1.8f;
-                //item.transform.position = new Vector3(item.transform.position.x, item.transform.position.y + 0.5f, item.transform.position.z);
             }
+            if (item.movementComponent.isCrouching)
+                Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, 0.7265f, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
+            else
+                Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, 1.453f, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
         }
 
         public void DoBobCycle()

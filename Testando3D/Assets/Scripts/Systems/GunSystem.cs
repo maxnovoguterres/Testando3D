@@ -57,7 +57,6 @@ namespace Assets.Scripts.Systems
                 {
                     timer = 0;
                     gun.gunComponent[i].isScoped = true;
-                    gun.gunComponent[i].animator.SetBool("Scoped", gun.gunComponent[i].isScoped);
                 }
                 if (Input.GetButtonUp("Fire2"))
                 {
@@ -68,12 +67,13 @@ namespace Assets.Scripts.Systems
                 if (gun.gunComponent[i].isScoped)
                 {
                     timer += Time.deltaTime;
-                    if (timer >= 0.15f)
+                    if (timer >= 0.15f && Camera.main.fieldOfView != gun.gunComponent[i].scopedFOV)
                     {
                         OnScoped(gun.gunComponent[i]);
-                        gun.gunComponent[i].isScoped = false;
                     }
                 }
+
+                gun.gunComponent[i].animator.SetBool("Scoped", gun.gunComponent[i].isScoped);
             }
         }
 
