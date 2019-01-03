@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
 
     public static float GravityAceleration = 9.81f;
 
-
     void Start()
     {
         if (Instance == null)
@@ -25,6 +24,6 @@ public class GameManager : MonoBehaviour
             Destroy(this);
 
         entityManager = World.Active.GetOrCreateManager<EntityManager>();
-        bullet = Resources.Load("Prefabs/Bullet") as GameObject;
+        //bullet = Resources.Load("Prefabs/Bullet") as GameObject;
     }
 }

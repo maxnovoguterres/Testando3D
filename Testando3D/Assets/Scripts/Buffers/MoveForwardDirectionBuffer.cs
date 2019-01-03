@@ -41,6 +41,6 @@ namespace Assets.Scripts.Buffers
         public static implicit operator Direction(MoveForwardDirectionBuffer e) { return e.Value; }
         public static implicit operator MoveForwardDirectionBuffer(Direction e) { return new MoveForwardDirectionBuffer { Value = e }; }
 
-        public Direction Value;
+        public Direction Value { get; set; }
     }
 }

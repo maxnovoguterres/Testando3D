@@ -52,7 +52,6 @@ namespace Assets.Scripts.Systems
                 halfExtents[i] = gun.pickupComponent[i].boxCollider.bounds.size;
                 orientation[i] = Quaternion.LookRotation(Vector3.right);//gun.transform[i].rotation;
                 direction[i] = gun.transform[i].right;//Vector3.one * .5f;//gun.pickupComponent[i].direction;
-                //Picked(gun.transform[i], gun.pickupComponent[i]);
             }
 
             var pickDependency = new Pick
@@ -74,7 +73,6 @@ namespace Assets.Scripts.Systems
                 if (results[i].normal != Vector3.zero)
                 {
                     if (results[i].collider.GetComponent<InputComponent>() == null) continue;
-                    Debug.Log("asd");
 
                     EquipmentManager.instance.Equip(gun.pickupComponent[i].equipment, results[i].collider.gameObject);
                     break;

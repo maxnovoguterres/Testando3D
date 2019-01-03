@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Entities;
 using Assets.Scripts.Components;
 using Unity.Transforms;
 using Unity.Collections;
 using Assets.Scripts.Helpers;
 using Unity.Mathematics;
-using Unity.Rendering;
 using Unity.Burst;
-using Assets.Scripts.Utils;
 using Assets.Scripts.Buffers;
-using UnityEngine.UI;
+using Unity.Rendering;
 
 namespace Assets.Scripts.Systems
 {
@@ -86,36 +79,22 @@ namespace Assets.Scripts.Systems
                 float3 pos = bocalT.position;
                 var _pos = pos + (gunComponent.bulletSpeed * math.forward(rotation) * Time.deltaTime);
 
-                NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
-                GameManager.entityManager.Instantiate(GameManager.Instance.bullet, _bullet);
-                GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
-                GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = rotation });
-                GameManager.entityManager.SetComponentData(_bullet[0], new Speed { Value = gunComponent.bulletSpeed });
-                GameManager.entityManager.SetComponentData(_bullet[0], new Components.Collision { Radius = 0.1f });
-                GameManager.entityManager.AddBuffer<MoveForwardDirectionBuffer>(_bullet[0]);
-                var buffer = GameManager.entityManager.GetBuffer<MoveForwardDirectionBuffer>(_bullet[0]);
+                NativeArray<Entity> bullet = new NativeArray<Entity>(1, Allocator.Temp);
+                GameManager.entityManager.CreateEntity(EntityArchetypes.bullet, bullet);
+                GameManager.entityManager.SetComponentData(bullet[0], new Position { Value = bocalT.position });
+                GameManager.entityManager.SetComponentData(bullet[0], new Rotation { Value = rotation });
+                GameManager.entityManager.SetComponentData(bullet[0], new Speed { Value = gunComponent.bulletSpeed });
+                GameManager.entityManager.SetComponentData(bullet[0], new Components.Collision { Radius = 0.1f });
+                GameManager.entityManager.SetComponentData(bullet[0], new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
+                GameManager.entityManager.SetComponentData(bullet[0], new Gravity { InitPosY = bocalT.position.y, InitVel = (_pos.y - pos.y) / Time.deltaTime, Mass = 0, Time = 0 });
+                GameManager.entityManager.SetSharedComponentData(bullet[0], new MeshInstanceRenderer { mesh = (Mesh)Resources.Load("Mesh/Bullet"), material = (Material)Resources.Load("Material/BulletMAT") });
 
-                CollisionSystem.entities.Add(_bullet[0]);
+                var bufferArray = EntityBufferUtils.BufferValues<MoveForwardDirectionBuffer>(Direction.X, Direction.Z);
+                GameManager.entityManager.GetBuffer<MoveForwardDirectionBuffer>(bullet[0]).AddRange(bufferArray);
 
-                var moveForwardDirectionBuffer = new MoveForwardDirectionBuffer[2];
-                moveForwardDirectionBuffer[0].Value = Direction.X;
-                moveForwardDirectionBuffer[1].Value = Direction.Z;
+                CollisionSystem.entities.Add(bullet[0]);
 
-                var bufferArray = new NativeArray<MoveForwardDirectionBuffer>(moveForwardDirectionBuffer, Allocator.TempJob);
-                buffer.AddRange(bufferArray);
-
-                GameManager.entityManager.SetComponentData(_bullet[0], new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
-                var gravity = GameManager.entityManager.GetComponentData<Gravity>(_bullet[0]);
-
-                GameManager.entityManager.SetComponentData(_bullet[0], new Gravity
-                {
-                    InitPosY = bocalT.position.y,
-                    InitVel = (_pos.y - pos.y) / Time.deltaTime,
-                    Mass = 0,//gravity.Mass,
-                    Time = 0
-                });
-
-                _bullet.Dispose();
+                bullet.Dispose();
                 bufferArray.Dispose();
 
                 RaycastHit[] hit;
@@ -137,6 +116,7 @@ namespace Assets.Scripts.Systems
 
         void OnScoped(GunComponent gunComponent)
         {
+            GameManager.Instance.scopeOverlay.enabled = true;
             //gunComponent.scopeOverlay.enabled = true; 
             Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
             gunComponent.normalFOV = Camera.main.fieldOfView;
@@ -145,6 +125,7 @@ namespace Assets.Scripts.Systems
 
         void OnUnscoped(GunComponent gunComponent)
         {
+            GameManager.Instance.scopeOverlay.enabled = false;
             //gunComponent.scopeOverlay.enabled = false;
             Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
             Camera.main.fieldOfView = gunComponent.normalFOV;

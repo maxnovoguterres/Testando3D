@@ -26,19 +26,19 @@ namespace Assets.Scripts.Systems
             public void Execute(Entity entity, int index, ref Position position, ref Speed speed, ref Rotation rotation)
             {
                 var pos = position.Value;
-                pos += speed.Value * math.forward(rotation.Value) * deltaTime;
+                var _pos = speed.Value * math.forward(rotation.Value) * deltaTime;
 
                 var directionBuffer = GameManager.entityManager.GetBuffer<MoveForwardDirectionBuffer>(entity);
 
                 if (directionBuffer.Length > 0)
                     for (var i = 0; i < directionBuffer.Length; i++)
                     {
-                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionX) pos.x += (speed.Value * math.forward(rotation.Value) * deltaTime).x;
-                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionY) pos.y += (speed.Value * math.forward(rotation.Value) * deltaTime).y;
-                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionZ) pos.z += (speed.Value * math.forward(rotation.Value) * deltaTime).z;
+                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionX) pos.x += _pos.x;
+                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionY) pos.y += _pos.y;
+                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionZ) pos.z += _pos.z;
                     }
                 else
-                    pos += speed.Value * math.forward(rotation.Value) * deltaTime;
+                    pos += _pos;
 
                 position.Value = pos;
             }
