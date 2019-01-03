@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 using UnityEngine;
+using Unity.Jobs;
+using Unity.Collections;
 
 namespace Assets.Scripts.Systems
 {
@@ -21,26 +23,85 @@ namespace Assets.Scripts.Systems
 
         [Inject] Gun gun;
 
+        public struct Pick : IJobParallelFor
+        {
+            public NativeArray<Vector3> Center;
+            public NativeArray<Vector3> HalfExtents;
+            public NativeArray<Quaternion> Orientation;
+            public NativeArray<Vector3> Direction;
+            public NativeArray<BoxcastCommand> commands;
+
+            public void Execute(int i)
+            {
+                commands[i] = new BoxcastCommand(Center[i], HalfExtents[i], Orientation[i], Direction[i]);
+            }
+        }
+
         protected override void OnUpdate()
         {
+            var center = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
+            var halfExtents = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
+            var orientation = new NativeArray<Quaternion>(gun.Length, Allocator.TempJob);
+            var direction = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
+            var commands = new NativeArray<BoxcastCommand>(gun.Length, Allocator.TempJob);
+            var results = new NativeArray<RaycastHit>(gun.Length, Allocator.TempJob);
+
             for (var i = 0; i < gun.Length; i++)
             {
-                Picked(gun.transform[i], gun.pickupComponent[i]);
+                center[i] = gun.pickupComponent[i].center;
+                halfExtents[i] = gun.pickupComponent[i].halfExtents;
+                orientation[i] = Quaternion.identity;//gun.transform[i].rotation;
+                direction[i] = Vector3.forward;//Vector3.one * .5f;//gun.pickupComponent[i].direction;
+                //Picked(gun.transform[i], gun.pickupComponent[i]);
             }
-        }
 
-        void Picked(Transform transform, PickupComponent pickupComponent)
-        {
-            UnityEngine.Collider[] hits;
-            hits = Physics.OverlapSphere(transform.position, pickupComponent.radius);
-            foreach (var hit in hits)
+            var pickDependency = new Pick
             {
-                if (hit.GetComponent<InputComponent>() == null) continue;
+                Center = center,
+                Direction = direction,
+                HalfExtents = halfExtents,
+                Orientation = orientation,
+                commands = commands
+            }.Schedule(gun.Length, 32);
 
-                EquipmentManager.instance.Equip(pickupComponent.equipment, hit.gameObject);
-                break;
+            var handle = BoxcastCommand.ScheduleBatch(commands, results, 32, pickDependency);
+
+            handle.Complete();
+
+            for (var i = 0; i < results.Length; i++)
+            {
+                //Debug.Log(results[i].normal);
+                if (results[i].normal != Vector3.zero)
+                {
+                    Debug.Log(results[i].point);
+                    if (results[i].collider.GetComponent<InputComponent>() == null) continue;
+                    Debug.Log("asd");
+
+                    EquipmentManager.instance.Equip(gun.pickupComponent[i].equipment, results[i].collider.gameObject);
+                    break;
+                }
             }
-            //StandardMethods.Destroy(transform.gameObject);
+
+            center.Dispose();
+            halfExtents.Dispose();
+            orientation.Dispose();
+            direction.Dispose();
+            commands.Dispose();
+            results.Dispose();
         }
+
+        //void Picked(Transform transform, PickupComponent pickupComponent)
+        //{
+        //    UnityEngine.Collider[] hits;
+        //    hits = Physics.OverlapSphere(transform.position, pickupComponent.radius);
+        //    foreach (var hit in hits)
+        //    {
+        //        if (hit.GetComponent<InputComponent>() == null) continue;
+
+        //        EquipmentManager.instance.Equip(pickupComponent.equipment, hit.gameObject);
+        //        break;
+        //    }
+        //    //StandardMethods.Destroy(transform.gameObject);
+        //}
     }
 }

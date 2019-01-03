@@ -38,7 +38,6 @@ namespace Assets.Scripts.Systems
             {
                 gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
                 gun.gunComponent[i].animator = GameObject.Find("GunHolder").GetComponent<Animator>();
-                gun.gunComponent[i].scopeOverlay = GameObject.Find("ScopeOverlay").GetComponent<Image>();
             }
         }
 
@@ -88,7 +87,7 @@ namespace Assets.Scripts.Systems
                 var _pos = pos + (gunComponent.bulletSpeed * math.forward(rotation) * Time.deltaTime);
 
                 NativeArray<Entity> _bullet = new NativeArray<Entity>(1, Allocator.Temp);
-                GameManager.entityManager.Instantiate(GameManager.bullet, _bullet);
+                GameManager.entityManager.Instantiate(GameManager.Instance.bullet, _bullet);
                 GameManager.entityManager.SetComponentData(_bullet[0], new Position { Value = bocalT.position });
                 GameManager.entityManager.SetComponentData(_bullet[0], new Rotation { Value = rotation });
                 GameManager.entityManager.SetComponentData(_bullet[0], new Speed { Value = gunComponent.bulletSpeed });
@@ -138,7 +137,7 @@ namespace Assets.Scripts.Systems
 
         void OnScoped(GunComponent gunComponent)
         {
-            gunComponent.scopeOverlay.enabled = true;
+            //gunComponent.scopeOverlay.enabled = true; 
             Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
             gunComponent.normalFOV = Camera.main.fieldOfView;
             Camera.main.fieldOfView = gunComponent.scopedFOV;
@@ -146,7 +145,7 @@ namespace Assets.Scripts.Systems
 
         void OnUnscoped(GunComponent gunComponent)
         {
-            gunComponent.scopeOverlay.enabled = false;
+            //gunComponent.scopeOverlay.enabled = false;
             Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
             Camera.main.fieldOfView = gunComponent.normalFOV;
         }

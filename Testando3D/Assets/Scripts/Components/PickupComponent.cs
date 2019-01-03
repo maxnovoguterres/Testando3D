@@ -9,7 +9,10 @@ namespace Assets.Scripts.Components
 {
     public class PickupComponent : MonoBehaviour
     {
-        public float radius;
+        public Vector3 center;
+        public Vector3 halfExtents;
+        public Quaternion orientation;
+        public Vector3 direction;
         public Equipment equipment;
     }
 }

@@ -17,7 +17,6 @@ namespace Assets.Scripts.Components
         public GameObject player;
         public Transform bocal;
         public float bulletSpeed;
-        public Image scopeOverlay;
         public Animator animator;
         public float scopedFOV = 15f;
         public float normalFOV;

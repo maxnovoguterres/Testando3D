@@ -142,6 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9d0522ffda61b4c801d5ec0cd9a432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bullet: {fileID: 0}
+  scopeOverlay: {fileID: 0}
 --- !u!4 &23727778
 Transform:
   m_ObjectHideFlags: 0
@@ -335,7 +337,7 @@ PrefabInstance:
     - target: {fileID: 5017323462759264691, guid: d981734fb86c53a499a472c071af530d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.19
+      value: -2.154
       objectReference: {fileID: 0}
     - target: {fileID: 5017323462759264691, guid: d981734fb86c53a499a472c071af530d,
         type: 3}
@@ -391,6 +393,36 @@ PrefabInstance:
         type: 3}
       propertyPath: player
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028824495666693421, guid: d981734fb86c53a499a472c071af530d,
+        type: 3}
+      propertyPath: center.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028824495666693421, guid: d981734fb86c53a499a472c071af530d,
+        type: 3}
+      propertyPath: center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028824495666693421, guid: d981734fb86c53a499a472c071af530d,
+        type: 3}
+      propertyPath: halfExtents.x
+      value: 0.021019505
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028824495666693421, guid: d981734fb86c53a499a472c071af530d,
+        type: 3}
+      propertyPath: halfExtents.y
+      value: 0.4370491
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028824495666693421, guid: d981734fb86c53a499a472c071af530d,
+        type: 3}
+      propertyPath: halfExtents.z
+      value: 0.128955
+      objectReference: {fileID: 0}
+    - target: {fileID: 3028824495666693421, guid: d981734fb86c53a499a472c071af530d,
+        type: 3}
+      propertyPath: orientation.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2662309903326495352, guid: d981734fb86c53a499a472c071af530d, type: 3}
@@ -478,7 +510,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba3d93919b2a41840bc701a0a691c4ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1
+  center: {x: 0, y: 0, z: 0}
+  halfExtents: {x: 0.021019505, y: 0.4370491, z: 0.128955}
+  orientation: {x: 0, y: 0, z: 0, w: 0}
+  direction: {x: 0, y: 0, z: 0}
   equipment: {fileID: 11400000, guid: 8babc5737360bab41bcd39a02fee2741, type: 2}
 --- !u!114 &136715359
 MonoBehaviour:
@@ -502,7 +537,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 136715354}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -2.19, y: 0.38, z: -3.87}
+  m_LocalPosition: {x: -2.154, y: 0.38, z: -3.87}
   m_LocalScale: {x: 1, y: 1, z: 0.9999999}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2606,7 +2641,6 @@ MonoBehaviour:
   player: {fileID: 0}
   bocal: {fileID: 0}
   bulletSpeed: 0
-  scopeOverlay: {fileID: 655243144}
   animator: {fileID: 1459967981}
   scopedFOV: 15
   normalFOV: 36
