@@ -11,6 +11,7 @@ namespace Assets.Scripts.Components
     {
         public float walkSpeed;
         public float runSpeed;
+        public float crouchSpeed;
         public float speed;
         public float jumpSpeed;
         public bool jumping;

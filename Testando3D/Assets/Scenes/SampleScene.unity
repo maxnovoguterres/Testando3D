@@ -284,6 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 2
   runSpeed: 5
+  crouchSpeed: 1.5
   speed: 0
   jumpSpeed: 10
   jumping: 0
@@ -3068,7 +3069,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &566347473
 BoxCollider:
   m_ObjectHideFlags: 0

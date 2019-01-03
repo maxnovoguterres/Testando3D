@@ -54,7 +54,30 @@ namespace Assets.Scripts.Systems
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
             item.movementComponent.isWalking = !Input.GetButton("Sprint");
-            item.movementComponent.speed = item.movementComponent.isWalking ? item.movementComponent.walkSpeed : item.movementComponent.runSpeed;
+
+            if (Input.GetButtonDown("Crouch"))
+            {
+                item.movementComponent.isCrouching = true;
+                item.characterController.center = new Vector3(item.characterController.center.x, 0.465f, item.characterController.center.z);
+                item.characterController.height = 0.855f;
+            }
+            if (Input.GetButtonUp("Crouch"))
+            {
+                item.movementComponent.isCrouching = false;
+                item.characterController.center = new Vector3(item.characterController.center.x, 0.93f, item.characterController.center.z);
+                item.characterController.height = 1.71f;
+            }
+            if (item.movementComponent.isCrouching)
+            {
+                Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, 0.7265f, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
+                item.movementComponent.speed = item.movementComponent.crouchSpeed;
+            }
+            else
+            {
+                Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, 1.453f, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
+                item.movementComponent.speed = item.movementComponent.isWalking ? item.movementComponent.walkSpeed : item.movementComponent.runSpeed;
+            }
+
             item.inputComponent.movement.x = desiredMove.x * item.movementComponent.speed;
             item.inputComponent.movement.z = desiredMove.z * item.movementComponent.speed;
 
@@ -89,23 +112,6 @@ namespace Assets.Scripts.Systems
             {
                 item.inputComponent.Shoot = false;
             }
-
-            if (Input.GetButtonDown("Crouch"))
-            {
-                item.movementComponent.isCrouching = true;
-                item.characterController.center = new Vector3(item.characterController.center.x, 0.465f, item.characterController.center.z);
-                item.characterController.height = 0.855f;
-            }
-            if (Input.GetButtonUp("Crouch"))
-            {
-                item.movementComponent.isCrouching = false;
-                item.characterController.center = new Vector3(item.characterController.center.x, 0.93f, item.characterController.center.z);
-                item.characterController.height = 1.71f;
-            }
-            if (item.movementComponent.isCrouching)
-                Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, 0.7265f, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
-            else
-                Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, 1.453f, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
         }
 
         public void DoBobCycle()
