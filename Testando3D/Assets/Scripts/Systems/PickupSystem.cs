@@ -48,10 +48,10 @@ namespace Assets.Scripts.Systems
 
             for (var i = 0; i < gun.Length; i++)
             {
-                center[i] = gun.pickupComponent[i].center;
-                halfExtents[i] = gun.pickupComponent[i].halfExtents;
-                orientation[i] = Quaternion.identity;//gun.transform[i].rotation;
-                direction[i] = Vector3.forward;//Vector3.one * .5f;//gun.pickupComponent[i].direction;
+                center[i] = gun.pickupComponent[i].boxCollider.bounds.center;
+                halfExtents[i] = gun.pickupComponent[i].boxCollider.bounds.size;
+                orientation[i] = Quaternion.LookRotation(Vector3.right);//gun.transform[i].rotation;
+                direction[i] = gun.transform[i].right;//Vector3.one * .5f;//gun.pickupComponent[i].direction;
                 //Picked(gun.transform[i], gun.pickupComponent[i]);
             }
 
@@ -73,7 +73,6 @@ namespace Assets.Scripts.Systems
                 //Debug.Log(results[i].normal);
                 if (results[i].normal != Vector3.zero)
                 {
-                    Debug.Log(results[i].point);
                     if (results[i].collider.GetComponent<InputComponent>() == null) continue;
                     Debug.Log("asd");
 
