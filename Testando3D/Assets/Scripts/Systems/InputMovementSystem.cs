@@ -112,6 +112,15 @@ namespace Assets.Scripts.Systems
             {
                 item.inputComponent.Shoot = false;
             }
+
+            if (Input.GetButtonDown("Fire2"))
+            {
+                item.inputComponent.Aim = true;
+            }
+            if (Input.GetButtonUp("Fire2"))
+            {
+                item.inputComponent.Aim = false;
+            }
         }
 
         public void DoBobCycle()

@@ -13,6 +13,7 @@ namespace Assets.Scripts.Components
         [HideInInspector]
         public Vector3 movement;
         public bool Shoot;
+        public bool Aim;
         //public float speed;
     }
 }

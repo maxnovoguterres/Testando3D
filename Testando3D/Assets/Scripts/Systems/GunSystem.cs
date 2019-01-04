@@ -8,6 +8,8 @@ using Unity.Mathematics;
 using Unity.Burst;
 using Assets.Scripts.Buffers;
 using Unity.Rendering;
+using Unity.Jobs;
+using System.Linq;
 
 namespace Assets.Scripts.Systems
 {
@@ -21,7 +23,7 @@ namespace Assets.Scripts.Systems
             public EntityArray Entities;
             public readonly int Length;
         }
-        float timer = 0;
+        CountDown timer = new CountDown(.15f);
 
         [Inject] Gun gun;
 
@@ -36,86 +38,132 @@ namespace Assets.Scripts.Systems
 
         protected override void OnUpdate()
         {
+            NativeArray<Vector3> p = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
+            NativeArray<float> s = new NativeArray<float>(gun.Length, Allocator.TempJob);
+            NativeArray<Quaternion> r = new NativeArray<Quaternion>(gun.Length, Allocator.TempJob);
+            NativeArray<Entity> e = new NativeArray<Entity>(gun.Length, Allocator.TempJob);
+            GameManager.entityManager.CreateEntity(EntityArchetypes.bullet, e);
+
             for (var i = 0; i < gun.Length; i++)
             {
                 if (gun.gunComponent[i].countDown == null)
-                    gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
+                    gun.gunComponent[i].countDown = new CountDown(3); // gun.gunComponent[i].countDownRate
 
-                Fire(gun.gunComponent[i], gun.gunComponent[i].bocal);
 
-                if (Input.GetButtonDown("Fire2"))
-                {
-                    timer = 0;
-                    gun.gunComponent[i].isScoped = true;
-                }
-                if (Input.GetButtonUp("Fire2"))
-                {
-                    gun.gunComponent[i].isScoped = false;
-                    OnUnscoped(gun.gunComponent[i]);
-                }
+                CountDown.DecreaseTime(gun.gunComponent[i].countDown);
 
-                if (gun.gunComponent[i].isScoped)
+                if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
                 {
-                    timer += Time.deltaTime;
-                    if (timer >= 0.15f && Camera.main.fieldOfView != gun.gunComponent[i].scopedFOV)
-                    {
-                        OnScoped(gun.gunComponent[i]);
-                    }
+                    p[i] = gun.gunComponent[i].bocal.position;
+                    r[i] = gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation;
+                    s[i] = gun.gunComponent[i].bulletSpeed;
+                    GameManager.entityManager.SetSharedComponentData(e[i], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
+
+                    gun.gunComponent[i].countDown.StartToCount();
                 }
 
-                gun.gunComponent[i].animator.SetBool("Scoped", gun.gunComponent[i].isScoped);
+                //var aim = gun.gunComponent[i].player.GetComponent<InputComponent>();
+
+                //if (aim && !timer.Flag)
+                //{
+                //    timer.StartToCount();
+                //}
+                //else if (timer.Flag)
+                //{
+                //    OnUnscoped(gun.gunComponent[i]);
+                //}
+
+                //if (aim)
+                //{
+                //    CountDown.DecreaseTime(timer);
+                //    if (timer.ReturnedToZero && Camera.main.fieldOfView != gun.gunComponent[i].scopedFOV)
+                //    {
+                //        OnScoped(gun.gunComponent[i]);
+                //    }
+                //}
+
+                //gun.gunComponent[i].animator.SetBool("Scoped", aim);
+
+                var bulletDependency = new BulletSpawn
+                {
+                    p = p,
+                    r = r,
+                    s = s,
+                    e = e,
+                    dTime = Time.deltaTime
+                }.Schedule(gun.Length, 32);
+
+                bulletDependency.Complete();
+
+
+                p.Dispose();
+                s.Dispose();
+                r.Dispose();
+                e.Dispose();
             }
         }
 
-        void Fire(GunComponent gunComponent, Transform bocalT)
+        struct BulletSpawn : IJobParallelFor
         {
-            CountDown.DecreaseTime(gunComponent.countDown);
+            public NativeArray<Vector3> p;
+            public NativeArray<float> s;
+            public NativeArray<Quaternion> r;
+            public NativeArray<Entity> e;
+            public float dTime;
 
-            if (gunComponent.player == null || gunComponent.countDown.CoolDown > 0) return;
-
-            if (gunComponent.player.GetComponent<InputComponent>().Shoot)
+            public void Execute(int i)
             {
-                var rotation = gunComponent.player.transform.Find("FirstPersonCamera").rotation;
-                float3 pos = bocalT.position;
-                var _pos = pos + (gunComponent.bulletSpeed * math.forward(rotation) * Time.deltaTime);
+                float3 pos = p[i];
 
-                NativeArray<Entity> bullet = new NativeArray<Entity>(1, Allocator.Temp);
-                GameManager.entityManager.CreateEntity(EntityArchetypes.bullet, bullet);
-                GameManager.entityManager.SetComponentData(bullet[0], new Position { Value = bocalT.position });
-                GameManager.entityManager.SetComponentData(bullet[0], new Rotation { Value = rotation });
-                GameManager.entityManager.SetComponentData(bullet[0], new Speed { Value = gunComponent.bulletSpeed });
-                GameManager.entityManager.SetComponentData(bullet[0], new Components.Collision { Radius = 0.1f });
-                GameManager.entityManager.SetComponentData(bullet[0], new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
-                GameManager.entityManager.SetComponentData(bullet[0], new Gravity { InitPosY = bocalT.position.y, InitVel = (_pos.y - pos.y) / Time.deltaTime, Mass = 0, Time = 0 });
-                GameManager.entityManager.SetSharedComponentData(bullet[0], new MeshInstanceRenderer { mesh = (Mesh)Resources.Load("Mesh/Bullet"), material = (Material)Resources.Load("Material/BulletMAT") });
+                if (p[i] == Vector3.zero) return;
+
+                var nextPos = pos + (s[i] * math.forward(r[i]) * dTime);
+
+                GameManager.entityManager.SetComponentData(e[i], new Position { Value = pos });
+                GameManager.entityManager.SetComponentData(e[i], new Rotation { Value = r[i] });
+                GameManager.entityManager.SetComponentData(e[i], new Speed { Value = s[i] });
+                GameManager.entityManager.SetComponentData(e[i], new Components.Collision { Radius = 0.1f });
+                GameManager.entityManager.SetComponentData(e[i], new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
+                GameManager.entityManager.SetComponentData(e[i], new Gravity { InitPosY = pos.y, InitVel = (nextPos.y - pos.y) / dTime, Mass = 0.1f, Time = 0 });
 
                 var bufferArray = EntityBufferUtils.BufferValues<MoveForwardDirectionBuffer>(Direction.X, Direction.Z);
-                GameManager.entityManager.GetBuffer<MoveForwardDirectionBuffer>(bullet[0]).AddRange(bufferArray);
+                GameManager.entityManager.GetBuffer<MoveForwardDirectionBuffer>(e[i]).AddRange(bufferArray);
 
-                CollisionSystem.entities.Add(bullet[0]);
+                CollisionSystem.entities.Add(e[i]);
 
-                bullet.Dispose();
                 bufferArray.Dispose();
+            }
+        }
 
-                RaycastHit[] hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        void Fire()
+        {
+            NativeArray<Vector3> p = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
+            NativeArray<float> s = new NativeArray<float>(gun.Length, Allocator.TempJob);
+            NativeArray<Quaternion> r = new NativeArray<Quaternion>(gun.Length, Allocator.TempJob);
+            NativeArray<Entity> e = new NativeArray<Entity>(gun.Length, Allocator.TempJob);
+            GameManager.entityManager.CreateEntity(EntityArchetypes.bullet, e);
 
-                hit = Physics.RaycastAll(ray);
-                foreach (var _item in hit)
+            for (var i = 0; i < gun.Length; i++)
+            {
+                if (gun.gunComponent[i].countDown == null)
+                    gun.gunComponent[i].countDown = new CountDown(3); // gun.gunComponent[i].countDownRate
+
+
+                CountDown.DecreaseTime(gun.gunComponent[i].countDown);
+
+                if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
                 {
-                    Rigidbody body = _item.collider.attachedRigidbody;
-                    if (body != null)
-                    {
-                        body.AddForceAtPosition(Vector3.forward, _item.point, ForceMode.Impulse);
-                    }
+                    p[i] = gun.gunComponent[i].bocal.position;
+                    r[i] = gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation;
+                    s[i] = gun.gunComponent[i].bulletSpeed;
+                    GameManager.entityManager.SetSharedComponentData(e[i], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
                 }
-
-                gunComponent.countDown.StartToCount();
             }
         }
 
         void OnScoped(GunComponent gunComponent)
         {
+            timer.F(true);
             GameManager.Instance.scopeOverlay.enabled = true;
             //gunComponent.scopeOverlay.enabled = true; 
             Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
@@ -125,6 +173,7 @@ namespace Assets.Scripts.Systems
 
         void OnUnscoped(GunComponent gunComponent)
         {
+            timer.F(false);
             GameManager.Instance.scopeOverlay.enabled = false;
             //gunComponent.scopeOverlay.enabled = false;
             Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");

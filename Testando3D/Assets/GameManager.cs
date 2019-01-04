@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     public static EntityManager entityManager;
     [Header("Prefabs")]
-    public GameObject bullet;
+    public Mesh bullet;
 
     [Header("Canvas")]
     public Image scopeOverlay;
