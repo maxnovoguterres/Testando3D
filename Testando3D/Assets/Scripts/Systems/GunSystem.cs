@@ -40,6 +40,12 @@ namespace Assets.Scripts.Systems
 
         protected override void OnUpdate()
         {
+            Aim();
+            Fire();
+        }
+
+        public void Aim()
+        {
             for (var i = 0; i < gun.Length; i++)
             {
 #if DEBUG
@@ -69,7 +75,6 @@ namespace Assets.Scripts.Systems
                 if (gun.gunComponent[i].animator != null)
                     gun.gunComponent[i].animator.SetBool("Scoped", aim);
 
-                Fire();
 
             }
         }
@@ -157,7 +162,6 @@ namespace Assets.Scripts.Systems
 
             bulletDependency.Complete();
 
-
             p.Dispose();
             s.Dispose();
             r.Dispose();
@@ -167,7 +171,6 @@ namespace Assets.Scripts.Systems
         void OnScoped(GunComponent gunComponent)
         {
             GameManager.Instance.scopeOverlay.enabled = true;
-            //gunComponent.scopeOverlay.enabled = true; 
             Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
             gunComponent.normalFOV = Camera.main.fieldOfView;
             Camera.main.fieldOfView = gunComponent.scopedFOV;
@@ -176,7 +179,6 @@ namespace Assets.Scripts.Systems
         void OnUnscoped(GunComponent gunComponent)
         {
             GameManager.Instance.scopeOverlay.enabled = false;
-            //gunComponent.scopeOverlay.enabled = false;
             Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
             Camera.main.fieldOfView = gunComponent.normalFOV;
         }
