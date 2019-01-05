@@ -95,13 +95,15 @@ namespace Assets.Scripts.Systems
             {
                 if (raycastHits[i].normal != Vector3.zero)
                 {
-                    GameManager.entityManager.DestroyEntity(entities[i]);
-                    entities.RemoveAt(i);
+                    Debug.Log(raycastHits[i].collider.name);
                     Rigidbody body = raycastHits[i].collider.attachedRigidbody;
                     if (body != null)
                     {
                         body.AddForceAtPosition(Vector3.forward, raycastHits[i].point, ForceMode.Impulse);
                     }
+
+                    GameManager.entityManager.DestroyEntity(entities[i]);
+                    entities.RemoveAt(i);
                 }
             }
 
