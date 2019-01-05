@@ -48,7 +48,7 @@ public class EquipmentManager : MonoBehaviour {
 
         currentEquipment[slotIndex] = newItem;
 
-        if (newItem.equipSlot == EquipmentSlot.Weapon)
+        if (newItem.equipSlot == EquipmentSlot.Gun)
         {
             var ob = Instantiate(newItem.ob);
             ob.transform.parent = gunHover.transform;
