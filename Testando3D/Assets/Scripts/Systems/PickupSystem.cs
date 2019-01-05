@@ -1,9 +1,4 @@
 ﻿using Assets.Scripts.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity.Entities;
 using UnityEngine;
 using Unity.Jobs;
@@ -50,8 +45,8 @@ namespace Assets.Scripts.Systems
             {
                 center[i] = gun.pickupComponent[i].boxCollider.bounds.center;
                 halfExtents[i] = gun.pickupComponent[i].boxCollider.bounds.size;
-                orientation[i] = Quaternion.LookRotation(Vector3.right);//gun.transform[i].rotation;
-                direction[i] = gun.transform[i].right;//Vector3.one * .5f;//gun.pickupComponent[i].direction;
+                orientation[i] = Quaternion.LookRotation(Vector3.right);
+                direction[i] = gun.transform[i].right;
             }
 
             var pickDependency = new Pick
@@ -69,7 +64,6 @@ namespace Assets.Scripts.Systems
 
             for (var i = 0; i < results.Length; i++)
             {
-                //Debug.Log(results[i].normal);
                 if (results[i].normal != Vector3.zero)
                 {
                     if (results[i].collider.GetComponent<InputComponent>() == null) continue;

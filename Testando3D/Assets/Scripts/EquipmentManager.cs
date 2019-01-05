@@ -16,6 +16,7 @@ public class EquipmentManager : MonoBehaviour {
     
     public Equipment[] defaultItems;
     public SkinnedMeshRenderer targetMesh;
+    public GameObject gunHover;
     Equipment[] currentEquipment;
     SkinnedMeshRenderer[] currentMeshes;
 
@@ -46,16 +47,26 @@ public class EquipmentManager : MonoBehaviour {
         SetEquipmentBlendShapes(newItem, 100);
 
         currentEquipment[slotIndex] = newItem;
-        SkinnedMeshRenderer newMesh = Instantiate(newItem.mesh);
 
-        newMesh.transform.parent = targetMesh.transform;
-        newMesh.transform.localPosition = new Vector3(0.278f, 0.703f, 0.79f);
+        if (newItem.equipSlot == EquipmentSlot.Weapon)
+        {
+            var ob = Instantiate(newItem.ob);
+            ob.transform.parent = gunHover.transform;
+        }
+        else
+        {
 
-        newMesh.GetComponent<GunComponent>().player = player;
+            SkinnedMeshRenderer newMesh = Instantiate(newItem.mesh);
 
-        newMesh.bones = targetMesh.bones;
-        newMesh.rootBone = targetMesh.rootBone;
-        currentMeshes[slotIndex] = newMesh;
+            newMesh.transform.parent = targetMesh.transform;
+            newMesh.transform.localPosition = new Vector3(0.278f, 0.703f, 0.79f);
+
+            newMesh.GetComponent<GunComponent>().player = player;
+
+            newMesh.bones = targetMesh.bones;
+            newMesh.rootBone = targetMesh.rootBone;
+            currentMeshes[slotIndex] = newMesh;
+        }
     }
 
     public Equipment Unequip(int slotIndex)
