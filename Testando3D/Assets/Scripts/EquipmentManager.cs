@@ -50,12 +50,27 @@ public class EquipmentManager : MonoBehaviour {
 
         if (newItem.equipSlot == EquipmentSlot.Gun)
         {
+            var childs = gunHover.GetComponentsInChildren<GunComponent>();
+
             var ob = Instantiate(newItem.ob);
             ob.transform.parent = gunHover.transform;
             ob.transform.localPosition = new Vector3(0, 0, 0);
             ob.transform.localRotation = Quaternion.identity;
             ob.GetComponent<GunComponent>().player = player;
             ob.GetComponent<GunComponent>().animator = gunHover.GetComponent<Animator>();
+
+            if (oldItem != null)
+            {
+                var _ob = Instantiate(oldItem.ob, new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z), Quaternion.identity);
+                Destroy(_ob.GetComponent<GunComponent>());
+                _ob.AddComponent(typeof(Rigidbody));
+                _ob.AddComponent(typeof(BoxCollider));
+                _ob.transform.parent = null;
+
+
+                foreach (var child in childs)
+                    Destroy(child.gameObject);
+            }
         }
         else
         {
