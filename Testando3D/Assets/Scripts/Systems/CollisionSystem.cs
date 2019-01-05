@@ -97,6 +97,11 @@ namespace Assets.Scripts.Systems
                 {
                     GameManager.entityManager.DestroyEntity(entities[i]);
                     entities.RemoveAt(i);
+                    Rigidbody body = raycastHits[i].collider.attachedRigidbody;
+                    if (body != null)
+                    {
+                        body.AddForceAtPosition(Vector3.forward, raycastHits[i].point, ForceMode.Impulse);
+                    }
                 }
             }
 
