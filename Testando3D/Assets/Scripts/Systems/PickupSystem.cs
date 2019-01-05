@@ -45,8 +45,8 @@ namespace Assets.Scripts.Systems
             {
                 center[i] = gun.pickupComponent[i].boxCollider.bounds.center;
                 halfExtents[i] = gun.pickupComponent[i].boxCollider.bounds.size;
-                orientation[i] = Quaternion.LookRotation(Vector3.right);
-                direction[i] = gun.transform[i].right;
+                orientation[i] = Quaternion.LookRotation(new Vector3(0, 1, 0));
+                direction[i] = new Vector3(0, 1, 0);
             }
 
             var pickDependency = new Pick
@@ -69,6 +69,7 @@ namespace Assets.Scripts.Systems
                     if (results[i].collider.GetComponent<InputComponent>() == null) continue;
 
                     EquipmentManager.instance.Equip(gun.pickupComponent[i].equipment, results[i].collider.gameObject);
+                    Helpers.StandardMethods.Destroy(gun.transform[i].gameObject);
                     break;
                 }
             }

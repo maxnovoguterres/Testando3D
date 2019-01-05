@@ -57,9 +57,13 @@ namespace Assets.Scripts.Systems
                     timer.StartToCount();
                     timer.F(true);
                 }
-                else if (!aim && timer.Flag)
+                else if (!aim && timer.Flag && Camera.main.fieldOfView != gun.gunComponent[i].normalFOV)
                 {
                     OnUnscoped(gun.gunComponent[i]);
+                    timer.F(false);
+                }
+                else if (!aim)
+                {
                     timer.F(false);
                 }
 

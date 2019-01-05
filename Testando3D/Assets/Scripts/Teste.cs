@@ -8,6 +8,7 @@ public class Teste : MonoBehaviour
 
     Collider m_Collider;
     RaycastHit m_Hit;
+    public Vector3 axis;
 
     void Start()
     {
@@ -30,7 +31,7 @@ public class Teste : MonoBehaviour
         //Test to see if there is a hit using a BoxCast
         //Calculate using the center of the GameObject's Collider, half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
         //Also fetch the hit data
-        m_HitDetect = Physics.BoxCast(m_Collider.bounds.center, m_Collider.bounds.size, transform.right, out m_Hit, Quaternion.LookRotation(Vector3.right), 1);
+        m_HitDetect = Physics.BoxCast(m_Collider.bounds.center, m_Collider.bounds.size, axis, out m_Hit, Quaternion.LookRotation(axis), 1);
         if (m_HitDetect)
         {
             //Output the name of the Collider your Box hit
@@ -55,18 +56,18 @@ public class Teste : MonoBehaviour
         if (m_HitDetect)
         {
             //Draw a Ray forward from GameObject toward the hit
-            Gizmos.DrawRay(transform.position, transform.right * m_Hit.distance);
+            Gizmos.DrawRay(transform.position, axis * m_Hit.distance);
             //Draw a cube that extends to where the hit exists
-            Gizmos.DrawWireCube(m_Collider.bounds.center + transform.right * m_Hit.distance, m_Collider.bounds.size);
+            Gizmos.DrawWireCube(m_Collider.bounds.center + axis * m_Hit.distance, m_Collider.bounds.size);
 
         }
         //If there hasn't been a hit yet, draw the ray at the maximum distance
         else
         {
             //Draw a Ray forward from GameObject toward the maximum distance
-            Gizmos.DrawRay(transform.position, transform.right * m_MaxDistance);
+            Gizmos.DrawRay(transform.position, axis * m_MaxDistance);
             //Draw a cube at the maximum distance
-            Gizmos.DrawWireCube(m_Collider.bounds.center + transform.right * m_MaxDistance, m_Collider.bounds.size);
+            Gizmos.DrawWireCube(m_Collider.bounds.center + axis * m_MaxDistance, m_Collider.bounds.size);
         }
     }
 }

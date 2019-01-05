@@ -5,6 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Transforms;
 using UnityEngine;
+using Unity.Mathematics;
 
 namespace Assets.Scripts.Systems
 {
@@ -16,7 +17,9 @@ namespace Assets.Scripts.Systems
         public static List<Entity> entities;
         NativeArray<Vector3> PreviousPos;
         List<Vector3> _PreviousPos = new List<Vector3>();
+        List<Quaternion> Rot = new List<Quaternion>();
         NativeArray<Vector3> Pos;
+        
 
         struct PrepareRaycastCommands : IJobParallelFor
         {
@@ -58,7 +61,10 @@ namespace Assets.Scripts.Systems
             if (_PreviousPos.Count == 0)
             {
                 for (var i = 0; i < entities.Count; i++)
+                {
+                    Rot.Add(GameManager.entityManager.GetComponentData<Rotation>(entities[i]).Value);
                     _PreviousPos.Add(GameManager.entityManager.GetComponentData<Position>(entities[i]).Value);
+                }
                 return;
             }
 
@@ -67,6 +73,7 @@ namespace Assets.Scripts.Systems
 
             for (var i = 0; i < _PreviousPos.Count; i++)
             {
+                //Debug.DrawLine(PreviousPos[i], Pos[i], Color.red);
                 PreviousPos[i] = _PreviousPos[i];
                 Pos[i] = GameManager.entityManager.GetComponentData<Position>(entities[i]).Value;
             }
@@ -99,7 +106,8 @@ namespace Assets.Scripts.Systems
                     Rigidbody body = raycastHits[i].collider.attachedRigidbody;
                     if (body != null)
                     {
-                        body.AddForceAtPosition(Vector3.forward, raycastHits[i].point, ForceMode.Impulse);
+                        Debug.Log(Rot[i]);
+                        body.AddForceAtPosition(math.forward(Rot[i]), raycastHits[i].point, ForceMode.Impulse);
                     }
 
                     GameManager.entityManager.DestroyEntity(entities[i]);
@@ -112,9 +120,13 @@ namespace Assets.Scripts.Systems
             Pos.Dispose();
             PreviousPos.Dispose();
 
+            Rot = new List<Quaternion>();
             _PreviousPos = new List<Vector3>();
             for (var i = 0; i < entities.Count; i++)
+            {
                 _PreviousPos.Add(GameManager.entityManager.GetComponentData<Position>(entities[i]).Value);
+                Rot.Add(GameManager.entityManager.GetComponentData<Rotation>(entities[i]).Value);
+            }
         }
 
         private void OnDisable()

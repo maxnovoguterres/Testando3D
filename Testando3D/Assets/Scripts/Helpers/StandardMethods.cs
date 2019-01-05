@@ -10,7 +10,7 @@ namespace Assets.Scripts.Helpers
 {
     public class StandardMethods : MonoBehaviour
     {
-        public static void Destroy(GameObject gameObject)
+        public static void _Destroy(GameObject gameObject)
         {
             Destroy(gameObject);
         }

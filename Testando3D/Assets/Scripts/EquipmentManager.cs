@@ -52,6 +52,10 @@ public class EquipmentManager : MonoBehaviour {
         {
             var ob = Instantiate(newItem.ob);
             ob.transform.parent = gunHover.transform;
+            ob.transform.localPosition = new Vector3(0, 0, 0);
+            ob.transform.localRotation = Quaternion.identity;
+            ob.GetComponent<GunComponent>().player = player;
+            ob.GetComponent<GunComponent>().animator = gunHover.GetComponent<Animator>();
         }
         else
         {
