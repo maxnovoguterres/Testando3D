@@ -107,7 +107,7 @@ namespace Assets.Scripts.Systems
                     if (body != null)
                     {
                         Debug.Log(Rot[i]);
-                        body.AddForceAtPosition(math.forward(Rot[i]), raycastHits[i].point, ForceMode.Impulse);
+                        body.AddForceAtPosition(math.forward(Rot[i]) * 2, raycastHits[i].point, ForceMode.Impulse);
                     }
 
                     GameManager.entityManager.DestroyEntity(entities[i]);

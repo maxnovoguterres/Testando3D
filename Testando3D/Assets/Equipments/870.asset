@@ -15,9 +15,9 @@ MonoBehaviour:
   name: New Item
   icon: {fileID: 0}
   isDefaultItem: 0
-  equipSlot: 0
+  equipSlot: 6
   mesh: {fileID: 0}
-  ob: {fileID: 0}
+  ob: {fileID: 4562883209982269393, guid: c3f9dd28906cf32489241ac91ed1a5fc, type: 3}
   coveredMeshRegions: 
   armorModifier: 0
   damageModifier: 0

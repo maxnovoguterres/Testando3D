@@ -94,7 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countDownRate: 0.1
   bocal: {fileID: 9044059032946276539}
-  bulletSpeed: 200
+  bulletSpeed: 50
   animator: {fileID: 0}
   scopedFOV: 36
   normalFOV: 36
