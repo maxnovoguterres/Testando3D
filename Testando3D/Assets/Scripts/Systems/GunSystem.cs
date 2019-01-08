@@ -101,7 +101,7 @@ namespace Assets.Scripts.Systems
                 GameManager.entityManager.SetComponentData(e[i], new Rotation { Value = r[i] });
                 GameManager.entityManager.SetComponentData(e[i], new Speed { Value = s[i] });
                 GameManager.entityManager.SetComponentData(e[i], new Components.Collision { Radius = 0.1f });
-                GameManager.entityManager.SetComponentData(e[i], new Scale { Value = new float3(0.01f, 0.02f, 0.02f) });
+                GameManager.entityManager.SetComponentData(e[i], new Scale { Value = new float3(0.02f, 0.02f, 0.02f) });
                 GameManager.entityManager.SetComponentData(e[i], new Gravity { InitPosY = pos.y, InitVel = (nextPos.y - pos.y) / dTime, Mass = 0.1f, Time = 0 });
 
                 var bufferArray = EntityBufferUtils.BufferValues<MoveForwardDirectionBuffer>(Direction.X, Direction.Z);
@@ -133,8 +133,8 @@ namespace Assets.Scripts.Systems
                 if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
                 {
                     _p.Add(gun.gunComponent[i].bocal.position);
-                    _r.Add(gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation);
-                    _s.Add(gun.gunComponent[i].bulletSpeed);
+                    _r.Add(Quaternion.Euler(0, gun.gunComponent[i].player.transform.eulerAngles.y - 90, -gun.gunComponent[i].player.transform.Find("FirstPersonCamera").localEulerAngles.x));
+                    _s.Add(10);
                     gun.gunComponent[i].countDown.StartToCount();
                 }
             }
