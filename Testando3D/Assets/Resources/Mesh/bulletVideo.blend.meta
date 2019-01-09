@@ -27,7 +27,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: bulletVideoMat
-    second: {fileID: 2100000, guid: 52f8afe21bf987e4c873b868b31698eb, type: 2}
+    second: {fileID: 2100000, guid: f98990d22c2f3c4419b6e2f6a747089a, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
