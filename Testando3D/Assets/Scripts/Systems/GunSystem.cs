@@ -133,8 +133,8 @@ namespace Assets.Scripts.Systems
                 if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
                 {
                     _p.Add(gun.gunComponent[i].bocal.position);
-                    _r.Add(Quaternion.Euler(0, gun.gunComponent[i].player.transform.eulerAngles.y - 90, -gun.gunComponent[i].player.transform.Find("FirstPersonCamera").localEulerAngles.x));
-                    _s.Add(10);
+                    _r.Add(gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation);
+                    _s.Add(gun.gunComponent[i].bulletSpeed);
                     gun.gunComponent[i].countDown.StartToCount();
                 }
             }

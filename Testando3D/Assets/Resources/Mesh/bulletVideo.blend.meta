@@ -11,6 +11,7 @@ ModelImporter:
     400004: text
     2100000: unnamed
     2100002: testando
+    2100004: bulletVideoMat
     2300000: Cylinder
     2300002: text
     2300004: //RootNode
@@ -21,7 +22,12 @@ ModelImporter:
     4300002: Cylinder
     7400000: Default Take
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bulletVideoMat
+    second: {fileID: 2100000, guid: 52f8afe21bf987e4c873b868b31698eb, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
