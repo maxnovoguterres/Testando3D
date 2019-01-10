@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d53f5673b3f6f24493ed3ea9f0d31de, type: 3}
   m_Name: M4
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
+  name: M4 Carbine
+  icon: {fileID: 21300000, guid: eb5f6e2757c821940b69cf1456f7865a, type: 3}
   isDefaultItem: 0
   equipSlot: 6
   mesh: {fileID: 0}

@@ -63,12 +63,12 @@ namespace Assets.Scripts.Systems
             var charPos = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
             var dist = new NativeArray<float>(gun.Length, Allocator.TempJob);
             var canPickUp = new NativeArray<byte>(gun.Length, Allocator.TempJob);
-
+            
             for (var i = 0; i < gun.Length; i++)
             {
                 gunPos[i] = gun.pickupComponent[i].boxCollider.bounds.center;
                 dist[i] = gun.pickupComponent[i].distance;
-                charPos[i] = player.transform[0].position;
+                charPos[i] = player.transform[0].position - gunPos[i];
                 Debug.DrawRay(gunPos[i], charPos[i], Color.red);
             }
 
@@ -99,13 +99,28 @@ namespace Assets.Scripts.Systems
             {
                 if (results[i].normal == Vector3.zero && canPickUp[i] == 1)
                 {
-                    //if (results[i].collider.GetComponent<InputComponent>() == null) continue;
-
                     Debug.Log(gun.pickupComponent[i].gameObject);
-                    //EquipmentManager.instance.Equip(gun.pickupComponent[i].equipment, results[i].collider.gameObject);
-                    //Object.Destroy(gun.transform[i].gameObject);
+                    GameManager.Instance.pickUpText.text = "Press T to PICK " + gun.transform[i].name;
+                    GameManager.Instance.gunToEquip = gun.pickupComponent[i].equipment;
+                    GameManager.Instance.canEquip = true;
+                    GameManager.Instance.gunToDestroy = gun.transform[i].gameObject;
                     continue;
                 }
+                if (canPickUp[i] == 0)
+                {
+                    GameManager.Instance.pickUpText.text = "";
+                    GameManager.Instance.canEquip = false;
+                    continue;
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.T) && GameManager.Instance.canEquip)
+            {
+                EquipmentManager.instance.Equip(GameManager.Instance.gunToEquip, player.transform[0].gameObject);
+                Debug.Log("Picked: " + GameManager.Instance.gunToEquip.name);
+                Object.Destroy(GameManager.Instance.gunToDestroy);
+                GameManager.Instance.pickUpText.text = "";
+                GameManager.Instance.canEquip = false;
             }
 
             gunPos.Dispose();

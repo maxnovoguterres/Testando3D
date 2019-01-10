@@ -13,6 +13,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Canvas")]
     public Image scopeOverlay;
+    public Text pickUpText;
+
+    public Equipment gunToEquip;
+    public bool canEquip;
+    public GameObject gunToDestroy;
 
     public static float GravityAceleration = 9.81f;
 
