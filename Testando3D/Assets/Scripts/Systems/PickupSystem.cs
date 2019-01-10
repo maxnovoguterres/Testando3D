@@ -105,6 +105,7 @@ namespace Assets.Scripts.Systems
                 _Dist = _dist
             }.Schedule(gun.Length, 32);
 
+
             var commands = new NativeArray<RaycastCommand>(gun.Length, Allocator.TempJob);
             var results = new NativeArray<RaycastHit>(gun.Length, Allocator.TempJob);
 
@@ -119,6 +120,14 @@ namespace Assets.Scripts.Systems
             var ray = RaycastCommand.ScheduleBatch(commands, results, 32, checkPath);
 
             ray.Complete();
+
+            gunPos.Dispose();
+            charPosRay.Dispose();
+            canPickUp.Dispose();
+            commands.Dispose();
+            charPos.Dispose();
+            dist.Dispose();
+
             var canPick = new NativeArray<byte>(gun.Length, Allocator.TempJob);
 
             for (var i = 0; i < gun.Length; i++)
@@ -130,6 +139,8 @@ namespace Assets.Scripts.Systems
                 //    Debug.Log(results[i].collider.tag);
                 //}
             }
+
+            results.Dispose();
 
             var gunIndex = new NativeArray<int>(1, Allocator.TempJob);
             var minDist = new NativeArray<float>(1, Allocator.TempJob);
@@ -146,6 +157,10 @@ namespace Assets.Scripts.Systems
 
             nearstGun.Complete();
 
+            canPick.Dispose();
+            minDist.Dispose();
+            _dist.Dispose();
+
             var _i = gunIndex[0];
 
             if (_i != -1)
@@ -161,6 +176,8 @@ namespace Assets.Scripts.Systems
                 GameManager.Instance.canEquip = false;
             }
 
+            gunIndex.Dispose();
+
             if (Input.GetKeyDown(KeyCode.T) && GameManager.Instance.canEquip)
             {
                 EquipmentManager.instance.Equip(GameManager.Instance.gunToEquip, player.transform[0].gameObject);
@@ -169,17 +186,6 @@ namespace Assets.Scripts.Systems
                 GameManager.Instance.canEquip = false;
             }
 
-            gunPos.Dispose();
-            charPos.Dispose();
-            charPosRay.Dispose();
-            commands.Dispose();
-            results.Dispose();
-            canPickUp.Dispose();
-            canPick.Dispose();
-            dist.Dispose();
-            _dist.Dispose();
-            gunIndex.Dispose();
-            minDist.Dispose();
         }
     }
 }
