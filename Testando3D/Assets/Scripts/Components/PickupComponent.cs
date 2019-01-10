@@ -9,8 +9,7 @@ namespace Assets.Scripts.Components
 {
     public class PickupComponent : MonoBehaviour
     {
-        //public Vector3 center;
-        //public Vector3 halfExtents;
+        public float distance;
         public BoxCollider boxCollider;
         public Quaternion orientation;
         public Vector3 direction;
