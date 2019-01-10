@@ -8,6 +8,8 @@ namespace Assets.Scripts.Systems
 {
     public class PickupSystem : ComponentSystem
     {
+        int gunIndex = 0;
+
         public struct Gun
         {
             public ComponentArray<Transform> transform;
@@ -31,13 +33,15 @@ namespace Assets.Scripts.Systems
         public struct CheckPos : IJobParallelFor
         {
             public NativeArray<float> Dist;
+            public NativeArray<float> _Dist;
             public NativeArray<Vector3> GunPos;
             public NativeArray<Vector3> CharPos;
             public NativeArray<byte> CanPickUp;
 
             public void Execute(int i)
             {
-                CanPickUp[i] = (byte)(Vector3.Distance(GunPos[i], CharPos[i]) <= Dist[i] ? 1 : 0);
+                _Dist[i] = Vector3.Distance(GunPos[i], CharPos[i]);
+                CanPickUp[i] = (byte)(_Dist[i] <= Dist[i] ? 1 : 0);
             }
         }
 
@@ -57,67 +61,109 @@ namespace Assets.Scripts.Systems
             }
         }
 
+        public struct NearstGun : IJobParallelFor
+        {
+            public NativeArray<float> Dist;
+            public NativeArray<byte> CanPick;
+            public NativeArray<int> Index;
+            public NativeArray<float> MinDist;
+
+            public void Execute(int i)
+            {
+                if (CanPick[i] == 1 && Dist[i] <= MinDist[0])
+                {
+                    Index[0] = i;
+                    MinDist[0] = Dist[i];
+                }
+            }
+        }
+
         protected override void OnUpdate()
         {
             var gunPos = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
             var charPos = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
+            var charPosRay = new NativeArray<Vector3>(gun.Length, Allocator.TempJob);
             var dist = new NativeArray<float>(gun.Length, Allocator.TempJob);
+            var _dist = new NativeArray<float>(gun.Length, Allocator.TempJob);
             var canPickUp = new NativeArray<byte>(gun.Length, Allocator.TempJob);
-            
+
             for (var i = 0; i < gun.Length; i++)
             {
                 gunPos[i] = gun.pickupComponent[i].boxCollider.bounds.center;
                 dist[i] = gun.pickupComponent[i].distance;
-                charPos[i] = player.transform[0].position - gunPos[i];
-                Debug.DrawRay(gunPos[i], charPos[i], Color.red);
+                charPos[i] = player.transform[0].Find("FirstPersonCamera").position;
+                charPosRay[i] = player.transform[0].Find("FirstPersonCamera").position - gunPos[i];
+                Debug.DrawRay(gunPos[i], charPosRay[i], Color.red);
             }
 
-            var checkPosDep = new CheckPos
+            var checkPos = new CheckPos
             {
                 GunPos = gunPos,
                 CharPos = charPos,
                 CanPickUp = canPickUp,
-                Dist = dist
+                Dist = dist,
+                _Dist = _dist
             }.Schedule(gun.Length, 32);
 
             var commands = new NativeArray<RaycastCommand>(gun.Length, Allocator.TempJob);
             var results = new NativeArray<RaycastHit>(gun.Length, Allocator.TempJob);
 
-            var checkPathDep = new CheckPath
+            var checkPath = new CheckPath
             {
                 GunPos = gunPos,
-                CharPos = charPos,
+                CharPos = charPosRay,
                 CanPickUp = canPickUp,
                 commands = commands
-            }.Schedule(gun.Length, 32, checkPosDep);
+            }.Schedule(gun.Length, 32, checkPos);
 
-            var handle = RaycastCommand.ScheduleBatch(commands, results, 32, checkPathDep);
+            var ray = RaycastCommand.ScheduleBatch(commands, results, 32, checkPath);
 
-            handle.Complete();
+            ray.Complete();
+            var canPick = new NativeArray<byte>(gun.Length, Allocator.TempJob);
 
-            for (var i = 0; i < results.Length; i++)
+            for (var i = 0; i < gun.Length; i++)
             {
-                if (results[i].normal == Vector3.zero && canPickUp[i] == 1)
-                {
-                    Debug.Log(gun.pickupComponent[i].gameObject);
-                    GameManager.Instance.pickUpText.text = "Press T to PICK " + gun.transform[i].name;
-                    GameManager.Instance.gunToEquip = gun.pickupComponent[i].equipment;
-                    GameManager.Instance.canEquip = true;
-                    GameManager.Instance.gunToDestroy = gun.transform[i].gameObject;
-                    continue;
-                }
-                if (canPickUp[i] == 0)
-                {
-                    GameManager.Instance.pickUpText.text = "";
-                    GameManager.Instance.canEquip = false;
-                    continue;
-                }
+                canPick[i] = (byte)(results[i].normal == Vector3.zero || (results[i].collider != null && results[i].collider.tag != "Untagged") ? 1 : 0);
+                //Debug.Log(canPick[i]);
+                //if (results[i].normal != Vector3.zero)
+                //{
+                //    Debug.Log(results[i].collider.tag);
+                //}
+            }
+
+            var gunIndex = new NativeArray<int>(1, Allocator.TempJob);
+            var minDist = new NativeArray<float>(1, Allocator.TempJob);
+            gunIndex[0] = -1;
+            minDist[0] = 100;
+
+            var nearstGun = new NearstGun
+            {
+                Dist = _dist,
+                CanPick = canPick,
+                Index = gunIndex,
+                MinDist = minDist
+            }.Schedule(gun.Length, 32, ray);
+
+            nearstGun.Complete();
+
+            var _i = gunIndex[0];
+
+            if (_i != -1)
+            {
+                GameManager.Instance.pickUpText.text = "Press T to PICK " + gun.transform[_i].name;
+                GameManager.Instance.gunToEquip = gun.pickupComponent[_i].equipment;
+                GameManager.Instance.canEquip = true;
+                GameManager.Instance.gunToDestroy = gun.transform[_i].gameObject;
+            }
+            else
+            {
+                GameManager.Instance.pickUpText.text = "";
+                GameManager.Instance.canEquip = false;
             }
 
             if (Input.GetKeyDown(KeyCode.T) && GameManager.Instance.canEquip)
             {
                 EquipmentManager.instance.Equip(GameManager.Instance.gunToEquip, player.transform[0].gameObject);
-                Debug.Log("Picked: " + GameManager.Instance.gunToEquip.name);
                 Object.Destroy(GameManager.Instance.gunToDestroy);
                 GameManager.Instance.pickUpText.text = "";
                 GameManager.Instance.canEquip = false;
@@ -125,10 +171,15 @@ namespace Assets.Scripts.Systems
 
             gunPos.Dispose();
             charPos.Dispose();
+            charPosRay.Dispose();
             commands.Dispose();
             results.Dispose();
             canPickUp.Dispose();
+            canPick.Dispose();
             dist.Dispose();
+            _dist.Dispose();
+            gunIndex.Dispose();
+            minDist.Dispose();
         }
     }
 }
