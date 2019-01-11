@@ -48,14 +48,15 @@ namespace Assets.Scripts.Systems
                     DoHeadBob(characterController.velocity.magnitude +
                                       (movementComponent.walkSpeed * (Input.GetAxis("Sprint") != 0 ? 1f : 0.5f)), transform, cameraComponent);
                 newCameraPosition = transform.localPosition;
-                newCameraPosition.y = transform.localPosition.y;
+                newCameraPosition.y = transform.localPosition.y - GameManager.Instance.JumpOffSet();
             }
             else
             {
                 newCameraPosition = transform.localPosition;
-                newCameraPosition.y = transform.localPosition.y;
+                newCameraPosition.y = transform.localPosition.y - GameManager.Instance.JumpOffSet();
             }
             transform.localPosition = newCameraPosition;
+            Debug.Log(GameManager.Instance.JumpOffSet());
         }
 
         public Vector3 DoHeadBob(float speed, Transform transform, CameraComponent cameraComponent)
