@@ -14,6 +14,5 @@ namespace Assets.Scripts.Components
         public Vector3 movement;
         public bool Shoot;
         public bool Aim;
-        //public float speed;
     }
 }

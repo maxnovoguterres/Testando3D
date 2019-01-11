@@ -15,7 +15,6 @@ namespace Assets.Scripts.Components
         [HideInInspector] public float InitPosY;
         [HideInInspector] public float InitVel;
         [HideInInspector]public float Time;
-        //public float Vel;
     }
     public class GravityComponent : ComponentDataWrapper<Gravity> { }
 }

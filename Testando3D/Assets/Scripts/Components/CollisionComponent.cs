@@ -9,11 +9,6 @@ using UnityEngine;
 
 namespace Assets.Scripts.Components
 {
-    //public class CollisionComponent //: MonoBehaviour
-    //{
-    //    public float Radius;
-    //    public float3 PreviousPos;
-    //}
     [Serializable]
     public struct Collision : IComponentData
     {

@@ -8,8 +8,6 @@ namespace Assets.Scripts.Systems
 {
     public class PickupSystem : ComponentSystem
     {
-        int gunIndex = 0;
-
         public struct Gun
         {
             public ComponentArray<Transform> transform;
@@ -20,7 +18,7 @@ namespace Assets.Scripts.Systems
         public struct Player
         {
             public ComponentArray<InputComponent> inputComponent;
-            public ComponentArray<MovementComponent> movementComponent;
+            public ComponentArray<PlayerMovementComponent> movementComponent;
             public ComponentArray<Transform> transform;
             public ComponentArray<Animator> animator;
             public ComponentArray<Rigidbody> rb;
@@ -133,11 +131,6 @@ namespace Assets.Scripts.Systems
             for (var i = 0; i < gun.Length; i++)
             {
                 canPick[i] = (byte)(results[i].normal == Vector3.zero || (results[i].collider != null && results[i].collider.tag != "Untagged") ? 1 : 0);
-                //Debug.Log(canPick[i]);
-                //if (results[i].normal != Vector3.zero)
-                //{
-                //    Debug.Log(results[i].collider.tag);
-                //}
             }
 
             results.Dispose();

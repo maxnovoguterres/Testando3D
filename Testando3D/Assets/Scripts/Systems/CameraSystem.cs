@@ -20,23 +20,25 @@ namespace Assets.Scripts.Systems
         public struct Player
         {
             public InputComponent inputComponent;
-            public MovementComponent movementComponent;
+            public PlayerMovementComponent movementComponent;
             public Transform transform;
             public Animator animator;
             public Rigidbody rb;
             public CharacterController characterController;
         }
 
+        Camera? camera;
+        Player? player;
         protected override void OnUpdate()
         {
-            var camera = GetEntities<Camera>()[0];
-            var player = GetEntities<Player>()[0];
+            if (camera == null) camera = GetEntities<Camera>()[0];
+            if (player == null) player = GetEntities<Player>()[0];
 
-            UpdateCameraPosition(player.characterController, player.movementComponent, camera.transform, camera.cameraComponent);
-            LookRotation(player.transform, camera.transform, camera.cameraComponent);
+            UpdateCameraPosition(player.Value.characterController, player.Value.movementComponent, camera.Value.transform, camera.Value.cameraComponent);
+            LookRotation(player.Value.transform, camera.Value.transform, camera.Value.cameraComponent);
         }
 
-        private void UpdateCameraPosition(CharacterController characterController, MovementComponent movementComponent, Transform transform, CameraComponent cameraComponent)
+        private void UpdateCameraPosition(CharacterController characterController, PlayerMovementComponent movementComponent, Transform transform, CameraComponent cameraComponent)
         {
             Vector3 newCameraPosition;
 
@@ -79,20 +81,20 @@ namespace Assets.Scripts.Systems
 
         public void LookRotation(Transform character, Transform camera, CameraComponent cameraComponent)
         {
-            float yRot = Input.GetAxis("Mouse X") * 1;
-            float xRot = Input.GetAxis("Mouse Y") * 1;
+            float yRot = Input.GetAxis("Mouse X") * cameraComponent.XSensibility;
+            float xRot = Input.GetAxis("Mouse Y") * cameraComponent.YSensibility;
 
             cameraComponent.m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
             cameraComponent.m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
 
             cameraComponent.m_CameraTargetRot = ClampRotationAroundXAxis(cameraComponent.m_CameraTargetRot);
 
-            if (true)
+            if (cameraComponent.Smooth)
             {
                 character.localRotation = Quaternion.Slerp(character.localRotation, cameraComponent.m_CharacterTargetRot,
-                    5f * Time.deltaTime);
+                    cameraComponent.SmoothTime * Time.deltaTime);
                 camera.localRotation = Quaternion.Slerp(camera.localRotation, cameraComponent.m_CameraTargetRot,
-                    5f * Time.deltaTime);
+                    cameraComponent.SmoothTime * Time.deltaTime);
             }
             else
             {

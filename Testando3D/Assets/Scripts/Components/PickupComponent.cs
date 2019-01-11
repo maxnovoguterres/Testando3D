@@ -11,8 +11,6 @@ namespace Assets.Scripts.Components
     {
         public float distance;
         public BoxCollider boxCollider;
-        public Quaternion orientation;
-        public Vector3 direction;
         public Equipment equipment;
     }
 }

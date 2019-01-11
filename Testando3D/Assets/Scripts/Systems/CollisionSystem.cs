@@ -35,15 +35,6 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        struct IntegratePhysics : IJobParallelFor
-        {
-            public NativeArray<RaycastHit> Hits;
-
-            public void Execute(int i)
-            {
-            }
-        }
-
         private void Start()
         {
             if (Instance == null)
@@ -75,7 +66,7 @@ namespace Assets.Scripts.Systems
             {
                 PreviousPos[i] = _PreviousPos[i];
                 Pos[i] = GameManager.entityManager.GetComponentData<Position>(entities[i]).Value - (float3)PreviousPos[i];
-                Debug.DrawRay(PreviousPos[i], Pos[i], Color.red);
+                //Debug.DrawRay(PreviousPos[i], Pos[i], Color.red);
             }
 
             var raycastCommands = new NativeArray<RaycastCommand>(PreviousPos.Length, Allocator.TempJob);
@@ -90,25 +81,15 @@ namespace Assets.Scripts.Systems
 
             var raycastDependency = RaycastCommand.ScheduleBatch(raycastCommands, raycastHits, 32, setupDependency);
 
-            //var _Collision = new IntegratePhysics()
-            //{
-            //    Hits = raycastHits
-            //}.Schedule(PreviousPos.Length, 32, raycastDependency);
-
-            //_Collision.Complete();
             raycastDependency.Complete();
 
             for (var i = 0; i < raycastHits.Length; i++)
             {
                 if (raycastHits[i].normal != Vector3.zero)
                 {
-                    Debug.Log(raycastHits[i].collider.name);
                     Rigidbody body = raycastHits[i].collider.attachedRigidbody;
                     if (body != null)
-                    {
-                        Debug.Log(Rot[i]);
                         body.AddForceAtPosition(math.forward(Rot[i]) * 2, raycastHits[i].point, ForceMode.Impulse);
-                    }
 
                     GameManager.entityManager.DestroyEntity(entities[i]);
                     entities.RemoveAt(i);
@@ -128,190 +109,5 @@ namespace Assets.Scripts.Systems
                 Rot.Add(GameManager.entityManager.GetComponentData<Rotation>(entities[i]).Value);
             }
         }
-
-        private void OnDisable()
-        {
-            //Pos.Dispose();
-            //PreviousPos.Dispose();
-        }
-
     }
-    //[BurstCompile]
-    //public class CollisionSystem : ComponentSystem
-    //{
-    //    public struct Item
-    //    {
-    //        public ComponentDataArray<Components.Collision> collision;
-    //        public ComponentDataArray<Position> position;
-    //        public EntityArray Entities;
-    //        public readonly int Length;
-    //    }
-
-    //    [Inject] Item itens;
-
-    //    protected override void OnUpdate()
-    //    {
-    //        Debug.Log(itens.Length);
-
-    //        NativeArray<JobHandle> rayCastJobs = new NativeArray<JobHandle>();
-    //        for (var i = 0; i < itens.Length; i++)
-    //        {
-    //            Debug.Log("asd");
-    //            var col = itens.collision[i];
-    //            var pos = itens.position[i].Value;
-    //            if (i == 0)
-    //            {
-    //                rayCastJobs[i] = new RayCastJob()
-    //                {
-    //                    startPos = pos,
-    //                    endPos = col.PreviousPos
-    //                }.Schedule(itens.Length, 32);
-    //            }
-    //            else
-    //            {
-    //                rayCastJobs[i] = new RayCastJob()
-    //                {
-    //                    startPos = pos,
-    //                    endPos = col.PreviousPos
-    //                }.Schedule(itens.Length, 32, rayCastJobs[i - 1]);
-    //            }
-    //            //if (!col.PreviousPos.Equals(new float3()) && !col.PreviousPos.Equals(pos.Value))
-    //            //    DetectMovingCollision(pos.Value, col.PreviousPos, itens.Entities[i]);
-    //            //else
-    //            //    DetectCollision(pos.Value, col.Radius);
-    //        }
-    //        rayCastJobs.Dispose();
-
-    //    }
-
-    //    struct RayCastJob : IJobParallelFor
-    //    {
-    //        public Vector3 startPos;
-    //        public Vector3 endPos;
-
-    //        public void Execute(int index)
-    //        {
-    //            var results = new NativeArray<RaycastHit>(1, Allocator.TempJob);
-    //            var commands = new NativeArray<RaycastCommand>(1, Allocator.TempJob);
-
-    //            commands[0] = new RaycastCommand(startPos, endPos);
-
-    //            var handle = RaycastCommand.ScheduleBatch(commands, results, 1);
-
-    //            handle.Complete();
-
-    //            RaycastHit batchedHit = results[0];
-    //            Debug.Log(batchedHit);
-
-    //            results.Dispose();
-    //            commands.Dispose();
-    //        }
-    //    }
-
-    //public void DetectCollision(Vector3 pos, float radius)
-    //{
-    //    Debug.Log("Collision Method 1");
-    //    Collider[] hits = Physics.OverlapSphere(pos, radius);
-    //    if (hits.Length > 0)
-    //    {
-    //        for (var i = 0; i < hits.Length; i++)
-    //        {
-    //            Debug.Log(hits[i].name);
-    //        }
-    //    }
-    //}
-    //public void DetectMovingCollision(Vector3 startPos, Vector3 endPos, Entity entity)
-    //{
-    //    Debug.Log("Collision Method 2");
-
-    //    RaycastHit hit;
-    //    if (Physics.Linecast(startPos, endPos, out hit))
-    //    {
-    //        Debug.Log("Destroyed");
-    //        GameManager.entityManager.DestroyEntity(entity);
-    //    }
-    //}
-    //}
-
-    //[BurstCompile]
-    //public class CollisionSystem : JobComponentSystem
-    //{
-    //    public struct CollisionObjects : IJobProcessComponentDataWithEntity<Components.Collision, Position>
-    //    {
-    //        public float deltaTime;
-    //        public void Execute(Entity entity, int index, ref Components.Collision col, ref Position pos)
-    //        {
-    //            if (!col.PreviousPos.Equals(new float3()) && !col.PreviousPos.Equals(pos.Value))
-    //                DetectMovingCollision(pos.Value, col.PreviousPos, entity);
-    //            else
-    //                DetectCollision(pos.Value, col.Radius);
-
-    //            col.PreviousPos = pos.Value;
-    //        }
-
-    //        public void DetectCollision(Vector3 pos, float radius)
-    //        {
-    //            Debug.Log("Collision Method 1");
-
-    //            //var results = new NativeArray<RaycastHit>(1, Allocator.TempJob);
-    //            //var commands = new NativeArray<RaycastCommand>(1, Allocator.TempJob);
-
-    //            //Vector3 direction = Vector3.forward;
-
-    //            //commands[0] = new RaycastCommand(pos, direction);
-
-    //            //var handle = RaycastCommand.ScheduleBatch(commands, results, 1);
-
-    //            //handle.Complete();
-
-    //            //RaycastHit batchedHit = results[0];
-
-    //            //results.Dispose();
-    //            //commands.Dispose();
-
-    //            //Collider[] hits = Physics.OverlapSphere(pos, radius);
-    //            //if (hits.Length > 0)
-    //            //{
-    //            //    for (var i = 0; i < hits.Length; i++)
-    //            //    {
-    //            //        Debug.Log(hits[i].name);
-    //            //    }
-    //            //}
-    //        }
-    //        public void DetectMovingCollision(Vector3 startPos, Vector3 endPos, Entity entity)
-    //        {
-    //            Debug.Log("Collision Method 2");
-
-
-    //            //var results = new NativeArray<RaycastHit>(1, Allocator.TempJob);
-    //            //var commands = new NativeArray<RaycastCommand>(1, Allocator.TempJob);
-
-    //            //commands[0] = new RaycastCommand(startPos, endPos);
-
-    //            //var handle = RaycastCommand.ScheduleBatch(commands, results, 1);
-
-    //            //handle.Complete();
-
-    //            //RaycastHit batchedHit = results[0];
-
-    //            //results.Dispose();
-    //            //commands.Dispose();
-
-    //            //RaycastHit hit;
-    //            //if (Physics.Linecast(startPos, endPos, out hit))
-    //            //{
-    //            //    Debug.Log("Destroyed");
-    //            //    GameManager.entityManager.DestroyEntity(entity);
-    //            //}
-    //        }
-    //    }
-
-    //    protected override JobHandle OnUpdate(JobHandle inputDeps)
-    //    {
-    //        return new CollisionObjects
-    //        {
-    //            deltaTime = Time.deltaTime
-    //        }.ScheduleSingle(this, inputDeps);
-    //    }
-    //}
 }
