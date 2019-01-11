@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7333220199414028402}
   - component: {fileID: 349969244681045849}
   - component: {fileID: 4370294625016750432}
+  - component: {fileID: 6257620969147187797}
   m_Layer: 0
   m_Name: AK-47
   m_TagString: Untagged
@@ -92,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba3d93919b2a41840bc701a0a691c4ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distance: 0
   boxCollider: {fileID: 4370294625016750432}
   orientation: {x: 0, y: 0, z: 0, w: 0}
   direction: {x: 0, y: 0, z: 0}
@@ -116,8 +118,24 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 797447666310307387}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.87152416, y: 0.23632374, z: 0.0333694}
   m_Center: {x: -0.116303, y: -0.03383361, z: -0.000000005587937}
+--- !u!54 &6257620969147187797
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797447666310307387}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

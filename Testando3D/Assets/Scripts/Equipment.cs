@@ -8,6 +8,7 @@ public class Equipment : Item
     public EquipmentSlot equipSlot;
     public SkinnedMeshRenderer mesh;
     public GameObject ob;
+    public GameObject pickUpOb;
     public EquipmentMeshRegion[] coveredMeshRegions;
     public int armorModifier;
     public int damageModifier;

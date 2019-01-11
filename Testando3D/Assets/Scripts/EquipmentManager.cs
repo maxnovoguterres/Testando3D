@@ -17,6 +17,7 @@ public class EquipmentManager : MonoBehaviour {
     public Equipment[] defaultItems;
     public SkinnedMeshRenderer targetMesh;
     public GameObject gunHover;
+    public Transform gunsParent;
     Equipment[] currentEquipment;
     SkinnedMeshRenderer[] currentMeshes;
 
@@ -61,12 +62,12 @@ public class EquipmentManager : MonoBehaviour {
 
             if (oldItem != null)
             {
-                var _ob = Instantiate(oldItem.ob, new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z), Quaternion.identity);
-                Destroy(_ob.GetComponent<GunComponent>());
-                _ob.AddComponent(typeof(Rigidbody));
-                _ob.AddComponent(typeof(BoxCollider));
-                _ob.transform.parent = null;
-
+                var _ob = Instantiate(oldItem.pickUpOb, new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z), Quaternion.identity);
+                //Destroy(_ob.GetComponent<GunComponent>());
+                //_ob.AddComponent(typeof(Rigidbody));
+                //_ob.AddComponent(typeof(BoxCollider));
+                _ob.transform.parent = gunsParent;
+                _ob.name = oldItem.pickUpOb.name;
 
                 foreach (var child in childs)
                     Destroy(child.gameObject);

@@ -18,6 +18,8 @@ MonoBehaviour:
   equipSlot: 6
   mesh: {fileID: 0}
   ob: {fileID: 991349996276405651, guid: a473d32a1247d27439f38910bdb9df54, type: 3}
+  pickUpOb: {fileID: 7892264974275576438, guid: 74d36c37358eb37428c185e152ebbb36,
+    type: 3}
   coveredMeshRegions: 
   armorModifier: 0
   damageModifier: 0
