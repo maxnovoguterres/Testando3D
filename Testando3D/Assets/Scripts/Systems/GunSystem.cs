@@ -104,8 +104,8 @@ namespace Assets.Scripts.Systems
                 GameManager.entityManager.SetComponentData(e[i], new Scale { Value = new float3(0.02f, 0.02f, 0.02f) });
                 GameManager.entityManager.SetComponentData(e[i], new Gravity { InitPosY = pos.y, InitVel = (nextPos.y - pos.y) / dTime, Mass = 0.1f, Time = 0 });
 
-                var bufferArray = EntityBufferUtils.BufferValues<MoveForwardDirectionBuffer>(Direction.X, Direction.Z);
-                GameManager.entityManager.GetBuffer<MoveForwardDirectionBuffer>(e[i]).AddRange(bufferArray);
+                var bufferArray = EntityBufferUtils.BufferValues<DirectionBuffer>(Direction.X, Direction.Z);
+                GameManager.entityManager.GetBuffer<DirectionBuffer>(e[i]).AddRange(bufferArray);
 
                 CollisionSystem.entities.Add(e[i]);
 

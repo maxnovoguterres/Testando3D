@@ -28,14 +28,14 @@ namespace Assets.Scripts.Systems
                 var pos = position.Value;
                 var _pos = speed.Value * math.forward(rotation.Value) * deltaTime;
 
-                var directionBuffer = GameManager.entityManager.GetBuffer<MoveForwardDirectionBuffer>(entity);
+                var directionBuffer = GameManager.entityManager.GetBuffer<DirectionBuffer>(entity);
 
                 if (directionBuffer.Length > 0)
                     for (var i = 0; i < directionBuffer.Length; i++)
                     {
-                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionX) pos.x += _pos.x;
-                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionY) pos.y += _pos.y;
-                        if (directionBuffer[i].Value == MoveForwardDirectionBuffer.MoveFowardDirectionZ) pos.z += _pos.z;
+                        if (directionBuffer[i].Value == DirectionBuffer.MoveFowardDirectionX) pos.x += _pos.x;
+                        if (directionBuffer[i].Value == DirectionBuffer.MoveFowardDirectionY) pos.y += _pos.y;
+                        if (directionBuffer[i].Value == DirectionBuffer.MoveFowardDirectionZ) pos.z += _pos.z;
                     }
                 else
                     pos += _pos;
