@@ -11,36 +11,44 @@ namespace Assets.Scripts.Helpers
         public double Rate { get; set; }
         public double CoolDown { get; set; }
         public bool ReturnedToZero { get { return CoolDown <= 0; } }
-        public bool Flag { get; set; }
+        public bool StartCountOnce { get; set; }
 
+        #region instance
         public CountDown()
         {
             CoolDown = 0;
             Rate = 1;
-            Flag = false;
+            StartCountOnce = false;
         }
-
-        public CountDown(double rate)
+        public CountDown(double rate, bool startCountOnce = false)
         {
             Rate = rate;
             CoolDown = 0;
-            Flag = false;
+            StartCountOnce = startCountOnce;
         }
-
         public void StartToCount()
         {
+            if((StartCountOnce && ReturnedToZero) || !StartCountOnce)
             CoolDown = Rate;
         }
-
-        public void F(bool f)
+        public void Zero()
         {
-            Flag = f;
+            CoolDown = 0;
         }
+        public void DecreaseTime()
+        {
+            if (CoolDown > 0)
+                CoolDown -= Time.deltaTime;
+        }
+        #endregion
 
+        #region static
         public static void DecreaseTime(CountDown model)
         {
             if (model.CoolDown > 0)
                 model.CoolDown -= Time.deltaTime;
         }
+        #endregion
+
     }
 }

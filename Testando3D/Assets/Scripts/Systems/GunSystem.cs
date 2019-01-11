@@ -17,7 +17,7 @@ namespace Assets.Scripts.Systems
     [BurstCompile]
     public class GunSystem : ComponentSystem
     {
-        CountDown timer = new CountDown(.15f);
+        CountDown timer = new CountDown(.15f, true);
 
         public struct Gun
         {
@@ -52,28 +52,24 @@ namespace Assets.Scripts.Systems
                 if (gun.gunComponent[i].player == null) continue;
 #endif
                 var aim = gun.gunComponent[i].player.GetComponent<InputComponent>().Aim;
-                if (aim && !timer.Flag)
-                {
-                    timer.StartToCount();
-                    timer.F(true);
-                }
-                else if (!aim && timer.Flag && Camera.main.fieldOfView != gun.gunComponent[i].normalFOV)
-                {
-                    OnUnscoped(gun.gunComponent[i]);
-                    timer.F(false);
-                }
-                else if (!aim)
-                {
-                    timer.F(false);
-                }
 
                 if (aim)
                 {
-                    CountDown.DecreaseTime(timer);
+                    if (timer.ReturnedToZero)
+                        timer.StartToCount();
+
+                    timer.DecreaseTime();
                     if (timer.ReturnedToZero && Camera.main.fieldOfView != gun.gunComponent[i].scopedFOV)
                     {
                         OnScoped(gun.gunComponent[i]);
                     }
+
+                }
+                else
+                {
+                    timer.Zero();
+                    if (Camera.main.fieldOfView != gun.gunComponent[i].normalFOV)
+                        OnUnscoped(gun.gunComponent[i]);
                 }
 
                 if (gun.gunComponent[i].animator != null)
