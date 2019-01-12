@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
     public bool canEquip;
     public GameObject gunToDestroy;
 
-    public bool test;
-    private float jumpOffSet = 0f;
     public static float GravityAceleration = 9.81f;
 
     void Start()
@@ -36,41 +34,5 @@ public class GameManager : MonoBehaviour
 
         Physics.IgnoreLayerCollision(8, 9, true);
         //bullet = Resources.Load("Prefabs/Bullet") as GameObject;
-    }
-
-    private void Update()
-    {
-        if (test)
-        {
-            StartCoroutine(DoBobCycle());
-            test = false;
-        }
-    }
-
-    public float JumpOffSet()
-    {
-        return jumpOffSet;
-    }
-
-    public IEnumerator DoBobCycle()
-    {
-        // make the camera move down slightly
-        float t = 0f;
-        while (t < 0.2f)
-        {
-            jumpOffSet = Mathf.Lerp(0f, 0.1f, t / 0.2f);
-            t += Time.deltaTime;
-            yield return new WaitForFixedUpdate();
-        }
-
-        // make it move back to neutral
-        t = 0f;
-        while (t < 0.1f)
-        {
-            jumpOffSet = Mathf.Lerp(0.1f, 0f, t / 0.2f);
-            t += Time.deltaTime;
-            yield return new WaitForFixedUpdate();
-        }
-        jumpOffSet = 0f;
     }
 }

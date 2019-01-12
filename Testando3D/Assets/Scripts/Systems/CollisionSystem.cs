@@ -66,7 +66,7 @@ namespace Assets.Scripts.Systems
             {
                 PreviousPos[i] = _PreviousPos[i];
                 Pos[i] = GameManager.entityManager.GetComponentData<Position>(entities[i]).Value - (float3)PreviousPos[i];
-                //Debug.DrawRay(PreviousPos[i], Pos[i], Color.red);
+                Debug.DrawRay(PreviousPos[i], Pos[i], Color.red);
             }
 
             var raycastCommands = new NativeArray<RaycastCommand>(PreviousPos.Length, Allocator.TempJob);

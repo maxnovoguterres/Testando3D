@@ -23,7 +23,6 @@ namespace Assets.Scripts.Systems
             public Rigidbody rb;
             public CharacterController characterController;
         }
-        //public float jumpOffSet = 0f;
         public float playerHeight = 0f;
         public float3 playerCenter = 0f;
         public float cameraY = 0f;
@@ -41,7 +40,6 @@ namespace Assets.Scripts.Systems
 
             if (!player.Value.movementComponent.previouslyGrounded && player.Value.characterController.isGrounded)
             {
-                GameManager.Instance.test = true;
                 //PlayLandingSound();
                 player.Value.inputComponent.movement.y = 0f;
                 player.Value.movementComponent.jumping = false;
@@ -132,25 +130,5 @@ namespace Assets.Scripts.Systems
                 player.Value.inputComponent.Aim = false;
             }
         }
-
-        //public void DoBobCycle()
-        //{
-        //    // make the camera move down slightly
-        //    float t = 0f;
-        //    while (t < 0.2f)
-        //    {
-        //        GameManager.JumpOffSetS = Mathf.Lerp(0f, 0.1f, t / 0.2f);
-        //        t += Time.deltaTime;
-        //    }
-
-        //    // make it move back to neutral
-        //    t = 0f;
-        //    while (t < 0.1f)
-        //    {
-        //        GameManager.JumpOffSetS = Mathf.Lerp(0.1f, 0f, t / 0.2f);
-        //        t += Time.deltaTime;
-        //    }
-        //    GameManager.JumpOffSetS = 0f;
-        //}
     }
 }

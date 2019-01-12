@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Unity.Entities;
 using Assets.Scripts.Components;
 using UnityEngine;
+using Assets.Scripts.Helpers;
 
 namespace Assets.Scripts.Systems
 {
@@ -29,10 +30,22 @@ namespace Assets.Scripts.Systems
 
         Camera? camera;
         Player? player;
+        float jumpOffSet;
+        CountDown bobCycleCD = new CountDown(0.2f);
+
         protected override void OnUpdate()
         {
             if (camera == null) camera = GetEntities<Camera>()[0];
             if (player == null) player = GetEntities<Player>()[0];
+
+
+            if (!player.Value.movementComponent.previouslyGrounded && player.Value.characterController.isGrounded)
+            //{
+                //bobCycleCD.Rate = .2f;
+                bobCycleCD.StartToCount();
+            //}
+            if (!bobCycleCD.ReturnedToZero)
+                DoBobCycleStep1();
 
             UpdateCameraPosition(player.Value.characterController, player.Value.movementComponent, camera.Value.transform, camera.Value.cameraComponent);
             LookRotation(player.Value.transform, camera.Value.transform, camera.Value.cameraComponent);
@@ -48,12 +61,12 @@ namespace Assets.Scripts.Systems
                     DoHeadBob(characterController.velocity.magnitude +
                                       (movementComponent.walkSpeed * (Input.GetAxis("Sprint") != 0 ? 1f : 0.5f)), transform, cameraComponent);
                 newCameraPosition = transform.localPosition;
-                newCameraPosition.y = transform.localPosition.y - GameManager.Instance.JumpOffSet();
+                newCameraPosition.y = transform.localPosition.y - jumpOffSet;
             }
             else
             {
                 newCameraPosition = transform.localPosition;
-                newCameraPosition.y = transform.localPosition.y - GameManager.Instance.JumpOffSet();
+                newCameraPosition.y = transform.localPosition.y - jumpOffSet;
             }
             transform.localPosition = newCameraPosition;
         }
@@ -160,5 +173,30 @@ namespace Assets.Scripts.Systems
 
             return q;
         }
+
+        public void DoBobCycleStep1()
+        {
+            //if(bobCycleCD.Rate == .1f)
+            //{
+            //    DoBobCycleStep2();
+            //    return;
+            //}
+            jumpOffSet = Mathf.Lerp(0f, 0.1f, bobCycleCD.CoolDown / 0.2f);
+            bobCycleCD.DecreaseTime();
+
+            //if (bobCycleCD.ReturnedToZero)
+            //{
+            //    bobCycleCD.Rate = .1f;
+            //    bobCycleCD.StartToCount();
+            //}
+        }
+        //public void DoBobCycleStep2()
+        //{
+        //    jumpOffSet = Mathf.Lerp(0.1f, 0f, bobCycleCD.CoolDown / 0.2f);
+        //    bobCycleCD.DecreaseTime();
+
+        //    if (bobCycleCD.ReturnedToZero)
+        //        jumpOffSet = 0f;
+        //}
     }
 }

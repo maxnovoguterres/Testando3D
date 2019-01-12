@@ -12,7 +12,7 @@ namespace Assets.Scripts.Components
 {
     public class GunComponent : MonoBehaviour
     {
-        public double countDownRate;
+        public float countDownRate;
         public CountDown countDown;
         public Transform bocal;
         public float bulletSpeed;

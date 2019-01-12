@@ -8,10 +8,10 @@ namespace Assets.Scripts.Helpers
 {
     public class CountDown
     {
-        public double Rate { get; set; }
-        public double CoolDown { get; set; }
+        public float Rate { get; set; }
+        public float CoolDown { get; set; }
         public bool ReturnedToZero { get { return CoolDown <= 0; } }
-        public bool StartCountOnce { get; set; }
+        private bool StartCountOnce { get; set; }
 
         #region instance
         public CountDown()
@@ -20,7 +20,7 @@ namespace Assets.Scripts.Helpers
             Rate = 1;
             StartCountOnce = false;
         }
-        public CountDown(double rate, bool startCountOnce = false)
+        public CountDown(float rate, bool startCountOnce = false)
         {
             Rate = rate;
             CoolDown = 0;
