@@ -46,27 +46,26 @@ namespace Assets.Scripts.Systems
 
         public void Aim()
         {
+            GameManager.Instance.redDot.enabled = false;
             for (var i = 0; i < gun.Length; i++)
             {
 #if DEBUG
                 if (gun.gunComponent[i].player == null) continue;
 #endif
                 var aim = gun.gunComponent[i].player.GetComponent<InputComponent>().Aim;
-
                 if (aim)
                 {
+                    GameManager.Instance.redDot.enabled = false;
                     if (timer.ReturnedToZero)
                         timer.StartToCount();
 
                     timer.DecreaseTime();
                     if (timer.ReturnedToZero && Camera.main.fieldOfView != gun.gunComponent[i].scopedFOV)
-                    {
                         OnScoped(gun.gunComponent[i]);
-                    }
-
                 }
                 else
                 {
+                    GameManager.Instance.redDot.enabled = true;
                     timer.Zero();
                     if (Camera.main.fieldOfView != gun.gunComponent[i].normalFOV)
                         OnUnscoped(gun.gunComponent[i]);
@@ -74,8 +73,6 @@ namespace Assets.Scripts.Systems
 
                 if (gun.gunComponent[i].animator != null)
                     gun.gunComponent[i].animator.SetBool("Scoped", aim);
-
-
             }
         }
 

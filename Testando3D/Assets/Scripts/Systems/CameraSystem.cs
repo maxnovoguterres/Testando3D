@@ -56,7 +56,6 @@ namespace Assets.Scripts.Systems
                 newCameraPosition.y = transform.localPosition.y - GameManager.Instance.JumpOffSet();
             }
             transform.localPosition = newCameraPosition;
-            Debug.Log(GameManager.Instance.JumpOffSet());
         }
 
         public Vector3 DoHeadBob(float speed, Transform transform, CameraComponent cameraComponent)

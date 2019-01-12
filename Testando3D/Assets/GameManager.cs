@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public Mesh bullet;
 
     [Header("Canvas")]
+    public Image redDot;
     public Image scopeOverlay;
     public Text pickUpText;
 

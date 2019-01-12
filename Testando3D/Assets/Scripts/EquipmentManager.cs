@@ -59,6 +59,7 @@ public class EquipmentManager : MonoBehaviour {
             ob.transform.localRotation = Quaternion.identity;
             ob.GetComponent<GunComponent>().player = player;
             ob.GetComponent<GunComponent>().animator = gunHover.GetComponent<Animator>();
+            GameManager.Instance.redDot.enabled = true;
 
             if (oldItem != null)
             {
