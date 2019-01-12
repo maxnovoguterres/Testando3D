@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public static EntityManager entityManager;
+    public static EntityManager deleteEntityManager;
+    public static World deleteWorld;
+
     [Header("Prefabs")]
     public Mesh bullet;
 
@@ -31,6 +34,8 @@ public class GameManager : MonoBehaviour
             Destroy(this);
 
         entityManager = World.Active.GetOrCreateManager<EntityManager>();
+        deleteWorld = new World("deleteWorld");
+        deleteEntityManager = deleteWorld.GetOrCreateManager<EntityManager>();
 
         Physics.IgnoreLayerCollision(8, 9, true);
         //bullet = Resources.Load("Prefabs/Bullet") as GameObject;

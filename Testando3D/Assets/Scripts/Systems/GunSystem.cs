@@ -90,6 +90,7 @@ namespace Assets.Scripts.Systems
 
                 var nextPos = pos + (s[i] * math.forward(r[i]) * dTime);
 
+                GameManager.entityManager.SetComponentData(e[i], new DestroyAfterTime { lifeTime = 0f, timeToDestroy = 1f });
                 GameManager.entityManager.SetComponentData(e[i], new Position { Value = pos });
                 GameManager.entityManager.SetComponentData(e[i], new Rotation { Value = r[i] });
                 GameManager.entityManager.SetComponentData(e[i], new Speed { Value = s[i] });
