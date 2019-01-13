@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5792900534546139306}
   - component: {fileID: 5792900534547139178}
   - component: {fileID: 5792900534539757418}
-  - component: {fileID: 6388948730109216695}
   m_Layer: 0
   m_Name: cadeira
   m_TagString: Untagged
@@ -98,16 +97,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &6388948730109216695
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5792900534549140650}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.9192915, y: 2.1205454, z: 104.070854}
-  m_Center: {x: 0.016393306, y: 0.10078696, z: 33.08429}

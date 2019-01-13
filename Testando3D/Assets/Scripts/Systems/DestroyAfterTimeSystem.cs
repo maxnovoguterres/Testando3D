@@ -10,6 +10,7 @@ using Assets.Scripts.Components;
 
 namespace Assets.Scripts.Systems
 {
+    public class MyBarrier : BarrierSystem { }
     [BurstCompile]
     public class DestroyAfterTimeSystem : ComponentSystem
     {
@@ -22,23 +23,28 @@ namespace Assets.Scripts.Systems
 
         [Inject] ObjectsToDestroy objectsToDestroy;
 
+        [Inject] private MyBarrier m_Barrier;
+
         protected override void OnUpdate()
         {
-            Debug.Log(objectsToDestroy.Length);
-            List<Entity> e = new List<Entity>();
+            //Debug.Log(objectsToDestroy.Length);
+            //List<Entity> e = new List<Entity>();
 
-            for (int i = 0; i < objectsToDestroy.Length; i++)
-            {
-                if (objectsToDestroy.destroyAfterTime[i].delete)
-                {
-                    e.Add(objectsToDestroy.e[i]);
-                }
-            }
-            for (int i = 0; i < e.Count; i++)
-            {
-                GameManager.entityManager.DestroyEntity(e[i]);
-            }
+            //for (int i = 0; i < objectsToDestroy.Length; i++)
+            //{
+            //    if (objectsToDestroy.destroyAfterTime[i].delete)
+            //    {
+            //        e.Add(objectsToDestroy.e[i]);
+            //    }
+            //}
+            //NativeArray<Entity> _e = new NativeArray<Entity>(e.Count, Allocator.Temp);
+            //for (int i = 0; i < e.Count; i++)
+            //{
+            ////PostUpdateCommands.DestroyEntity(e[i]);
+            //    _e[i] = e[i];
+            //}
+            //GameManager.entityManager.DestroyEntity(_e);
+            //_e.Dispose();
         }
     }
 }
-

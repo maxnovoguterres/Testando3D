@@ -64,11 +64,9 @@ public class EquipmentManager : MonoBehaviour {
             if (oldItem != null)
             {
                 var _ob = Instantiate(oldItem.pickUpOb, new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z), Quaternion.identity);
-                //Destroy(_ob.GetComponent<GunComponent>());
-                //_ob.AddComponent(typeof(Rigidbody));
-                //_ob.AddComponent(typeof(BoxCollider));
                 _ob.transform.parent = gunsParent;
                 _ob.name = oldItem.pickUpOb.name;
+                _ob.layer = 9;
 
                 foreach (var child in childs)
                     Destroy(child.gameObject);

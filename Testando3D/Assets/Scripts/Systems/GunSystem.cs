@@ -146,6 +146,7 @@ namespace Assets.Scripts.Systems
                 p[i] = _p[i];
                 r[i] = _r[i];
                 s[i] = _s[i];
+
                 GameManager.entityManager.SetSharedComponentData(e[i], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
             }
 
