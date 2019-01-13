@@ -21,5 +21,13 @@ namespace Assets.Scripts.Components
         public float normalFOV;
         public bool isScoped;
         public GameObject player;
+        public float Damage;
+        [Range(0,1)] public float Accuracy;
+        public float CurrentAccuracy;
+        public int MaxAmmo;
+        public int Ammo;
+        [Range(0, 1)] public float Recoil;
+        public int qtdProjectile;
+        public float distanceOfEachProjectile;
     }
 }
