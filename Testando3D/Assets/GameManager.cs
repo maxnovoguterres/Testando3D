@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Mesh bullet;
 
     [Header("Canvas")]
-    public Image redDot;
+    public GameObject redDot;
+    [HideInInspector] public Image[] arrows;
     public Image scopeOverlay;
     public Text pickUpText;
 
@@ -44,8 +45,13 @@ public class GameManager : MonoBehaviour
 
         entityManager = World.Active.GetOrCreateManager<EntityManager>();
         bullet = ((GameObject)Resources.Load("Mesh/bullet")).GetComponent<MeshFilter>().sharedMesh;
+
+        #region [redDot]
+        arrows = redDot.GetComponentsInChildren<Image>();
+        #endregion
+
         Physics.IgnoreLayerCollision(8, 9, true);
-        //bullet = Resources.Load("Prefabs/Bullet") as GameObject;
+
         SetObjectInScene();
     }
 
@@ -78,5 +84,11 @@ public class GameManager : MonoBehaviour
         }
 
         e.Dispose();
+    }
+
+    public void EnableRedDot(bool enable)
+    {
+        for (var i = 0; i < arrows.Length; i++)
+            arrows[i].enabled = enable;
     }
 }

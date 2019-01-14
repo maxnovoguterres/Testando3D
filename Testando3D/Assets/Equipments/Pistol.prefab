@@ -142,3 +142,11 @@ MonoBehaviour:
   normalFOV: 36
   isScoped: 0
   player: {fileID: 0}
+  Damage: 10
+  Accuracy: 0.1
+  CurrentAccuracy: 0
+  MaxAmmo: 7
+  Ammo: 0
+  Recoil: 0.2
+  qtdProjectile: 1
+  distanceOfEachProjectile: 0

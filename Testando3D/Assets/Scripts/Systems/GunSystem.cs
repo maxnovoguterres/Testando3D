@@ -46,7 +46,7 @@ namespace Assets.Scripts.Systems
 
         public void Aim()
         {
-            GameManager.Instance.redDot.enabled = false;
+            GameManager.Instance.EnableRedDot(false);
             for (var i = 0; i < gun.Length; i++)
             {
 #if DEBUG
@@ -55,7 +55,7 @@ namespace Assets.Scripts.Systems
                 var aim = gun.gunComponent[i].player.GetComponent<InputComponent>().Aim;
                 if (aim)
                 {
-                    GameManager.Instance.redDot.enabled = false;
+                    GameManager.Instance.EnableRedDot(false);
                     if (timer.ReturnedToZero)
                         timer.StartToCount();
 
@@ -65,7 +65,7 @@ namespace Assets.Scripts.Systems
                 }
                 else
                 {
-                    GameManager.Instance.redDot.enabled = true;
+                    GameManager.Instance.EnableRedDot(true);
                     timer.Zero();
                     if (Camera.main.fieldOfView != gun.gunComponent[i].normalFOV)
                         OnUnscoped(gun.gunComponent[i]);

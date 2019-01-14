@@ -98,7 +98,9 @@ class ECSUtilsWindows : EditorWindow
                 Mesh = new MeshInfo { PrefabName = prefabName, MeshName = meshName }
             });
 
-            obj.transform.parent = ecsColliders.transform;
+            if (string.IsNullOrWhiteSpace(parentName))
+                obj.transform.parent = ecsColliders.transform;
+
             DestroyImmediate(obj.GetComponent<MeshRenderer>());
             DestroyImmediate(obj.GetComponent<MeshFilter>());
 
