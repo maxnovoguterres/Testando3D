@@ -42,6 +42,21 @@ namespace Assets.Scripts.Systems
         {
             Aim();
             Fire();
+
+            var ca = new NativeArray<float>(gun.Length, Allocator.TempJob);
+
+            for (var i = 0; i < gun.Length; i++)
+                ca[i] = gun.gunComponent[i].CurrentAccuracy;
+
+            var IncreaseAccurrency = new UpdateAccuracy
+            {
+                ca = ca,
+                dTime = Time.deltaTime
+            }.Schedule(gun.Length, 32);
+
+            IncreaseAccurrency.Complete();
+
+            ca.Dispose();
         }
 
         public void Aim()
@@ -76,6 +91,82 @@ namespace Assets.Scripts.Systems
             }
         }
 
+        void Fire()
+        {
+            List<Vector3> _p = new List<Vector3>();
+            List<float> _s = new List<float>();
+            List<Quaternion> _r = new List<Quaternion>();
+            List<Entity> _e = new List<Entity>();
+            List<float> _a = new List<float>();
+            List<float> _ca = new List<float>();
+
+            for (var i = 0; i < gun.Length; i++)
+            {
+                if (gun.gunComponent[i].countDown == null)
+                    gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
+
+#if DEBUG
+                if (gun.gunComponent[i].player == null) continue;
+#endif
+                CountDown.DecreaseTime(gun.gunComponent[i].countDown);
+
+                if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
+                {
+                    _p.Add(gun.gunComponent[i].bocal.position);
+                    _r.Add(gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation);
+                    _s.Add(gun.gunComponent[i].bulletSpeed);
+                    _a.Add(gun.gunComponent[i].Accuracy);
+                    _ca.Add(gun.gunComponent[i].CurrentAccuracy);
+                    gun.gunComponent[i].countDown.StartToCount();
+                }
+            }
+
+            if (_p.Count == 0) return;
+
+            NativeArray<Vector3> p = new NativeArray<Vector3>(_p.Count, Allocator.TempJob);
+            NativeArray<float> s = new NativeArray<float>(_s.Count, Allocator.TempJob);
+            NativeArray<Quaternion> r = new NativeArray<Quaternion>(_r.Count, Allocator.TempJob);
+            NativeArray<Entity> e = new NativeArray<Entity>(_p.Count, Allocator.TempJob);
+            NativeArray<float> a = new NativeArray<float>(_r.Count, Allocator.TempJob);
+            NativeArray<float> ca = new NativeArray<float>(_p.Count, Allocator.TempJob);
+            GameManager.entityManager.CreateEntity(EntityArchetypes.bullet, e);
+
+            for (var i = 0; i < _p.Count; i++)
+            {
+                p[i] = _p[i];
+                r[i] = _r[i];
+                s[i] = _s[i];
+                a[i] = _a[i];
+                ca[i] = _ca[i];
+
+                GameManager.entityManager.SetSharedComponentData(e[i], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
+            }
+
+            var bulletDependency = new BulletSpawn
+            {
+                p = p,
+                r = r,
+                s = s,
+                e = e,
+                dTime = Time.deltaTime
+            }.Schedule(p.Length, 32);
+
+            var increaseAccuracy = new IncreaseAccuracy
+            {
+                a = a,
+                ca = ca
+            }.Schedule(p.Length, 32, bulletDependency);
+
+            increaseAccuracy.Complete();
+
+            p.Dispose();
+            s.Dispose();
+            r.Dispose();
+            e.Dispose();
+            a.Dispose();
+            ca.Dispose();
+        }
+
         struct BulletSpawn : IJobParallelFor
         {
             public NativeArray<Vector3> p;
@@ -107,64 +198,25 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        void Fire()
+        struct IncreaseAccuracy : IJobParallelFor
         {
-            List<Vector3> _p = new List<Vector3>();
-            List<float> _s = new List<float>();
-            List<Quaternion> _r = new List<Quaternion>();
-            List<Entity> _e = new List<Entity>();
+            public NativeArray<float> a;
+            public NativeArray<float> ca;
 
-            for (var i = 0; i < gun.Length; i++)
+            public void Execute(int i)
             {
-                if (gun.gunComponent[i].countDown == null)
-                    gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
-
-#if DEBUG
-                if (gun.gunComponent[i].player == null) continue;
-#endif
-                CountDown.DecreaseTime(gun.gunComponent[i].countDown);
-
-                if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
-                {
-                    _p.Add(gun.gunComponent[i].bocal.position);
-                    _r.Add(gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation);
-                    _s.Add(gun.gunComponent[i].bulletSpeed);
-                    gun.gunComponent[i].countDown.StartToCount();
-                }
+               ca[i] = (ca[i] >= 1 || ca[i] + a[i] > 1)? 1 : a[i];
             }
+        }
+        struct UpdateAccuracy : IJobParallelFor
+        {
+            public float dTime;
+            public NativeArray<float> ca;
 
-            if (_p.Count == 0) return;
-
-            NativeArray<Vector3> p = new NativeArray<Vector3>(_p.Count, Allocator.TempJob);
-            NativeArray<float> s = new NativeArray<float>(_s.Count, Allocator.TempJob);
-            NativeArray<Quaternion> r = new NativeArray<Quaternion>(_r.Count, Allocator.TempJob);
-            NativeArray<Entity> e = new NativeArray<Entity>(_p.Count, Allocator.TempJob);
-            GameManager.entityManager.CreateEntity(EntityArchetypes.bullet, e);
-
-            for (var i = 0; i < _p.Count; i++)
+            public void Execute(int i)
             {
-                p[i] = _p[i];
-                r[i] = _r[i];
-                s[i] = _s[i];
-
-                GameManager.entityManager.SetSharedComponentData(e[i], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
+                ca[i] -= dTime;
             }
-
-            var bulletDependency = new BulletSpawn
-            {
-                p = p,
-                r = r,
-                s = s,
-                e = e,
-                dTime = Time.deltaTime
-            }.Schedule(p.Length, 32);
-
-            bulletDependency.Complete();
-
-            p.Dispose();
-            s.Dispose();
-            r.Dispose();
-            e.Dispose();
         }
 
         void OnScoped(GunComponent gunComponent)
