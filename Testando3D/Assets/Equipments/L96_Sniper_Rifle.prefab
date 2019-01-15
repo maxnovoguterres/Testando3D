@@ -115,6 +115,7 @@ MonoBehaviour:
   player: {fileID: 0}
   Damage: 100
   Accuracy: 0.1
+  IncreaseAccuracy: 0.75
   CurrentAccuracy: 0
   MaxAmmo: 1
   CurrentAmmo: 1

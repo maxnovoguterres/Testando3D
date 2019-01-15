@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [Header("Canvas")]
     public GameObject redDot;
     [HideInInspector] public Image[] arrows;
+    [HideInInspector] public Vector3[] arrowsPos = new Vector3[4];
     public Image scopeOverlay;
     public Text pickUpText;
     public Image ammoImage;
@@ -50,6 +51,8 @@ public class GameManager : MonoBehaviour
 
         #region [redDot]
         arrows = redDot.GetComponentsInChildren<Image>();
+        for (var i = 0; i < 4; i++)
+            arrowsPos[i] = arrows[i].transform.position;
         #endregion
 
         Physics.IgnoreLayerCollision(8, 9, true);

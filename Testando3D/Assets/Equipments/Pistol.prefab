@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b589d09bd528c040afdd84ed26e4c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countDownRate: 0.5
+  countDownRate: 0.2
   bocal: {fileID: 9054954967384454711}
   bulletSpeed: 200
   animator: {fileID: 0}
@@ -144,6 +144,7 @@ MonoBehaviour:
   player: {fileID: 0}
   Damage: 10
   Accuracy: 0.1
+  IncreaseAccuracy: 0.1
   CurrentAccuracy: 0
   MaxAmmo: 7
   CurrentAmmo: 7

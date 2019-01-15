@@ -23,6 +23,7 @@ namespace Assets.Scripts.Components
         public GameObject player;
         public float Damage;
         [Range(0,1)] public float Accuracy;
+        [Range(0,1)] public float IncreaseAccuracy;
         public float CurrentAccuracy;
         public int MaxAmmo;
         public int CurrentAmmo;

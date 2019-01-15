@@ -94,14 +94,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countDownRate: 0.1
   bocal: {fileID: 9044059032946276539}
-  bulletSpeed: 50
+  bulletSpeed: 120
   animator: {fileID: 0}
   scopedFOV: 36
   normalFOV: 36
   isScoped: 0
   player: {fileID: 0}
   Damage: 10
-  Accuracy: 0.6
+  Accuracy: 0.3
+  IncreaseAccuracy: 0.15
   CurrentAccuracy: 0
   MaxAmmo: 30
   CurrentAmmo: 30
