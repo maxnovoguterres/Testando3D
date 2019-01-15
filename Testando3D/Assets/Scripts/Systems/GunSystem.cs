@@ -68,6 +68,11 @@ namespace Assets.Scripts.Systems
 
             IncreaseAccurrency.Complete();
 
+            for (var i = 0; i < gun.Length; i++)
+            {
+                gun.gunComponent[i].CurrentAccuracy = ca[i];
+            }
+            Debug.Log(gun.gunComponent[0].CurrentAccuracy);
             ca.Dispose();
         }
 
@@ -224,6 +229,11 @@ namespace Assets.Scripts.Systems
 
             increaseAccuracy.Complete();
 
+            for (var i = 0; i < _p.Count; i++)
+            {
+                gun.gunComponent[i].CurrentAccuracy = ca[i];
+            }
+
             p.Dispose();
             s.Dispose();
             r.Dispose();
@@ -270,7 +280,7 @@ namespace Assets.Scripts.Systems
 
             public void Execute(int i)
             {
-               ca[i] = (ca[i] >= 1 || ca[i] + a[i] > 1)? 1 : a[i];
+               ca[i] = (ca[i] >= 1 || ca[i] + a[i] > 1)? 1 : ca[i] + a[i];
             }
         }
         struct UpdateAccuracy : IJobParallelFor
@@ -280,7 +290,7 @@ namespace Assets.Scripts.Systems
 
             public void Execute(int i)
             {
-                ca[i] -= dTime;
+                ca[i] = (ca[i] <= 0 || ca[i] - dTime < 0) ? 0 : ca[i] - dTime;
             }
         }
 
