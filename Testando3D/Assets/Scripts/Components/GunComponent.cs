@@ -25,7 +25,9 @@ namespace Assets.Scripts.Components
         [Range(0,1)] public float Accuracy;
         public float CurrentAccuracy;
         public int MaxAmmo;
-        public int Ammo;
+        public int CurrentAmmo;
+        public int ExtraAmmo;
+        public Sprite AmmoImage;
         [Range(0, 1)] public float Recoil;
         public int qtdProjectile;
         public float distanceOfEachProjectile;

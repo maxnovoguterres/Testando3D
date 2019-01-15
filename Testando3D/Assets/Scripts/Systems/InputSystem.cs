@@ -112,7 +112,7 @@ namespace Assets.Scripts.Systems
             float speedPercent = player.Value.characterController.velocity.magnitude / player.Value.movementComponent.runSpeed;
             player.Value.animator.SetFloat("speedPercent", speedPercent, .1f, Time.deltaTime);
 
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire1") && !player.Value.inputComponent.isReloading)
             {
                 player.Value.inputComponent.Shoot = true;
             }
@@ -121,13 +121,18 @@ namespace Assets.Scripts.Systems
                 player.Value.inputComponent.Shoot = false;
             }
 
-            if (Input.GetButtonDown("Fire2"))
+            if (Input.GetButtonDown("Fire2") && !player.Value.inputComponent.isReloading)
             {
                 player.Value.inputComponent.Aim = true;
             }
             if (Input.GetButtonUp("Fire2"))
             {
                 player.Value.inputComponent.Aim = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.R) && !player.Value.inputComponent.Aim)
+            {
+                player.Value.inputComponent.isReloading = true;
             }
         }
     }

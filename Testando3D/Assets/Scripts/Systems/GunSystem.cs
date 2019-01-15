@@ -18,6 +18,7 @@ namespace Assets.Scripts.Systems
     public class GunSystem : ComponentSystem
     {
         CountDown timer = new CountDown(.15f, true);
+        float reloadTimer = 0;
 
         public struct Gun
         {
@@ -40,13 +41,24 @@ namespace Assets.Scripts.Systems
 
         protected override void OnUpdate()
         {
+            if (!GameManager.Instance.ammoImage.enabled)
+            {
+                GameManager.Instance.ammoImage.enabled = true;
+                GameManager.Instance.ammoText.enabled = true;
+            }
+
             Aim();
             Fire();
+            Reload();
 
             var ca = new NativeArray<float>(gun.Length, Allocator.TempJob);
 
             for (var i = 0; i < gun.Length; i++)
+            {
                 ca[i] = gun.gunComponent[i].CurrentAccuracy;
+                GameManager.Instance.ammoImage.sprite = gun.gunComponent[i].AmmoImage;
+                GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
+            }
 
             var IncreaseAccurrency = new UpdateAccuracy
             {
@@ -57,6 +69,50 @@ namespace Assets.Scripts.Systems
             IncreaseAccurrency.Complete();
 
             ca.Dispose();
+        }
+
+        void Reload()
+        {
+            for (int i = 0; i < gun.Length; i++)
+            {
+                if (gun.gunComponent[i].player == null) continue;
+
+                if (gun.gunComponent[i].ExtraAmmo <= 0)
+                    gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = false;
+
+                var IsReloading = gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading;
+
+                if (IsReloading && gun.gunComponent[i].CurrentAmmo < gun.gunComponent[i].MaxAmmo && gun.gunComponent[i].ExtraAmmo != 0)
+                {
+                    reloadTimer += Time.deltaTime;
+                    if (reloadTimer >= 1.5f)
+                    {
+                        if (gun.gunComponent[i].CurrentAmmo + gun.gunComponent[i].ExtraAmmo < 30)
+                        {
+                            gun.gunComponent[i].CurrentAmmo += gun.gunComponent[i].ExtraAmmo;
+                            gun.gunComponent[i].ExtraAmmo = 0;
+                        }
+                        else
+                        {
+                            gun.gunComponent[i].ExtraAmmo -= gun.gunComponent[i].MaxAmmo - gun.gunComponent[i].CurrentAmmo;
+                            gun.gunComponent[i].CurrentAmmo += gun.gunComponent[i].MaxAmmo - gun.gunComponent[i].CurrentAmmo;
+                        }
+
+                        GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
+                        Debug.Log("Arma Recarregada!");
+                        gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = false;
+                        reloadTimer = 0;
+                    }
+                }
+                else if (gun.gunComponent[i].CurrentAmmo == gun.gunComponent[i].MaxAmmo)
+                {
+                    IsReloading = false;
+                    gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = false;
+                }
+
+                if (gun.gunComponent[i].animator != null)
+                    gun.gunComponent[i].animator.SetBool("isReloading", IsReloading);
+            }
         }
 
         public void Aim()
@@ -102,6 +158,9 @@ namespace Assets.Scripts.Systems
 
             for (var i = 0; i < gun.Length; i++)
             {
+                if (gun.gunComponent[i].CurrentAmmo <= 0)
+                    gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot = false;
+
                 if (gun.gunComponent[i].countDown == null)
                     gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
 
@@ -118,6 +177,12 @@ namespace Assets.Scripts.Systems
                     _a.Add(gun.gunComponent[i].Accuracy);
                     _ca.Add(gun.gunComponent[i].CurrentAccuracy);
                     gun.gunComponent[i].countDown.StartToCount();
+                    gun.gunComponent[i].CurrentAmmo -= 1;
+                    if (gun.gunComponent[i].scopedFOV == 15)
+                        gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = true;
+                    GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
+                    if (gun.gunComponent[i].CurrentAmmo <= 0)
+                        gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot = false;
                 }
             }
 

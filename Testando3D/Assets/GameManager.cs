@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Image[] arrows;
     public Image scopeOverlay;
     public Text pickUpText;
+    public Image ammoImage;
+    public Text ammoText;
 
     public GameObject ECSColliders;
 
