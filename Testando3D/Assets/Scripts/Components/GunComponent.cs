@@ -30,6 +30,7 @@ namespace Assets.Scripts.Components
         public int ExtraAmmo;
         public Sprite AmmoImage;
         [Range(0, 1)] public float Recoil;
+        [Range(0, 1)] public float IncreaseRecoil;
         public int qtdProjectile;
         public float distanceOfEachProjectile;
     }

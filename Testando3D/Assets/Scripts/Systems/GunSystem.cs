@@ -29,7 +29,7 @@ namespace Assets.Scripts.Systems
         }
 
         [Inject] Gun gun;
-        //UnityEngine.Random random = new UnityEngine.Random();
+        Dictionary<GameObject, PlayerMovementComponent> playerMovementComponent = new Dictionary<GameObject, PlayerMovementComponent>();
 
         protected override void OnCreateManager()
         {
@@ -42,7 +42,7 @@ namespace Assets.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            var playerMovementComponent = new Dictionary<GameObject, PlayerMovementComponent>();
+            playerMovementComponent = new Dictionary<GameObject, PlayerMovementComponent>();
 
             if (!GameManager.Instance.ammoImage.enabled)
             {
@@ -56,7 +56,7 @@ namespace Assets.Scripts.Systems
 
             var ca = new NativeArray<float>(gun.Length, Allocator.TempJob);
             var a = new NativeArray<float>(gun.Length, Allocator.TempJob);
-            var crounch = new NativeArray<float>(gun.Length, Allocator.TempJob);
+            var m = new NativeArray<float>(gun.Length, Allocator.TempJob);
 
             for (var i = 0; i < gun.Length; i++)
             {
@@ -66,7 +66,7 @@ namespace Assets.Scripts.Systems
 
                 ca[i] = gun.gunComponent[i].CurrentAccuracy;
                 a[i] = gun.gunComponent[i].Accuracy;
-                crounch[i] = pmc.isCrouching? .5f : pmc.jumping? 2 : pmc.isWalking? 1.2f : pmc.isRunning? 1.5f : 1;
+                m[i] = pmc.isCrouching? .5f : pmc.jumping? 2 : pmc.isWalking? 1.2f : pmc.isRunning? 1.5f : 1;
                 GameManager.Instance.ammoImage.sprite = gun.gunComponent[i].AmmoImage;
                 GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
             }
@@ -74,9 +74,9 @@ namespace Assets.Scripts.Systems
             var updateAccuracy = new UpdateAccuracy
             {
                 ca = ca,
-                dTime = Time.deltaTime / 2,
+                dTime = Time.deltaTime * .5f,
                 a = a,
-                cr = crounch,
+                m = m,
             }.Schedule(gun.Length, 32);
 
             updateAccuracy.Complete();
@@ -89,7 +89,7 @@ namespace Assets.Scripts.Systems
 
             ca.Dispose();
             a.Dispose();
-            crounch.Dispose();
+            m.Dispose();
         }
 
         void UpdateArrows(GunComponent gunC)
@@ -191,6 +191,9 @@ namespace Assets.Scripts.Systems
             List<float> _rca = new List<float>();
             List<int> _ru = new List<int>();
             List<int> _rl = new List<int>();
+            List<float> _m = new List<float>();
+            List<float> _re = new List<float>();
+            List<float> _iRe = new List<float>();
 
             for (var i = 0; i < gun.Length; i++)
             {
@@ -207,6 +210,10 @@ namespace Assets.Scripts.Systems
 
                 if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
                 {
+                    PlayerMovementComponent pmc;
+                    if (!playerMovementComponent.ContainsKey(gun.gunComponent[i].player)) playerMovementComponent.Add(gun.gunComponent[i].player, gun.gunComponent[i].player.GetComponent<PlayerMovementComponent>());
+                    pmc = playerMovementComponent[gun.gunComponent[i].player];
+
                     for (int j = 0; j < gun.gunComponent[i].qtdProjectile; j++)
                     {
                         _p.Add(gun.gunComponent[i].bocal.position);
@@ -217,6 +224,9 @@ namespace Assets.Scripts.Systems
                         _rca.Add(UnityEngine.Random.Range(0, gun.gunComponent[i].CurrentAccuracy));
                         _ru.Add(UnityEngine.Random.Range(0, 2));
                         _rl.Add(UnityEngine.Random.Range(0, 2));
+                        _m.Add(pmc.isCrouching ? .5f : pmc.jumping ? 2 : pmc.isWalking ? 1.2f : pmc.isRunning ? 1.5f : 1);
+                        _re.Add(gun.gunComponent[i].Recoil);
+                        _iRe.Add(gun.gunComponent[i].IncreaseRecoil);
                         gun.gunComponent[i].countDown.StartToCount();
                         if (j == 0)
                             gun.gunComponent[i].CurrentAmmo -= 1;
@@ -233,13 +243,16 @@ namespace Assets.Scripts.Systems
 
             NativeArray<Vector3> p = new NativeArray<Vector3>(_p.Count, Allocator.TempJob);
             NativeArray<float> s = new NativeArray<float>(_s.Count, Allocator.TempJob);
-            NativeArray<Quaternion> r = new NativeArray<Quaternion>(_r.Count, Allocator.TempJob);
+            NativeArray<quaternion> r = new NativeArray<quaternion>(_r.Count, Allocator.TempJob);
             NativeArray<Entity> e = new NativeArray<Entity>(_p.Count, Allocator.TempJob);
             NativeArray<float> ia = new NativeArray<float>(_r.Count, Allocator.TempJob);
             NativeArray<float> ca = new NativeArray<float>(_p.Count, Allocator.TempJob);
             NativeArray<float> rca = new NativeArray<float>(_p.Count, Allocator.TempJob);
             NativeArray<int> ru = new NativeArray<int>(_p.Count, Allocator.TempJob);
             NativeArray<int> rl = new NativeArray<int>(_p.Count, Allocator.TempJob);
+            NativeArray<float> m = new NativeArray<float>(_p.Count, Allocator.TempJob);
+            NativeArray<float> re = new NativeArray<float>(_p.Count, Allocator.TempJob);
+            NativeArray<float> iRe = new NativeArray<float>(_p.Count, Allocator.TempJob);
             GameManager.entityManager.CreateEntity(EntityArchetypes.bullet, e);
 
             for (var i = 0; i < _p.Count; i++)
@@ -252,6 +265,9 @@ namespace Assets.Scripts.Systems
                 rca[i] = _rca[i];
                 ru[i] = _ru[i];
                 rl[i] = _rl[i];
+                m[i] = _m[i];
+                re[i] = _re[i];
+                iRe[i] = _iRe[i];
 
                 GameManager.entityManager.SetSharedComponentData(e[i], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
             }
@@ -271,13 +287,25 @@ namespace Assets.Scripts.Systems
             var increaseAccuracy = new IncreaseAccuracy
             {
                 ia = ia,
-                ca = ca
+                ca = ca,
+                m = m
             }.Schedule(p.Length, 32, bulletDependency);
 
-            increaseAccuracy.Complete();
+            var increaseRecoil = new IncreaseRecoil
+            {
+                ro = r,
+                re = re,
+                iRe = iRe,
+                m = m,
+            }.Schedule(p.Length, 32, increaseAccuracy);
 
-            gun.gunComponent[0].CurrentAccuracy = ca[0];
+            increaseRecoil.Complete();
 
+            for (var i = 0; i < p.Length; i++)
+            {
+                gun.gunComponent[i].player.transform.Find("FirstPersonCamera").transform.rotation = r[i];
+                gun.gunComponent[0].CurrentAccuracy = ca[0];
+            }
             p.Dispose();
             s.Dispose();
             r.Dispose();
@@ -287,13 +315,16 @@ namespace Assets.Scripts.Systems
             rca.Dispose();
             ru.Dispose();
             rl.Dispose();
+            m.Dispose();
+            re.Dispose();
+            iRe.Dispose();
         }
 
         struct BulletSpawn : IJobParallelFor
         {
             public NativeArray<Vector3> p;
             public NativeArray<float> s;
-            public NativeArray<Quaternion> r;
+            public NativeArray<quaternion> r;
             public NativeArray<Entity> e;
             public NativeArray<float> rca;
             public NativeArray<int> ru;
@@ -308,7 +339,7 @@ namespace Assets.Scripts.Systems
                 var rM = (rca[i] * .02f);
                 GameManager.entityManager.SetComponentData(e[i], new DestroyAfterTime { lifeTime = 0f, timeToDestroy = 1f });
                 GameManager.entityManager.SetComponentData(e[i], new Position { Value = pos });
-                GameManager.entityManager.SetComponentData(e[i], new Rotation { Value = new quaternion(r[i].x, r[i].y + rM * (rl[i] % 2 == 0 ? +1 : -1), r[i].z + rM * 2 * (ru[i] % 2 == 0 ? +1 : -1), r[i].w) });
+                GameManager.entityManager.SetComponentData(e[i], new Rotation { Value = new quaternion(r[i].value.x, r[i].value.y + rM * (rl[i] % 2 == 0 ? +1 : -1), r[i].value.z + rM * 2 * (ru[i] % 2 == 0 ? +1 : -1), r[i].value.w) });
                 GameManager.entityManager.SetComponentData(e[i], new Speed { Value = s[i] });
                 GameManager.entityManager.SetComponentData(e[i], new Components.Collision { Radius = 0.1f });
                 GameManager.entityManager.SetComponentData(e[i], new Scale { Value = new float3(0.02f, 0.02f, 0.02f) });
@@ -327,10 +358,12 @@ namespace Assets.Scripts.Systems
         {
             public NativeArray<float> ia;
             public NativeArray<float> ca;
+            public NativeArray<float> m;
 
             public void Execute(int i)
             {
-                ca[i] = (ca[i] >= 1 || ca[i] + ia[i] > 1) ? 1 : ca[i] + ia[i];
+                var _ia = ia[i] * m[i];
+                ca[i] = (ca[i] >= 1 || ca[i] + _ia > 1) ? 1 : ca[i] + _ia;
             }
         }
         struct UpdateAccuracy : IJobParallelFor
@@ -338,12 +371,43 @@ namespace Assets.Scripts.Systems
             public float dTime;
             public NativeArray<float> a;
             public NativeArray<float> ca;
-            public NativeArray<float> cr;
+            public NativeArray<float> m;
 
             public void Execute(int i)
             {
-                var _a = a[i] * cr[i];
+                var _a = a[i] * m[i];
                 ca[i] = (ca[i] < _a || ca[i] - dTime < _a) ? _a : ca[i] - dTime;
+            }
+        }
+
+        struct IncreaseRecoil : IJobParallelFor
+        {
+            public NativeArray<quaternion> ro;
+            public NativeArray<float> re;
+            public NativeArray<float> iRe;
+            public NativeArray<float> m;
+
+            public void Execute(int i)
+            {
+                var _iRe = iRe[i] * m[i];
+                var _ro = ro[i];
+                _ro.value.x -= (re[i] >= .002f || re[i] + _iRe > .002f) ? .002f : re[i] + _iRe;
+                ro[i] = _ro;
+            }
+        }
+        struct UpdateRecoil : IJobParallelFor
+        {
+            public float dTime;
+            public NativeArray<quaternion> ro;
+            public NativeArray<float> re;
+            public NativeArray<float> m;
+
+            public void Execute(int i)
+            {
+                var _d = dTime * m[i];
+                var _ro = ro[i];
+                _ro.value.x = (re[i] < 0 || re[i] - _d < 0) ? 0 : re[i] - _d;
+                ro[i] = _ro;
             }
         }
 
