@@ -120,7 +120,7 @@ namespace Assets.Scripts.Systems
                     reloadTimer += Time.deltaTime;
                     if (reloadTimer >= 1.5f)
                     {
-                        if (gun.gunComponent[i].CurrentAmmo + gun.gunComponent[i].ExtraAmmo < 30)
+                        if (gun.gunComponent[i].CurrentAmmo + gun.gunComponent[i].ExtraAmmo < gun.gunComponent[i].MaxAmmo)
                         {
                             gun.gunComponent[i].CurrentAmmo += gun.gunComponent[i].ExtraAmmo;
                             gun.gunComponent[i].ExtraAmmo = 0;
@@ -132,7 +132,7 @@ namespace Assets.Scripts.Systems
                         }
 
                         GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
-                        Debug.Log("Arma Recarregada!");
+                        
                         gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = false;
                         reloadTimer = 0;
                     }
@@ -207,21 +207,25 @@ namespace Assets.Scripts.Systems
 
                 if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
                 {
-                    _p.Add(gun.gunComponent[i].bocal.position);
-                    _r.Add(gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation);
-                    _s.Add(gun.gunComponent[i].bulletSpeed);
-                    _ia.Add(gun.gunComponent[i].IncreaseAccuracy);
-                    _ca.Add(gun.gunComponent[i].CurrentAccuracy);
-                    _rca.Add(UnityEngine.Random.Range(0, gun.gunComponent[i].CurrentAccuracy));
-                    _ru.Add(UnityEngine.Random.Range(0, 2));
-                    _rl.Add(UnityEngine.Random.Range(0, 2));
-                    gun.gunComponent[i].countDown.StartToCount();
-                    gun.gunComponent[i].CurrentAmmo -= 1;
-                    if (gun.gunComponent[i].scopedFOV == 15)
-                        gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = true;
-                    GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
-                    if (gun.gunComponent[i].CurrentAmmo <= 0)
-                        gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot = false;
+                    for (int j = 0; j < gun.gunComponent[i].qtdProjectile; j++)
+                    {
+                        _p.Add(gun.gunComponent[i].bocal.position);
+                        _r.Add(gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation);
+                        _s.Add(gun.gunComponent[i].bulletSpeed);
+                        _ia.Add(gun.gunComponent[i].IncreaseAccuracy);
+                        _ca.Add(gun.gunComponent[i].CurrentAccuracy);
+                        _rca.Add(UnityEngine.Random.Range(0, gun.gunComponent[i].CurrentAccuracy));
+                        _ru.Add(UnityEngine.Random.Range(0, 2));
+                        _rl.Add(UnityEngine.Random.Range(0, 2));
+                        gun.gunComponent[i].countDown.StartToCount();
+                        if (j == 0)
+                            gun.gunComponent[i].CurrentAmmo -= 1;
+                        if (gun.gunComponent[i].scopedFOV == 15)
+                            gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = true;
+                        GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
+                        if (gun.gunComponent[i].CurrentAmmo <= 0)
+                            gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot = false;
+                    }
                 }
             }
 
@@ -272,10 +276,7 @@ namespace Assets.Scripts.Systems
 
             increaseAccuracy.Complete();
 
-            for (var i = 0; i < _p.Count; i++)
-            {
-                gun.gunComponent[i].CurrentAccuracy = ca[i];
-            }
+            gun.gunComponent[0].CurrentAccuracy = ca[0];
 
             p.Dispose();
             s.Dispose();
