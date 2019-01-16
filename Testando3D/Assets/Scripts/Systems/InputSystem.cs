@@ -52,8 +52,9 @@ namespace Assets.Scripts.Systems
             player.Value.movementComponent.previouslyGrounded = player.Value.characterController.isGrounded;
 
             Vector3 moveDir = new Vector3();
-
-            moveDir = new float3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
+            var ver = Input.GetAxis("Vertical");
+            var hor = Input.GetAxis("Horizontal");
+            moveDir = new float3(ver, 0, hor);
 
             Vector3 desiredMove = player.Value.transform.forward * moveDir.x + player.Value.transform.right * moveDir.z;
             RaycastHit hitInfo;
@@ -61,7 +62,11 @@ namespace Assets.Scripts.Systems
                                player.Value.characterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
-            player.Value.movementComponent.isWalking = !Input.GetButton("Sprint");
+            var wal = ver != 0 || hor != 0;
+            var spr = Input.GetButton("Sprint");
+            player.Value.movementComponent.isWalking = wal && !spr;
+            player.Value.movementComponent.isRunning = wal && spr;
+
 
             if (Input.GetButtonDown("Crouch"))
             {

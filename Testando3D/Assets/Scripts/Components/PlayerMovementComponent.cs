@@ -17,6 +17,7 @@ namespace Assets.Scripts.Components
         [HideInInspector] public bool jumping;
         [HideInInspector] public bool previouslyGrounded;
         [HideInInspector] public bool isWalking;
+        [HideInInspector] public bool isRunning;
         [HideInInspector] public bool isCrouching;
     }
 }

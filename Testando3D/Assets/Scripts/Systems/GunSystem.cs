@@ -42,6 +42,8 @@ namespace Assets.Scripts.Systems
 
         protected override void OnUpdate()
         {
+            var playerMovementComponent = new Dictionary<GameObject, PlayerMovementComponent>();
+
             if (!GameManager.Instance.ammoImage.enabled)
             {
                 GameManager.Instance.ammoImage.enabled = true;
@@ -54,11 +56,17 @@ namespace Assets.Scripts.Systems
 
             var ca = new NativeArray<float>(gun.Length, Allocator.TempJob);
             var a = new NativeArray<float>(gun.Length, Allocator.TempJob);
+            var crounch = new NativeArray<float>(gun.Length, Allocator.TempJob);
 
             for (var i = 0; i < gun.Length; i++)
             {
+                PlayerMovementComponent pmc;
+                if (!playerMovementComponent.ContainsKey(gun.gunComponent[i].player)) playerMovementComponent.Add(gun.gunComponent[i].player, gun.gunComponent[i].player.GetComponent<PlayerMovementComponent>());
+                pmc = playerMovementComponent[gun.gunComponent[i].player];
+
                 ca[i] = gun.gunComponent[i].CurrentAccuracy;
                 a[i] = gun.gunComponent[i].Accuracy;
+                crounch[i] = pmc.isCrouching? .5f : pmc.jumping? 2 : pmc.isWalking? 1.2f : pmc.isRunning? 1.5f : 1;
                 GameManager.Instance.ammoImage.sprite = gun.gunComponent[i].AmmoImage;
                 GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
             }
@@ -67,7 +75,8 @@ namespace Assets.Scripts.Systems
             {
                 ca = ca,
                 dTime = Time.deltaTime / 2,
-                a = a
+                a = a,
+                cr = crounch,
             }.Schedule(gun.Length, 32);
 
             updateAccuracy.Complete();
@@ -80,21 +89,20 @@ namespace Assets.Scripts.Systems
 
             ca.Dispose();
             a.Dispose();
+            crounch.Dispose();
         }
 
         void UpdateArrows(GunComponent gunC)
         {
-            GameManager.Instance.arrows[0].transform.position = ArrowNewPos(GameManager.Instance.arrowsPos[0], Vector3.up, gunC.CurrentAccuracy);
-            GameManager.Instance.arrows[1].transform.position = ArrowNewPos(GameManager.Instance.arrowsPos[1], Vector3.down, gunC.CurrentAccuracy);
-            GameManager.Instance.arrows[2].transform.position = ArrowNewPos(GameManager.Instance.arrowsPos[2], Vector3.right, gunC.CurrentAccuracy);
-            GameManager.Instance.arrows[3].transform.position = ArrowNewPos(GameManager.Instance.arrowsPos[3], Vector3.left, gunC.CurrentAccuracy);
+            Vector3[] v = new Vector3[4] { Vector3.up, Vector3.down, Vector3.right, Vector3.left };
+            for (var i = 0; i < 4; i++)
+                GameManager.Instance.arrows[i].transform.position = ArrowNewPos(GameManager.Instance.arrowsPos[i], v[i], gunC.CurrentAccuracy);
         }
 
         public Vector3 ArrowNewPos(Vector3 pos, Vector3 dir, float cA)
         {
             return pos + cA * 70 * dir;
         }
-
 
         void Reload()
         {
@@ -329,10 +337,12 @@ namespace Assets.Scripts.Systems
             public float dTime;
             public NativeArray<float> a;
             public NativeArray<float> ca;
+            public NativeArray<float> cr;
 
             public void Execute(int i)
             {
-                ca[i] = (ca[i] < a[i] || ca[i] - dTime < a[i]) ? a[i] : ca[i] - dTime;
+                var _a = a[i] * cr[i];
+                ca[i] = (ca[i] < _a || ca[i] - dTime < _a) ? _a : ca[i] - dTime;
             }
         }
 
