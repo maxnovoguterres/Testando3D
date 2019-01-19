@@ -42,8 +42,8 @@ public class EquipmentManager : MonoBehaviour {
         int slotIndex = (int)newItem.equipSlot;
         Equipment oldItem = Unequip(slotIndex);
 
-        if (gunHover.transform.childCount != 0)
-            dropGunComponent = gunHover.GetComponentsInChildren<GunComponent>()[0];
+        //if (gunHover.transform.childCount != 0)
+        //    dropGunComponent = gunHover.GetComponentsInChildren<GunComponent>()[0];
 
         if (onEquipmentChanged != null)
         {
@@ -68,8 +68,8 @@ public class EquipmentManager : MonoBehaviour {
 
             if (oldItem != null)
             {
-                oldItem.ob.GetComponent<GunComponent>().CurrentAmmo = dropGunComponent.CurrentAmmo;
-                oldItem.ob.GetComponent<GunComponent>().ExtraAmmo = dropGunComponent.ExtraAmmo;
+                //oldItem.ob.GetComponent<GunComponent>().CurrentAmmo = dropGunComponent.CurrentAmmo;
+                //oldItem.ob.GetComponent<GunComponent>().ExtraAmmo = dropGunComponent.ExtraAmmo;
 
                 var _ob = Instantiate(oldItem.pickUpOb, new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z), Quaternion.identity);
                 _ob.transform.parent = gunsParent;

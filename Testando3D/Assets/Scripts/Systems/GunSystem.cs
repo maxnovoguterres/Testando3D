@@ -30,6 +30,9 @@ namespace Assets.Scripts.Systems
 
         [Inject] Gun gun;
         Dictionary<GameObject, PlayerMovementComponent> playerMovementComponent = new Dictionary<GameObject, PlayerMovementComponent>();
+        Dictionary<GameObject, InputComponent> inputComponent = new Dictionary<GameObject, InputComponent>();
+        NativeArray<float> ca = new NativeArray<float>();
+        NativeArray<float> m = new NativeArray<float>();
 
         protected override void OnCreateManager()
         {
@@ -43,6 +46,7 @@ namespace Assets.Scripts.Systems
         protected override void OnUpdate()
         {
             playerMovementComponent = new Dictionary<GameObject, PlayerMovementComponent>();
+            inputComponent = new Dictionary<GameObject, InputComponent>();
 
             if (!GameManager.Instance.ammoImage.enabled)
             {
@@ -54,9 +58,9 @@ namespace Assets.Scripts.Systems
             Fire();
             Reload();
 
-            var ca = new NativeArray<float>(gun.Length, Allocator.TempJob);
+            ca = new NativeArray<float>(gun.Length, Allocator.TempJob);
             var a = new NativeArray<float>(gun.Length, Allocator.TempJob);
-            var m = new NativeArray<float>(gun.Length, Allocator.TempJob);
+            m = new NativeArray<float>(gun.Length, Allocator.TempJob);
 
             for (var i = 0; i < gun.Length; i++)
             {
@@ -110,10 +114,14 @@ namespace Assets.Scripts.Systems
             {
                 if (gun.gunComponent[i].player == null) continue;
 
-                if (gun.gunComponent[i].ExtraAmmo <= 0)
-                    gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = false;
+                InputComponent inputC;
+                if (!inputComponent.ContainsKey(gun.gunComponent[i].player)) inputComponent.Add(gun.gunComponent[i].player, gun.gunComponent[i].player.GetComponent<InputComponent>());
+                inputC = inputComponent[gun.gunComponent[i].player];
 
-                var IsReloading = gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading;
+                if (gun.gunComponent[i].ExtraAmmo <= 0)
+                    inputC.isReloading = false;
+
+                var IsReloading = inputC.isReloading;
 
                 if (IsReloading && gun.gunComponent[i].CurrentAmmo < gun.gunComponent[i].MaxAmmo && gun.gunComponent[i].ExtraAmmo != 0)
                 {
@@ -130,17 +138,15 @@ namespace Assets.Scripts.Systems
                             gun.gunComponent[i].ExtraAmmo -= gun.gunComponent[i].MaxAmmo - gun.gunComponent[i].CurrentAmmo;
                             gun.gunComponent[i].CurrentAmmo += gun.gunComponent[i].MaxAmmo - gun.gunComponent[i].CurrentAmmo;
                         }
-
-                        GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
                         
-                        gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = false;
+                        inputC.isReloading = false;
                         reloadTimer = 0;
                     }
                 }
                 else if (gun.gunComponent[i].CurrentAmmo == gun.gunComponent[i].MaxAmmo)
                 {
                     IsReloading = false;
-                    gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = false;
+                    inputC.isReloading = false;
                 }
 
                 if (gun.gunComponent[i].animator != null)
@@ -156,7 +162,11 @@ namespace Assets.Scripts.Systems
 #if DEBUG
                 if (gun.gunComponent[i].player == null) continue;
 #endif
-                var aim = gun.gunComponent[i].player.GetComponent<InputComponent>().Aim;
+                InputComponent inputC;
+                if (!inputComponent.ContainsKey(gun.gunComponent[i].player)) inputComponent.Add(gun.gunComponent[i].player, gun.gunComponent[i].player.GetComponent<InputComponent>());
+                inputC = inputComponent[gun.gunComponent[i].player];
+
+                var aim = inputC.Aim;
                 if (aim)
                 {
                     GameManager.Instance.EnableRedDot(false);
@@ -197,44 +207,47 @@ namespace Assets.Scripts.Systems
 
             for (var i = 0; i < gun.Length; i++)
             {
+#if DEBUG
+                if (gun.gunComponent[i].player == null) continue;
+#endif
+                InputComponent inputC;
+                if (!inputComponent.ContainsKey(gun.gunComponent[i].player)) inputComponent.Add(gun.gunComponent[i].player, gun.gunComponent[i].player.GetComponent<InputComponent>());
+                inputC = inputComponent[gun.gunComponent[i].player];
+
                 if (gun.gunComponent[i].CurrentAmmo <= 0)
-                    gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot = false;
+                    inputC.Shoot = false;
 
                 if (gun.gunComponent[i].countDown == null)
                     gun.gunComponent[i].countDown = new CountDown(gun.gunComponent[i].countDownRate);
 
-#if DEBUG
-                if (gun.gunComponent[i].player == null) continue;
-#endif
                 CountDown.DecreaseTime(gun.gunComponent[i].countDown);
 
-                if (gun.gunComponent[i].countDown.ReturnedToZero && gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot)
+                if (gun.gunComponent[i].countDown.ReturnedToZero && inputC.Shoot)
                 {
                     PlayerMovementComponent pmc;
                     if (!playerMovementComponent.ContainsKey(gun.gunComponent[i].player)) playerMovementComponent.Add(gun.gunComponent[i].player, gun.gunComponent[i].player.GetComponent<PlayerMovementComponent>());
                     pmc = playerMovementComponent[gun.gunComponent[i].player];
+
+                    _ia.Add(gun.gunComponent[i].IncreaseAccuracy);
+                    _ca.Add(gun.gunComponent[i].CurrentAccuracy);
+                    _m.Add(pmc.isCrouching ? .5f : pmc.jumping ? 2 : pmc.isWalking ? 1.2f : pmc.isRunning ? 1.5f : 1);
+                    _re.Add(gun.gunComponent[i].Recoil);
+                    _iRe.Add(gun.gunComponent[i].IncreaseRecoil);
+                    gun.gunComponent[i].countDown.StartToCount();
+                    gun.gunComponent[i].CurrentAmmo -= 1;
+                    if (gun.gunComponent[i].scopedFOV == 15)
+                        inputC.isReloading = true;
+                    if (gun.gunComponent[i].CurrentAmmo <= 0)
+                        inputC.Shoot = false;
 
                     for (int j = 0; j < gun.gunComponent[i].qtdProjectile; j++)
                     {
                         _p.Add(gun.gunComponent[i].bocal.position);
                         _r.Add(gun.gunComponent[i].player.transform.Find("FirstPersonCamera").rotation);
                         _s.Add(gun.gunComponent[i].bulletSpeed);
-                        _ia.Add(gun.gunComponent[i].IncreaseAccuracy);
-                        _ca.Add(gun.gunComponent[i].CurrentAccuracy);
                         _rca.Add(UnityEngine.Random.Range(0, gun.gunComponent[i].CurrentAccuracy));
                         _ru.Add(UnityEngine.Random.Range(0, 2));
                         _rl.Add(UnityEngine.Random.Range(0, 2));
-                        _m.Add(pmc.isCrouching ? .5f : pmc.jumping ? 2 : pmc.isWalking ? 1.2f : pmc.isRunning ? 1.5f : 1);
-                        _re.Add(gun.gunComponent[i].Recoil);
-                        _iRe.Add(gun.gunComponent[i].IncreaseRecoil);
-                        gun.gunComponent[i].countDown.StartToCount();
-                        if (j == 0)
-                            gun.gunComponent[i].CurrentAmmo -= 1;
-                        if (gun.gunComponent[i].scopedFOV == 15)
-                            gun.gunComponent[i].player.GetComponent<InputComponent>().isReloading = true;
-                        GameManager.Instance.ammoText.text = gun.gunComponent[i].CurrentAmmo.ToString() + "/" + gun.gunComponent[i].ExtraAmmo.ToString();
-                        if (gun.gunComponent[i].CurrentAmmo <= 0)
-                            gun.gunComponent[i].player.GetComponent<InputComponent>().Shoot = false;
                     }
                 }
             }
@@ -245,21 +258,18 @@ namespace Assets.Scripts.Systems
             NativeArray<float> s = new NativeArray<float>(_s.Count, Allocator.TempJob);
             NativeArray<quaternion> r = new NativeArray<quaternion>(_r.Count, Allocator.TempJob);
             NativeArray<Entity> e = new NativeArray<Entity>(_p.Count, Allocator.TempJob);
-            NativeArray<float> ia = new NativeArray<float>(_r.Count, Allocator.TempJob);
-            NativeArray<float> ca = new NativeArray<float>(_p.Count, Allocator.TempJob);
-            NativeArray<float> rca = new NativeArray<float>(_p.Count, Allocator.TempJob);
-            NativeArray<int> ru = new NativeArray<int>(_p.Count, Allocator.TempJob);
-            NativeArray<int> rl = new NativeArray<int>(_p.Count, Allocator.TempJob);
-            NativeArray<float> m = new NativeArray<float>(_p.Count, Allocator.TempJob);
-            NativeArray<float> re = new NativeArray<float>(_p.Count, Allocator.TempJob);
-            NativeArray<float> iRe = new NativeArray<float>(_p.Count, Allocator.TempJob);
+            NativeArray<float> ia = new NativeArray<float>(_ia.Count, Allocator.TempJob);
+            ca = new NativeArray<float>(_ca.Count, Allocator.TempJob);
+            NativeArray<float> rca = new NativeArray<float>(_rca.Count, Allocator.TempJob);
+            NativeArray<int> ru = new NativeArray<int>(_ru.Count, Allocator.TempJob);
+            NativeArray<int> rl = new NativeArray<int>(_rl.Count, Allocator.TempJob);
+            m = new NativeArray<float>(_m.Count, Allocator.TempJob);
+            NativeArray<float> re = new NativeArray<float>(_re.Count, Allocator.TempJob);
+            NativeArray<float> iRe = new NativeArray<float>(_iRe.Count, Allocator.TempJob);
             GameManager.entityManager.CreateEntity(EntityArchetypes.bullet, e);
 
-            for (var i = 0; i < _p.Count; i++)
+            for (var i = 0; i < _ia.Count; i++)
             {
-                p[i] = _p[i];
-                r[i] = _r[i];
-                s[i] = _s[i];
                 ia[i] = _ia[i];
                 ca[i] = _ca[i];
                 rca[i] = _rca[i];
@@ -268,8 +278,13 @@ namespace Assets.Scripts.Systems
                 m[i] = _m[i];
                 re[i] = _re[i];
                 iRe[i] = _iRe[i];
-
-                GameManager.entityManager.SetSharedComponentData(e[i], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
+            }
+            for (int j = 0; j < _p.Count; j++)
+            {
+                p[j] = _p[j];
+                r[j] = _r[j];
+                s[j] = _s[j];
+                GameManager.entityManager.SetSharedComponentData(e[j], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
             }
 
             var bulletDependency = new BulletSpawn
@@ -289,7 +304,7 @@ namespace Assets.Scripts.Systems
                 ia = ia,
                 ca = ca,
                 m = m
-            }.Schedule(p.Length, 32, bulletDependency);
+            }.Schedule(ia.Length, 32, bulletDependency);
 
             var increaseRecoil = new IncreaseRecoil
             {
@@ -297,14 +312,14 @@ namespace Assets.Scripts.Systems
                 re = re,
                 iRe = iRe,
                 m = m,
-            }.Schedule(p.Length, 32, increaseAccuracy);
+            }.Schedule(ia.Length, 32, increaseAccuracy);
 
             increaseRecoil.Complete();
 
-            for (var i = 0; i < p.Length; i++)
+            for (var i = 0; i < ca.Length; i++)
             {
                 gun.gunComponent[i].player.transform.Find("FirstPersonCamera").transform.rotation = r[i];
-                gun.gunComponent[0].CurrentAccuracy = ca[0];
+                gun.gunComponent[i].CurrentAccuracy = ca[i];
             }
             p.Dispose();
             s.Dispose();

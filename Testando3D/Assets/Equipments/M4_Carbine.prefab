@@ -109,6 +109,7 @@ MonoBehaviour:
   ExtraAmmo: 90
   AmmoImage: {fileID: 21300000, guid: 710bf1004ea7d3f4781c13c5488a5156, type: 3}
   Recoil: 0.15
+  IncreaseRecoil: 0
   qtdProjectile: 1
   distanceOfEachProjectile: 0
 --- !u!114 &8824953099753646350
