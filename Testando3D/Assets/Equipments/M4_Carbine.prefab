@@ -92,7 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b589d09bd528c040afdd84ed26e4c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countDownRate: 0.1
+  FireRate: 0.05
+  fireCoolDown: 0
   bocal: {fileID: 9044059032946276539}
   bulletSpeed: 120
   animator: {fileID: 0}
@@ -112,6 +113,7 @@ MonoBehaviour:
   IncreaseRecoil: 0
   qtdProjectile: 1
   distanceOfEachProjectile: 0
+  reloadTimer: 0
 --- !u!114 &8824953099753646350
 MonoBehaviour:
   m_ObjectHideFlags: 0

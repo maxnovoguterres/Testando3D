@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Components;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour {
@@ -63,6 +64,7 @@ public class EquipmentManager : MonoBehaviour {
             ob.transform.localPosition = new Vector3(0, 0, 0);
             ob.transform.localRotation = Quaternion.identity;
             ob.GetComponent<GunComponent>().player = player;
+            ob.GetComponent<GunComponent>().playerEntity = player.GetComponent<GameObjectEntity>().Entity;
             ob.GetComponent<GunComponent>().animator = gunHover.GetComponent<Animator>();
             GameManager.Instance.EnableRedDot(true);
 

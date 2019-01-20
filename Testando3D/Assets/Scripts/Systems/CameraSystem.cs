@@ -20,7 +20,7 @@ namespace Assets.Scripts.Systems
 
         public struct Player
         {
-            public InputComponent inputComponent;
+            //public InputComponent inputComponent;
             public PlayerMovementComponent movementComponent;
             public Transform transform;
             public Animator animator;

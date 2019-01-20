@@ -134,7 +134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b589d09bd528c040afdd84ed26e4c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countDownRate: 0.2
+  FireRate: 0.1
+  fireCoolDown: 0
   bocal: {fileID: 9054954967384454711}
   bulletSpeed: 200
   animator: {fileID: 0}
@@ -154,3 +155,4 @@ MonoBehaviour:
   IncreaseRecoil: 0
   qtdProjectile: 1
   distanceOfEachProjectile: 0
+  reloadTimer: 0

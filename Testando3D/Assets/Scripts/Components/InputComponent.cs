@@ -5,15 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
+using Unity.Entities;
 
 namespace Assets.Scripts.Components
 {
-    public class InputComponent : MonoBehaviour
+    [Serializable]
+    public struct _Input : IComponentData
     {
         [HideInInspector]
-        public Vector3 movement;
-        public bool Shoot;
-        public bool Aim;
-        public bool isReloading;
+        public float3 movement;
+        public byte shoot;
+        public byte aim;
+        public byte isReloading;
     }
+
+    public class InputComponent : ComponentDataWrapper<_Input> { }
 }

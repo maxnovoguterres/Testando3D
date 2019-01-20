@@ -12,8 +12,8 @@ namespace Assets.Scripts.Components
 {
     public class GunComponent : MonoBehaviour
     {
-        public float countDownRate;
-        public CountDown countDown;
+        public float FireRate;
+        public float fireCoolDown;
         public Transform bocal;
         public float bulletSpeed;
         public Animator animator;
@@ -21,6 +21,7 @@ namespace Assets.Scripts.Components
         public float normalFOV;
         public bool isScoped;
         public GameObject player;
+        public Entity playerEntity;
         public float Damage;
         [Range(0,1)] public float Accuracy;
         [Range(0,1)] public float IncreaseAccuracy;
@@ -33,5 +34,7 @@ namespace Assets.Scripts.Components
         [Range(0, 1)] public float IncreaseRecoil;
         public int qtdProjectile;
         public float distanceOfEachProjectile;
+        public float reloadTimer = 0;
+        public CountDown timer;
     }
 }

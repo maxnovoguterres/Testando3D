@@ -105,7 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b589d09bd528c040afdd84ed26e4c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countDownRate: 1
+  FireRate: 0.65
+  fireCoolDown: 0
   bocal: {fileID: 6109715777346226736}
   bulletSpeed: 200
   animator: {fileID: 0}
@@ -114,7 +115,7 @@ MonoBehaviour:
   isScoped: 0
   player: {fileID: 0}
   Damage: 100
-  Accuracy: 0.1
+  Accuracy: 0.75
   IncreaseAccuracy: 0.75
   CurrentAccuracy: 0
   MaxAmmo: 1
@@ -125,6 +126,7 @@ MonoBehaviour:
   IncreaseRecoil: 0
   qtdProjectile: 1
   distanceOfEachProjectile: 0
+  reloadTimer: 0
 --- !u!114 &6109715776705009317
 MonoBehaviour:
   m_ObjectHideFlags: 0
