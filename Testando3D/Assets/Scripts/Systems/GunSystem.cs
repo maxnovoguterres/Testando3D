@@ -60,6 +60,7 @@ namespace Assets.Scripts.Systems
 
         //Player Components
         NativeArray<_Input> input;
+        NativeArray<PlayerMovement> pmc;
 
         //Communs
         NativeArray<float> fcd; //fireCoolDown
@@ -108,6 +109,7 @@ namespace Assets.Scripts.Systems
                     rca = rca,
                     rl = rl,
                     ru = ru,
+                    input = input,
                     dTime = Time.deltaTime,
                 }.Schedule(p.Length, 32, UpdateRate);
 
@@ -199,6 +201,7 @@ namespace Assets.Scripts.Systems
             rt.Dispose();
             iUsed.Dispose();
             fcd.Dispose();
+            pmc.Dispose();
             #endregion
 
         }
@@ -264,6 +267,7 @@ namespace Assets.Scripts.Systems
             public NativeArray<float> rca;
             public NativeArray<int> ru;
             public NativeArray<int> rl;
+            public NativeArray<_Input> input;
             public float dTime;
 
             public void Execute(int i)
@@ -271,7 +275,7 @@ namespace Assets.Scripts.Systems
                 float3 pos = p[i];
 
                 var nextPos = pos + (s[i] * math.forward(r[i]) * dTime);
-                var rM = (rca[i] * .02f);
+                var rM = rca[i] * (input[i].aim == 1 ? 0.01f : .02f);
                 GameManager.entityManager.SetComponentData(e[i], new DestroyAfterTime { lifeTime = 0f, timeToDestroy = 1f });
                 GameManager.entityManager.SetComponentData(e[i], new Position { Value = pos });
                 GameManager.entityManager.SetComponentData(e[i], new Rotation { Value = new quaternion(r[i].value.x, r[i].value.y + rM * (rl[i] % 2 == 0 ? +1 : -1), r[i].value.z + rM * 2 * (ru[i] % 2 == 0 ? +1 : -1), r[i].value.w) });
@@ -394,6 +398,17 @@ namespace Assets.Scripts.Systems
             }
         }
 
+        struct GetModifier : IJobParallelFor
+        {
+            public NativeArray<PlayerMovement> pm;
+            public NativeArray<float> m;
+
+            public void Execute(int i)
+            {
+                m[i] = pm[i].isCrouching == 1 ? .5f : pm[i].jumping == 1 ? 2 : pm[i].isWalking == 1 ? 1.2f : pm[i].isRunning == 1 ? 1.5f : 1;
+            }
+        }
+
         void OnScoped(GunComponent gunComponent)
         {
             GameManager.Instance.scopeOverlay.enabled = true;
@@ -413,6 +428,7 @@ namespace Assets.Scripts.Systems
         {
             #region [Native Array Instances]
             input = new NativeArray<_Input>(gun.Length, Allocator.TempJob);
+            pmc = new NativeArray<PlayerMovement>(gun.Length, Allocator.TempJob);
             cAmmo = new NativeArray<int>(gun.Length, Allocator.TempJob);
             ea = new NativeArray<int>(gun.Length, Allocator.TempJob);
             ma = new NativeArray<int>(gun.Length, Allocator.TempJob);
@@ -444,13 +460,12 @@ namespace Assets.Scripts.Systems
 
                 #region [PlayerComponents]
                 input[i] = GameManager.entityManager.GetComponentData<_Input>(gun.gunComponent[i].playerEntity);
-                PlayerMovementComponent pmc = gun.gunComponent[i].player.GetComponent<PlayerMovementComponent>();
+                pmc[i] = GameManager.entityManager.GetComponentData<PlayerMovement>(gun.gunComponent[i].playerEntity);
                 #endregion
 
                 #region [Accuracy]
                 ca[i] = gun.gunComponent[i].CurrentAccuracy;
                 a[i] = gun.gunComponent[i].Accuracy;
-                m[i] = pmc.isCrouching ? .5f : pmc.jumping ? 2 : pmc.isWalking ? 1.2f : pmc.isRunning ? 1.5f : 1;
                 #endregion
 
                 #region [ShootDatas]
@@ -519,6 +534,15 @@ namespace Assets.Scripts.Systems
                 s[j] = _s[j];
                 GameManager.entityManager.SetSharedComponentData(e[j], new MeshInstanceRenderer { mesh = GameManager.Instance.bullet, material = (Material)Resources.Load("Material/bulletMAT") });
             }
+            #endregion
+
+            #region [Modifier]
+            var getModifier = new GetModifier
+            {
+                pm = pmc,
+                m = m
+            }.Schedule(gun.Length, 32);
+            getModifier.Complete();
             #endregion
         }
     }

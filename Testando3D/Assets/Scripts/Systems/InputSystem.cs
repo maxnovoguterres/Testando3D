@@ -16,7 +16,7 @@ namespace Assets.Scripts.Systems
     {
         public struct Player
         {
-            public ComponentArray<PlayerMovementComponent> movementComponent;
+            public ComponentDataArray<PlayerMovement> movementComponent;
             public ComponentArray<Transform> transform;
             public ComponentArray<Animator> animator;
             public ComponentArray<Rigidbody> rb;
@@ -44,19 +44,20 @@ namespace Assets.Scripts.Systems
 
             var _player = player;
             var playerInput = _player.inputComponent[0];
+            var playerMovement = _player.movementComponent[0];
 
-            if (!_player.movementComponent[0].previouslyGrounded && _player.characterController[0].isGrounded)
+            if (_player.movementComponent[0].previouslyGrounded == 0 && _player.characterController[0].isGrounded)
             {
                 //PlayLandingSound();
                 playerInput.movement.y = 0f;
-                _player.movementComponent[0].jumping = false;
+                playerMovement.jumping = 0;
             }
-            if (!_player.characterController[0].isGrounded && !_player.movementComponent[0].jumping && _player.movementComponent[0].previouslyGrounded)
+            if (!_player.characterController[0].isGrounded && _player.movementComponent[0].jumping == 0 && _player.movementComponent[0].previouslyGrounded == 1)
             {
                 playerInput.movement.y = 0f;
             }
 
-            _player.movementComponent[0].previouslyGrounded = _player.characterController[0].isGrounded;
+            playerMovement.previouslyGrounded = (byte)(_player.characterController[0].isGrounded? 1 : 0);
 
             Vector3 moveDir = new Vector3();
             var ver = Input.GetAxis("Vertical");
@@ -71,31 +72,31 @@ namespace Assets.Scripts.Systems
 
             var wal = ver != 0 || hor != 0;
             var spr = Input.GetButton("Sprint");
-            _player.movementComponent[0].isWalking = wal && !spr;
-            _player.movementComponent[0].isRunning = wal && spr;
+            playerMovement.isWalking = (byte)(wal && !spr? 1 : 0);
+            playerMovement.isRunning = (byte)(wal && spr ? 1 : 0);
 
 
             if (Input.GetButtonDown("Crouch"))
             {
-                _player.movementComponent[0].isCrouching = true;
+                playerMovement.isCrouching = 1;
                 _player.characterController[0].center = new Vector3(playerCenter.x, playerCenter.y / 2, playerCenter.z);
                 _player.characterController[0].height = playerHeight / 2;
             }
             if (Input.GetButtonUp("Crouch"))
             {
-                _player.movementComponent[0].isCrouching = false;
+                playerMovement.isCrouching = 0;
                 _player.characterController[0].center = playerCenter;
                 _player.characterController[0].height = playerHeight;
             }
-            if (_player.movementComponent[0].isCrouching)
+            if (_player.movementComponent[0].isCrouching == 1)
             {
                 Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, cameraY / 2, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
-                _player.movementComponent[0].speed = _player.movementComponent[0].crouchSpeed;
+                playerMovement.speed = _player.movementComponent[0].crouchSpeed;
             }
             else
             {
                 Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, cameraY, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
-                _player.movementComponent[0].speed = _player.movementComponent[0].isWalking ? _player.movementComponent[0].walkSpeed : _player.movementComponent[0].runSpeed;
+                playerMovement.speed = _player.movementComponent[0].isWalking == 1 ? _player.movementComponent[0].walkSpeed : _player.movementComponent[0].runSpeed;
             }
 
             playerInput.movement.x = desiredMove.x * _player.movementComponent[0].speed;
@@ -105,11 +106,11 @@ namespace Assets.Scripts.Systems
             {
                 playerInput.movement.y = Physics.gravity.y;
 
-                if (Input.GetButtonDown("Jump") && !_player.movementComponent[0].jumping)
+                if (Input.GetButtonDown("Jump") && _player.movementComponent[0].jumping == 0)
                 {
                     playerInput.movement.y = _player.movementComponent[0].jumpSpeed;
                     //PlayJumpSound();
-                    _player.movementComponent[0].jumping = true;
+                    playerMovement.jumping = 1;
                 }
             }
             else
@@ -148,8 +149,8 @@ namespace Assets.Scripts.Systems
             }
 
             _player.inputComponent[0] = playerInput;
+            _player.movementComponent[0] = playerMovement;
             player = _player;
-            //Debug.Log(player.inputComponent[0].isReloading);
         }
     }
 }

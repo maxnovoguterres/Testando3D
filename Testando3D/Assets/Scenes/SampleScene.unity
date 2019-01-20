@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -236,16 +236,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aad6318c5180f3246b0e41e0fc8f6c4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 2
-  runSpeed: 5
-  crouchSpeed: 1.5
-  speed: 0
-  jumpSpeed: 10
-  jumping: 0
-  previouslyGrounded: 0
-  isWalking: 0
-  isRunning: 0
-  isCrouching: 0
+  m_SerializedData:
+    walkSpeed: 3
+    runSpeed: 6
+    crouchSpeed: 2
+    speed: 6
+    jumpSpeed: 8
+    jumping: 0
+    previouslyGrounded: 0
+    isWalking: 0
+    isRunning: 0
+    isCrouching: 0
 --- !u!95 &76343704
 Animator:
   serializedVersion: 3
@@ -318,10 +319,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f5dd2a8af389a4b925bbcc5cb8445f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {x: 0, y: 0, z: 0}
-  Shoot: 0
-  Aim: 0
-  isReloading: 0
+  m_SerializedData:
+    movement:
+      x: 0
+      y: 0
+      z: 0
+    shoot: 0
+    aim: 0
+    isReloading: 0
 --- !u!114 &76343710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10325,15 +10330,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.369444
+      value: 14.4
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.78
+      value: 0.71
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.1967299
+      value: -5.6541
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
       propertyPath: m_LocalRotation.x
@@ -10366,6 +10371,18 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5823437
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5823437
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5823437
       objectReference: {fileID: 0}
     - target: {fileID: 2300000, guid: 9ef42c153971d3c4b84273bf2e1982bb, type: 3}
       propertyPath: m_Materials.Array.data[0]
