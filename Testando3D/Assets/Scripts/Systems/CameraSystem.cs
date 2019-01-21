@@ -14,8 +14,9 @@ namespace Assets.Scripts.Systems
     {
         public struct Camera
         {
-            public CameraComponent cameraComponent;
-            public Transform transform;
+            public ComponentArray<CameraComponent> cameraComponent;
+            public ComponentArray<Transform> transform;
+            public readonly int Length;
         }
 
         public struct Player
@@ -28,31 +29,33 @@ namespace Assets.Scripts.Systems
             public ComponentArray<CharacterController> characterController;
         }
 
-        Camera? camera;
+        [Inject] Camera camera;
         [Inject] Player player;
         float jumpOffSet;
         CountDown bobCycleCD = new CountDown(0.2f);
 
         protected override void OnUpdate()
         {
-            if (camera == null) camera = GetEntities<Camera>()[0];
-            //if (player == null) player = GetEntities<Player>()[0];
+            for (int i = 0; i < camera.Length; i++)
+            {
+                //if (player == null) player = GetEntities<Player>()[0];
 
-            var _player = player;
-            //var playerInput = _player.inputComponent[0];
-            var playerMovement = _player.movementComponent[0];
+                var _player = player;
+                //var playerInput = _player.inputComponent[0];
+                var playerMovement = _player.movementComponent[i];
 
 
-            if (playerMovement.previouslyGrounded == 0 && player.characterController[0].isGrounded)
-            //{
-                //bobCycleCD.Rate = .2f;
-                bobCycleCD.StartToCount();
-            //}
-            if (!bobCycleCD.ReturnedToZero)
-                DoBobCycleStep1();
+                if (playerMovement.previouslyGrounded == 0 && player.characterController[i].isGrounded)
+                    //{
+                    //bobCycleCD.Rate = .2f;
+                    bobCycleCD.StartToCount();
+                //}
+                if (!bobCycleCD.ReturnedToZero)
+                    DoBobCycleStep1();
 
-            UpdateCameraPosition(player.characterController[0], playerMovement, camera.Value.transform, camera.Value.cameraComponent);
-            LookRotation(player.transform[0], camera.Value.transform, camera.Value.cameraComponent);
+                UpdateCameraPosition(player.characterController[i], playerMovement, camera.transform[i], camera.cameraComponent[i]);
+                LookRotation(player.transform[i], camera.transform[i], camera.cameraComponent[i]);
+            }
         }
 
         private void UpdateCameraPosition(CharacterController characterController, PlayerMovement movementComponent, Transform transform, CameraComponent cameraComponent)
