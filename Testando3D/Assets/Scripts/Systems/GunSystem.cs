@@ -231,14 +231,14 @@ namespace Assets.Scripts.Systems
                         gun.gunComponent[i].timer.StartToCount();
 
                     gun.gunComponent[i].timer.DecreaseTime();
-                    if (gun.gunComponent[i].timer.ReturnedToZero && Camera.main.fieldOfView != gun.gunComponent[i].scopedFOV)
+                    if (gun.gunComponent[i].timer.ReturnedToZero && gun.gunComponent[i].firstPersonCamera.fieldOfView != gun.gunComponent[i].scopedFOV)
                         OnScoped(gun.gunComponent[i]);
                 }
                 else
                 {
                     GameManager.Instance.EnableRedDot(true);
                     gun.gunComponent[i].timer.Zero();
-                    if (Camera.main.fieldOfView != gun.gunComponent[i].normalFOV)
+                    if (gun.gunComponent[i].firstPersonCamera.fieldOfView != gun.gunComponent[i].normalFOV)
                         OnUnscoped(gun.gunComponent[i]);
                 }
 
@@ -412,16 +412,16 @@ namespace Assets.Scripts.Systems
         void OnScoped(GunComponent gunComponent)
         {
             GameManager.Instance.scopeOverlay.enabled = true;
-            Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
-            gunComponent.normalFOV = Camera.main.fieldOfView;
-            Camera.main.fieldOfView = gunComponent.scopedFOV;
+            gunComponent.firstPersonCamera.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
+            gunComponent.normalFOV = gunComponent.firstPersonCamera.fieldOfView;
+            gunComponent.firstPersonCamera.fieldOfView = gunComponent.scopedFOV;
         }
 
         void OnUnscoped(GunComponent gunComponent)
         {
             GameManager.Instance.scopeOverlay.enabled = false;
-            Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
-            Camera.main.fieldOfView = gunComponent.normalFOV;
+            gunComponent.firstPersonCamera.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
+            gunComponent.firstPersonCamera.fieldOfView = gunComponent.normalFOV;
         }
 
         void GetDatas()

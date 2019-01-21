@@ -41,7 +41,7 @@ namespace Assets.Scripts.Systems
                 {
                     playerHeight = player.characterController[i].height;
                     playerCenter = player.characterController[i].center;
-                    cameraY = Camera.main.transform.position.y;
+                    cameraY = player.transform[i].Find("FirstPersonCamera").transform.position.y;
                 }
 
                 var _player = player;
@@ -92,12 +92,12 @@ namespace Assets.Scripts.Systems
                 }
                 if (_player.movementComponent[i].isCrouching == 1)
                 {
-                    Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, cameraY / 2, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
+                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, cameraY / 2, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
                     playerMovement.speed = _player.movementComponent[i].crouchSpeed;
                 }
                 else
                 {
-                    Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, new Vector3(Camera.main.transform.localPosition.x, cameraY, Camera.main.transform.localPosition.z), Time.deltaTime * 6);
+                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, cameraY, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
                     playerMovement.speed = _player.movementComponent[i].isWalking == 1 ? _player.movementComponent[i].walkSpeed : _player.movementComponent[i].runSpeed;
                 }
 

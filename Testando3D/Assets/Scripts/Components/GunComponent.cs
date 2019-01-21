@@ -36,5 +36,6 @@ namespace Assets.Scripts.Components
         public float distanceOfEachProjectile;
         public float reloadTimer = 0;
         public CountDown timer;
+        public Camera firstPersonCamera;
     }
 }

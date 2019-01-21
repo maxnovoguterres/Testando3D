@@ -66,6 +66,7 @@ public class EquipmentManager : MonoBehaviour {
             ob.GetComponent<GunComponent>().player = player;
             ob.GetComponent<GunComponent>().playerEntity = player.GetComponent<GameObjectEntity>().Entity;
             ob.GetComponent<GunComponent>().animator = gunHover.GetComponent<Animator>();
+            ob.GetComponent<GunComponent>().firstPersonCamera = player.transform.Find("FirstPersonCamera").GetComponent<Camera>();
             GameManager.Instance.EnableRedDot(true);
 
             if (oldItem != null)
