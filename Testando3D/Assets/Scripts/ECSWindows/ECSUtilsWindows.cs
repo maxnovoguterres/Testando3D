@@ -74,7 +74,6 @@ class ECSUtilsWindows : EditorWindow
 
     private static void GetObjetoInfo(List<GameObject> objs, ref List<ObjectInfo> objInfos, string parentName = null)
     {
-
         foreach (var obj in objs)
         {
             if (obj.transform.childCount > 0) GetObjetoInfo(obj.GetComponentsInChildren<Transform>().Where(c => c.gameObject != obj).Select(x => x.gameObject).ToList(), ref objInfos, string.IsNullOrWhiteSpace(parentName)? PrefabUtility.GetCorrespondingObjectFromSource(obj).name : parentName);
@@ -100,6 +99,11 @@ class ECSUtilsWindows : EditorWindow
 
             if (string.IsNullOrWhiteSpace(parentName))
                 obj.transform.parent = ecsColliders.transform;
+
+
+            var animator = obj.GetComponent<Animator>();
+            if(animator != null)
+                DestroyImmediate(animator);
 
             DestroyImmediate(obj.GetComponent<MeshRenderer>());
             DestroyImmediate(obj.GetComponent<MeshFilter>());
