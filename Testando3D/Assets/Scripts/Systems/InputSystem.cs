@@ -17,6 +17,7 @@ namespace Assets.Scripts.Systems
         public struct Player
         {
             public ComponentDataArray<PlayerMovement> movementComponent;
+            public ComponentDataArray<_Player> playerComponent;
             public ComponentArray<Transform> transform;
             public ComponentArray<Animator> animator;
             public ComponentArray<Rigidbody> rb;

@@ -85,7 +85,7 @@ namespace Assets.Scripts.Systems
             float yPos = originalCameraPosition.y + (cameraComponent.Bobcurve.Evaluate(cameraComponent.m_CyclePositionY) * 0.01f);
 
             cameraComponent.m_CyclePositionX += (speed * Time.deltaTime) / cameraComponent.m_BobBaseInterval;
-            cameraComponent.m_CyclePositionY += ((speed * Time.deltaTime) / cameraComponent.m_BobBaseInterval) * 1f;
+            cameraComponent.m_CyclePositionY += ((speed * Time.deltaTime) / cameraComponent.m_BobBaseInterval) * 2f;
 
             if (cameraComponent.m_CyclePositionX > cameraComponent._m_Time)
             {
