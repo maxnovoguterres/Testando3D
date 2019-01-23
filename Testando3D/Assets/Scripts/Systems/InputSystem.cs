@@ -9,7 +9,6 @@ using UnityEngine;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Transforms;
-using UnityEngine.Experimental.Input;
 
 namespace Assets.Scripts.Systems
 {
@@ -17,7 +16,6 @@ namespace Assets.Scripts.Systems
     {
         public struct Player
         {
-            public ComponentArray<NewInputComponent> newInputComponent;
             public ComponentDataArray<PlayerMovement> movementComponent;
             public ComponentDataArray<_Player> playerComponent;
             public ComponentArray<Transform> transform;
@@ -33,13 +31,6 @@ namespace Assets.Scripts.Systems
         public float playerHeight = 0f;
         public float3 playerCenter = 0f;
         public float cameraY = 0f;
-
-        //protected override void OnStartRunning()
-        //{
-        //    for (int i = 0; i < player.Length; i++)
-        //    {
-        //    }
-        //}
 
         protected override void OnUpdate()
         {
@@ -88,13 +79,13 @@ namespace Assets.Scripts.Systems
                 playerMovement.isRunning = (byte)(wal && spr ? 1 : 0);
 
 
-                if (GameManager.kb.leftCtrlKey.wasPressedThisFrame)
+                if (Input.GetButtonDown("Crouch"))
                 {
                     playerMovement.isCrouching = 1;
                     _player.characterController[i].center = new Vector3(playerCenter.x, playerCenter.y / 2, playerCenter.z);
                     _player.characterController[i].height = playerHeight / 2;
                 }
-                if (GameManager.kb.leftCtrlKey.wasReleasedThisFrame)
+                if (Input.GetButtonUp("Crouch"))
                 {
                     playerMovement.isCrouching = 0;
                     _player.characterController[i].center = playerCenter;
@@ -159,11 +150,6 @@ namespace Assets.Scripts.Systems
                 {
                     playerInput.isReloading = 1;
                 }
-
-                //if (GameManager.kb.spaceKey.wasPressedThisFrame)
-                //    Debug.Log("pulou");
-                //if (GameManager.kb.rKey.wasPressedThisFrame)
-                //    Debug.Log("recarregou");
 
                 _player.inputComponent[i] = playerInput;
                 _player.movementComponent[i] = playerMovement;
