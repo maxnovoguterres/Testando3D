@@ -12,6 +12,12 @@
                     "bindings": []
                 },
                 {
+                    "name": "Movement",
+                    "id": "337bf826-0d06-420b-a3ec-a1e676768b6e",
+                    "expectedControlLayout": "",
+                    "bindings": []
+                },
+                {
                     "name": "Aim",
                     "id": "2c1945b8-b024-43a6-a057-d01e65716333",
                     "expectedControlLayout": "",
@@ -40,18 +46,6 @@
                     "id": "9ba6f638-7968-496e-bc4d-6c48d44235cf",
                     "expectedControlLayout": "",
                     "bindings": []
-                },
-                {
-                    "name": "Horizontal",
-                    "id": "a66a69bb-7989-43a4-9b0c-816cc9fa4ada",
-                    "expectedControlLayout": "",
-                    "bindings": []
-                },
-                {
-                    "name": "Vertical",
-                    "id": "7b11e42b-3eb4-44f4-aeba-dd606cf00406",
-                    "expectedControlLayout": "",
-                    "bindings": []
                 }
             ],
             "bindings": [
@@ -74,6 +68,138 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Fire",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                },
+                {
+                    "name": "wasdKeys",
+                    "path": "Dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": true,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                },
+                {
+                    "name": "up",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": true,
+                    "modifiers": ""
+                },
+                {
+                    "name": "down",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": true,
+                    "modifiers": ""
+                },
+                {
+                    "name": "left",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": true,
+                    "modifiers": ""
+                },
+                {
+                    "name": "right",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": true,
+                    "modifiers": ""
+                },
+                {
+                    "name": "Dpad",
+                    "path": "Dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": true,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                },
+                {
+                    "name": "up",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": true,
+                    "modifiers": ""
+                },
+                {
+                    "name": "down",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": true,
+                    "modifiers": ""
+                },
+                {
+                    "name": "left",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": true,
+                    "modifiers": ""
+                },
+                {
+                    "name": "right",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Movement",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": true,
+                    "modifiers": ""
+                },
+                {
+                    "name": "right",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and mouse",
+                    "action": "Movement",
                     "chainWithPrevious": false,
                     "isComposite": false,
                     "isPartOfComposite": false,
@@ -137,78 +263,6 @@
                     "chainWithPrevious": false,
                     "isComposite": false,
                     "isPartOfComposite": false,
-                    "modifiers": ""
-                },
-                {
-                    "name": "Axis",
-                    "path": "Axis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Horizontal",
-                    "chainWithPrevious": false,
-                    "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
-                },
-                {
-                    "name": "negative",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard and mouse",
-                    "action": "Horizontal",
-                    "chainWithPrevious": false,
-                    "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
-                },
-                {
-                    "name": "positive",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard and mouse",
-                    "action": "Horizontal",
-                    "chainWithPrevious": false,
-                    "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
-                },
-                {
-                    "name": "Axis",
-                    "path": "Axis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Vertical",
-                    "chainWithPrevious": false,
-                    "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
-                },
-                {
-                    "name": "negative",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard and mouse",
-                    "action": "Vertical",
-                    "chainWithPrevious": false,
-                    "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
-                },
-                {
-                    "name": "positive",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard and mouse",
-                    "action": "Vertical",
-                    "chainWithPrevious": false,
-                    "isComposite": false,
-                    "isPartOfComposite": true,
                     "modifiers": ""
                 }
             ]

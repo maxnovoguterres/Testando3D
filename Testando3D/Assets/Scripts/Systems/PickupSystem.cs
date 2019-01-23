@@ -171,13 +171,13 @@ namespace Assets.Scripts.Systems
 
             gunIndex.Dispose();
 
-            //if (Input.GetKeyDown(KeyCode.T) && GameManager.Instance.canEquip)
-            //{
-            //    EquipmentManager.instance.Equip(GameManager.Instance.gunToEquip, player.transform[0].gameObject);
-            //    Object.Destroy(GameManager.Instance.gunToDestroy);
-            //    GameManager.Instance.pickUpText.text = "";
-            //    GameManager.Instance.canEquip = false;
-            //}
+            if (Input.GetKeyDown(KeyCode.T) && GameManager.Instance.canEquip)
+            {
+                EquipmentManager.instance.Equip(GameManager.Instance.gunToEquip, player.transform[0].gameObject);
+                Object.Destroy(GameManager.Instance.gunToDestroy);
+                GameManager.Instance.pickUpText.text = "";
+                GameManager.Instance.canEquip = false;
+            }
 
         }
     }
