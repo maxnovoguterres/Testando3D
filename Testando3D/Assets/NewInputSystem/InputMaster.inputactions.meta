@@ -4,12 +4,13 @@ ScriptedImporter:
   fileIDToRecycleName:
     11400000: <root>
     11400002: Player/Fire
-    11400004: Player/Movement
     11400006: Player/Aim
     11400008: Player/Crouch
     11400010: Player/Jump
     11400012: Player/PickItemsAndEquipments
     11400014: Player/Reload
+    11400016: Player/Horizontal
+    11400018: Player/Vertical
   externalObjects: {}
   userData: 
   assetBundleName: 

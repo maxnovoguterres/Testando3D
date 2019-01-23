@@ -17,6 +17,7 @@ namespace Assets.Scripts.Systems
     {
         public struct Player
         {
+            public ComponentArray<InputComponent> _inputComponent;
             public ComponentArray<NewInputComponent> newInputComponent;
             public ComponentDataArray<PlayerMovement> movementComponent;
             public ComponentDataArray<_Player> playerComponent;
@@ -47,6 +48,8 @@ namespace Assets.Scripts.Systems
             {
                 if (player.Length == 0) return;
 
+                player._inputComponent[i].playerAction.Fire.performed += x => { };
+
                 if (playerHeight == 0)
                 {
                     playerHeight = player.characterController[i].height;
@@ -72,8 +75,8 @@ namespace Assets.Scripts.Systems
                 playerMovement.previouslyGrounded = (byte)(_player.characterController[i].isGrounded ? 1 : 0);
 
                 Vector3 moveDir = new Vector3();
-                var ver = Input.GetAxis("Vertical");
-                var hor = Input.GetAxis("Horizontal");
+                var ver = NewInputComponent.teste2;
+                var hor = NewInputComponent.teste1;
                 moveDir = new float3(ver, 0, hor);
 
                 Vector3 desiredMove = _player.transform[i].forward * moveDir.x + _player.transform[i].right * moveDir.z;

@@ -10,7 +10,8 @@ namespace Assets.Scripts.Components
     public class NewInputComponent: MonoBehaviour
     {
         public InputMaster controls;
-
+        public static float teste1;
+        public static float teste2;
         private void Awake()
         {
             controls.Player.Crouch.performed += x => Crouch();
@@ -19,6 +20,9 @@ namespace Assets.Scripts.Components
             controls.Player.Reload.performed += x => Reload();
             controls.Player.PickItemsAndEquipments.performed += x => PickItemsAndEquipments();
             controls.Player.Jump.performed += x => Jump();
+
+            controls.Player.Horizontal.performed += x => { teste1 = x.ReadValue<float>(); };
+            controls.Player.Vertical.performed += x => { teste2 = x.ReadValue<float>(); };
         }
 
         private void OnEnable()
@@ -61,6 +65,14 @@ namespace Assets.Scripts.Components
         void Jump()
         {
             Debug.Log("pulou");
+        }
+        void Horizontal(float a)
+        {
+            Debug.Log("moveu horizontal para: " + a);
+        }
+        void Vertical(float a)
+        {
+            Debug.Log("moveu vertical para: " + a);
         }
     }
 }
