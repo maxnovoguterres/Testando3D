@@ -11,6 +11,7 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Experimental.Input;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -39,6 +40,8 @@ public class GameManager : MonoBehaviour
 
     public static float GravityAceleration = 9.81f;
 
+    public static Keyboard kb;
+
     void Start()
     {
         if (Instance == null)
@@ -58,6 +61,16 @@ public class GameManager : MonoBehaviour
         Physics.IgnoreLayerCollision(8, 9, true);
 
         SetObjectInScene();
+
+        kb = InputSystem.GetDevice<Keyboard>();
+
+
+        // Find the last gamepad the user used.
+        var gamepad = Gamepad.current;
+        // Find all gamepads.
+        var gamepads = Gamepad.all; // In the API but not yet implemented; will throw.
+        //gamepads = InputSystem.devices.Select(x => x is Gamepad);
+        //gamepads = InputSystem.FindControls("/<Gamepad>"); // Every device using the gamepad template.
     }
 
     void SetObjectInScene()
