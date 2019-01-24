@@ -28,24 +28,22 @@ namespace Assets.Scripts.Systems
         }
         [Inject] Player player;
 
-        public float playerHeight = 0f;
-        public float3 playerCenter = 0f;
-        public float cameraY = 0f;
-
         protected override void OnUpdate()
         {
             for (int i = 0; i < player.Length; i++)
             {
                 if (player.Length == 0) return;
 
-                if (playerHeight == 0)
+                var _player = player;
+                var playerComponent = _player.playerComponent[i];
+
+                if (player.playerComponent[i].playerHeight == 0)
                 {
-                    playerHeight = player.characterController[i].height;
-                    playerCenter = player.characterController[i].center;
-                    cameraY = player.transform[i].Find("FirstPersonCamera").transform.position.y;
+                    playerComponent.playerHeight = player.characterController[i].height;
+                    playerComponent.playerCenter = player.characterController[i].center;
+                    playerComponent.cameraY = player.transform[i].Find("FirstPersonCamera").transform.position.y;
                 }
 
-                var _player = player;
                 var playerInput = _player.inputComponent[i];
                 var playerMovement = _player.movementComponent[i];
 
@@ -82,23 +80,23 @@ namespace Assets.Scripts.Systems
                 if (Input.GetButtonDown("Crouch"))
                 {
                     playerMovement.isCrouching = 1;
-                    _player.characterController[i].center = new Vector3(playerCenter.x, playerCenter.y / 2, playerCenter.z);
-                    _player.characterController[i].height = playerHeight / 2;
+                    _player.characterController[i].center = new Vector3(playerComponent.playerCenter.x, playerComponent.playerCenter.y / 2, playerComponent.playerCenter.z);
+                    _player.characterController[i].height = playerComponent.playerHeight / 2;
                 }
                 if (Input.GetButtonUp("Crouch"))
                 {
                     playerMovement.isCrouching = 0;
-                    _player.characterController[i].center = playerCenter;
-                    _player.characterController[i].height = playerHeight;
+                    _player.characterController[i].center = playerComponent.playerCenter;
+                    _player.characterController[i].height = playerComponent.playerHeight;
                 }
                 if (_player.movementComponent[i].isCrouching == 1)
                 {
-                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, cameraY / 2, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
+                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, playerComponent.cameraY / 2, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
                     playerMovement.speed = _player.movementComponent[i].crouchSpeed;
                 }
                 else
                 {
-                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, cameraY, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
+                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, playerComponent.cameraY, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
                     playerMovement.speed = _player.movementComponent[i].isWalking == 1 ? _player.movementComponent[i].walkSpeed : _player.movementComponent[i].runSpeed;
                 }
 
@@ -153,6 +151,7 @@ namespace Assets.Scripts.Systems
 
                 _player.inputComponent[i] = playerInput;
                 _player.movementComponent[i] = playerMovement;
+                _player.playerComponent[i] = playerComponent;
                 player = _player;
             }
         }

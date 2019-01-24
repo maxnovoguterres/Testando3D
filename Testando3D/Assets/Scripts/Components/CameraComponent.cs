@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,5 +31,7 @@ namespace Assets.Scripts.Components
         [HideInInspector] public Quaternion m_CameraTargetRot { get { _m_CameraTargetRot = _m_CameraTargetRot ?? Camera.main.transform.localRotation; return _m_CameraTargetRot.Value; } set { _m_CameraTargetRot = value; } }
         [HideInInspector] public bool lockCursor = true;
         [HideInInspector] public bool m_cursorIsLocked = true;
+        [HideInInspector] public float jumpOffSet;
+        [HideInInspector] public CountDown bobCycleCD = new CountDown(0.2f);
     }
 }

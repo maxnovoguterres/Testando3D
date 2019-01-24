@@ -31,8 +31,6 @@ namespace Assets.Scripts.Systems
 
         [Inject] Camera camera;
         [Inject] Player player;
-        float jumpOffSet;
-        CountDown bobCycleCD = new CountDown(0.2f);
 
         protected override void OnUpdate()
         {
@@ -48,10 +46,10 @@ namespace Assets.Scripts.Systems
                 if (playerMovement.previouslyGrounded == 0 && player.characterController[i].isGrounded)
                     //{
                     //bobCycleCD.Rate = .2f;
-                    bobCycleCD.StartToCount();
+                    camera.cameraComponent[i].bobCycleCD.StartToCount();
                 //}
-                if (!bobCycleCD.ReturnedToZero)
-                    DoBobCycleStep1();
+                if (!camera.cameraComponent[i].bobCycleCD.ReturnedToZero)
+                    DoBobCycleStep1(camera.cameraComponent[i]);
 
                 UpdateCameraPosition(player.characterController[i], playerMovement, camera.transform[i], camera.cameraComponent[i]);
                 LookRotation(player.transform[i], camera.transform[i], camera.cameraComponent[i]);
@@ -68,12 +66,12 @@ namespace Assets.Scripts.Systems
                     DoHeadBob(characterController.velocity.magnitude +
                                       (movementComponent.walkSpeed * (Input.GetAxis("Sprint") != 0 ? 1f : 0.5f)), transform, cameraComponent);
                 newCameraPosition = transform.localPosition;
-                newCameraPosition.y = transform.localPosition.y - jumpOffSet;
+                newCameraPosition.y = transform.localPosition.y - cameraComponent.jumpOffSet;
             }
             else
             {
                 newCameraPosition = transform.localPosition;
-                newCameraPosition.y = transform.localPosition.y - jumpOffSet;
+                newCameraPosition.y = transform.localPosition.y - cameraComponent.jumpOffSet;
             }
             transform.localPosition = newCameraPosition;
         }
@@ -181,15 +179,15 @@ namespace Assets.Scripts.Systems
             return q;
         }
 
-        public void DoBobCycleStep1()
+        public void DoBobCycleStep1(CameraComponent cameraComponent)
         {
             //if(bobCycleCD.Rate == .1f)
             //{
             //    DoBobCycleStep2();
             //    return;
             //}
-            jumpOffSet = Mathf.Lerp(0f, 0.1f, bobCycleCD.CoolDown / 0.2f);
-            bobCycleCD.DecreaseTime();
+            cameraComponent.jumpOffSet = Mathf.Lerp(0f, 0.1f, cameraComponent.bobCycleCD.CoolDown / 0.2f);
+            cameraComponent.bobCycleCD.DecreaseTime();
 
             //if (bobCycleCD.ReturnedToZero)
             //{
