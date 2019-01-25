@@ -64,7 +64,7 @@ namespace Assets.Scripts.Systems
             {
                 transform.localPosition =
                     DoHeadBob(characterController.velocity.magnitude +
-                                      (movementComponent.walkSpeed * (Input.GetAxis("Sprint") != 0 ? 1f : 0.5f)), transform, cameraComponent);
+                                      (movementComponent.walkSpeed * (NewInputManager.run? 1f : 0.5f)), transform, cameraComponent);
                 newCameraPosition = transform.localPosition;
                 newCameraPosition.y = transform.localPosition.y - cameraComponent.jumpOffSet;
             }
@@ -144,14 +144,14 @@ namespace Assets.Scripts.Systems
 
         private void InternalLockUpdate(CameraComponent cameraComponent)
         {
-            if (Input.GetKeyUp(KeyCode.Escape))
-            {
+            //if (Input.GetKeyUp(KeyCode.Escape))
+            //{
                 cameraComponent.m_cursorIsLocked = false;
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                cameraComponent.m_cursorIsLocked = true;
-            }
+            //}
+            //else if (Input.GetMouseButtonUp(0))
+            //{
+            //    cameraComponent.m_cursorIsLocked = true;
+            //}
 
             if (cameraComponent.m_cursorIsLocked)
             {

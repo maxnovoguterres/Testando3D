@@ -9,7 +9,6 @@ using UnityEngine.Experimental.Input;
 
 public class NewInputManager : MonoBehaviour
 {
-
     //public enum ActionMap
     //{
     //    Player1 = 1,
@@ -21,6 +20,7 @@ public class NewInputManager : MonoBehaviour
     public Teste2 controls2;
     Mouse m;
     public static Keyboard kb;
+    public Gamepad gp;
     //public static Dictionary<ActionMap, Entity> entityAction;
 
     public static float horizontal;
@@ -40,6 +40,11 @@ public class NewInputManager : MonoBehaviour
     {
         m = InputSystem.GetDevice<Mouse>();
         kb = InputSystem.GetDevice<Keyboard>();
+
+        InputSystem.onDeviceChange += delegate (InputDevice a, InputDeviceChange b) {
+
+        };
+
         //entityAction = new Dictionary<ActionMap, Entity>();
         //controls.Player1.Crouch.performed += x => Crouch(ActionMap.Player1);
         //controls.Player1.Aim.performed += x => Aim(ActionMap.Player1);

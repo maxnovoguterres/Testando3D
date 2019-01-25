@@ -9,6 +9,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Transforms;
+using Assets.Scripts.Input.Shared;
 
 namespace Assets.Scripts.Systems
 {
@@ -17,7 +18,7 @@ namespace Assets.Scripts.Systems
         public struct Player
         {
             public ComponentDataArray<PlayerMovement> movementComponent;
-            public ComponentDataArray<_Player> playerComponent;
+            public ComponentArray<PlayerComponent> playerComponent;
             public ComponentArray<Transform> transform;
             public ComponentArray<Animator> animator;
             public ComponentArray<Rigidbody> rb;
@@ -35,13 +36,13 @@ namespace Assets.Scripts.Systems
                 if (player.Length == 0) return;
 
                 var _player = player;
-                var playerComponent = _player.playerComponent[i];
+                //var player.playerComponent[i] = _player.player.playerComponent[i][i];
 
                 if (player.playerComponent[i].playerHeight == 0)
                 {
-                    playerComponent.playerHeight = player.characterController[i].height;
-                    playerComponent.playerCenter = player.characterController[i].center;
-                    playerComponent.cameraY = player.transform[i].Find("FirstPersonCamera").transform.position.y;
+                    player.playerComponent[i].playerHeight = player.characterController[i].height;
+                    player.playerComponent[i].playerCenter = player.characterController[i].center;
+                    player.playerComponent[i].cameraY = player.transform[i].Find("FirstPersonCamera").transform.position.y;
                 }
 
                 var playerInput = _player.inputComponent[i];
@@ -86,24 +87,24 @@ namespace Assets.Scripts.Systems
                 if (NewInputManager.crouch == 1)
                 {
                     playerMovement.isCrouching = 1;
-                    _player.characterController[i].center = new Vector3(playerComponent.playerCenter.x, playerComponent.playerCenter.y / 2, playerComponent.playerCenter.z);
-                    _player.characterController[i].height = playerComponent.playerHeight / 2;
+                    _player.characterController[i].center = new Vector3(player.playerComponent[i].playerCenter.x, player.playerComponent[i].playerCenter.y / 2, player.playerComponent[i].playerCenter.z);
+                    _player.characterController[i].height = player.playerComponent[i].playerHeight / 2;
                 }
                 //if (Input.GetButtonUp("Crouch"))
                 if (NewInputManager.crouch == 0)
                 {
                     playerMovement.isCrouching = 0;
-                    _player.characterController[i].center = playerComponent.playerCenter;
-                    _player.characterController[i].height = playerComponent.playerHeight;
+                    _player.characterController[i].center = player.playerComponent[i].playerCenter;
+                    _player.characterController[i].height = player.playerComponent[i].playerHeight;
                 }
                 if (_player.movementComponent[i].isCrouching == 1)
                 {
-                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, playerComponent.cameraY / 2, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
+                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, player.playerComponent[i].cameraY / 2, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
                     playerMovement.speed = _player.movementComponent[i].crouchSpeed;
                 }
                 else
                 {
-                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, playerComponent.cameraY, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
+                    player.transform[i].Find("FirstPersonCamera").transform.localPosition = Vector3.Lerp(player.transform[i].Find("FirstPersonCamera").transform.localPosition, new Vector3(player.transform[i].Find("FirstPersonCamera").transform.localPosition.x, player.playerComponent[i].cameraY, player.transform[i].Find("FirstPersonCamera").transform.localPosition.z), Time.deltaTime * 6);
                     playerMovement.speed = _player.movementComponent[i].isWalking == 1 ? _player.movementComponent[i].walkSpeed : _player.movementComponent[i].runSpeed;
                 }
 
@@ -135,12 +136,12 @@ namespace Assets.Scripts.Systems
                 _player.animator[i].SetFloat("speedPercent", speedPercent, .1f, Time.deltaTime);
 
                 //if (Input.GetButtonDown("Fire1") && playerInput.isReloading == 0)
-                if (NewInputManager.fire == 1)
+                if (player.playerComponent[i].GetButton("Fire"))
                 {
                     playerInput.shoot = 1;
                 }
                 //if (Input.GetButtonUp("Fire1"))
-                if (NewInputManager.fire == 0)
+                if (player.playerComponent[i].GetButtonUp("Fire"))
                 {
                     playerInput.shoot = 0;
                 }
@@ -170,7 +171,7 @@ namespace Assets.Scripts.Systems
 
                 _player.inputComponent[i] = playerInput;
                 _player.movementComponent[i] = playerMovement;
-                _player.playerComponent[i] = playerComponent;
+                //_player.player.playerComponent[i][i] = player.playerComponent[i];
                 player = _player;
             }
         }
