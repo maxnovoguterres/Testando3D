@@ -3,15 +3,24 @@ guid: 9ef68c457f70afe44acdd8581798f302
 ScriptedImporter:
   fileIDToRecycleName:
     11400000: <root>
-    11400002: Player/Horizontal
-    11400004: Player/Vertical
-    11400006: Player/Fire
-    11400008: Player/Aim
-    11400010: Player/PickupItemsAndEquipments
-    11400012: Player/Reload
-    11400014: Player/Crouch
-    11400016: Player/Run
-    11400018: Player/Jump
+    11400002: Player2/Vertical
+    11400004: Player2/Fire
+    11400006: Player2/Aim
+    11400008: Player2/PickupItemsAndEquipments
+    11400010: Player2/Reload
+    11400012: Player2/Crouch
+    11400014: Player2/Run
+    11400016: Player2/Jump
+    11400020: Player2/Horizontal
+    11400022: Player1/Horizontal
+    11400024: Player1/Vertical
+    11400026: Player1/Fire
+    11400028: Player1/Aim
+    11400030: Player1/PickupItemsAndEquipments
+    11400032: Player1/Reload
+    11400034: Player1/Crouch
+    11400036: Player1/Run
+    11400038: Player1/Jump
   externalObjects: {}
   userData: 
   assetBundleName: 
