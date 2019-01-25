@@ -66,7 +66,7 @@ namespace Assets.Scripts.Systems
                 //var hor = Input.GetAxis("Horizontal");
                 var ver = NewInputManager.vertical;
                 var hor = NewInputManager.horizontal;
-
+                Debug.Log(ver + "/" + hor);
                 moveDir = new float3(ver, 0, hor);
 
                 Vector3 desiredMove = _player.transform[i].forward * moveDir.x + _player.transform[i].right * moveDir.z;
@@ -78,20 +78,20 @@ namespace Assets.Scripts.Systems
                 var wal = ver != 0 || hor != 0;
                 //var spr = Input.GetButton("Sprint");
                 //var spr = NewInputManager.kb.leftShiftKey.isPressed;
-                var spr = NewInputManager.run;
+                var spr = player.playerComponent[i].GetButton("Run");
                 playerMovement.isWalking = (byte)(wal && !spr ? 1 : 0);
                 playerMovement.isRunning = (byte)(wal && spr ? 1 : 0);
 
 
                 //if (Input.GetButtonDown("Crouch"))
-                if (NewInputManager.crouch == 1)
+                if (player.playerComponent[i].GetButtonDown("Crouch"))
                 {
                     playerMovement.isCrouching = 1;
                     _player.characterController[i].center = new Vector3(player.playerComponent[i].playerCenter.x, player.playerComponent[i].playerCenter.y / 2, player.playerComponent[i].playerCenter.z);
                     _player.characterController[i].height = player.playerComponent[i].playerHeight / 2;
                 }
                 //if (Input.GetButtonUp("Crouch"))
-                if (NewInputManager.crouch == 0)
+                if (player.playerComponent[i].GetButtonUp("Crouch"))
                 {
                     playerMovement.isCrouching = 0;
                     _player.characterController[i].center = player.playerComponent[i].playerCenter;
@@ -116,7 +116,7 @@ namespace Assets.Scripts.Systems
                     playerInput.movement.y = Physics.gravity.y;
 
                     //if (Input.GetButtonDown("Jump") && _player.movementComponent[i].jumping == 0)
-                    if (NewInputManager.jump == 1 && _player.movementComponent[i].jumping == 0)
+                    if (player.playerComponent[i].GetButtonDown("Jump") && _player.movementComponent[i].jumping == 0)
                     {
                         playerInput.movement.y = _player.movementComponent[i].jumpSpeed;
                         //PlayJumpSound();
@@ -147,26 +147,31 @@ namespace Assets.Scripts.Systems
                 }
 
                 //if (Input.GetButtonDown("Fire2") && playerInput.isReloading == 0)
-                if (NewInputManager.aim == 1)
+                if (player.playerComponent[i].GetButtonDown("Aim"))
                 {
                     Debug.Log("mirando");
                     playerInput.aim = 1;
-                    NewInputManager.aim = 2;
                 }
                 //if (Input.GetButtonUp("Fire2"))
-                if (NewInputManager.aim == 0)
+                if (player.playerComponent[i].GetButtonUp("Aim"))
                 {
                     Debug.Log("parou de mirar");
                     playerInput.aim = 0;
-                    NewInputManager.aim = 2;
                 }
 
                 //if (Input.GetKeyDown(KeyCode.R) && playerInput.aim == 0)
-                if (NewInputManager.reload == 1 && playerInput.aim == 0)
+                if (player.playerComponent[i].GetButtonDown("Reload") && playerInput.aim == 0)
                 {
                     Debug.Log("reloading");
                     playerInput.isReloading = 1;
-                    NewInputManager.reload = 0;
+                }
+
+                if (player.playerComponent[i].GetButtonDown("Interactions") && GameManager.Instance.canEquip)
+                {
+                    EquipmentManager.instance.Equip(GameManager.Instance.gunToEquip, player.transform[0].gameObject);
+                    UnityEngine.Object.Destroy(GameManager.Instance.gunToDestroy);
+                    GameManager.Instance.pickUpText.text = "";
+                    GameManager.Instance.canEquip = false;
                 }
 
                 _player.inputComponent[i] = playerInput;

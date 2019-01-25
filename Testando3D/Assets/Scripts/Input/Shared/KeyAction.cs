@@ -22,7 +22,17 @@ namespace Assets.Scripts.Input.Shared
         {
             Actions = new Dictionary<string, KeyActionType>();
 
-            Actions.Add("Fire", new KeyActionType(Key.KeyNull, GamePadKey.rightTrigger, MouseKey.leftButton));
+            //Actions.Add("Horizontal", new KeyActionType(Key.KeyNull, GamePadKey.rightTrigger, MouseKey.leftButton));
+            //Actions.Add("Vertical", new KeyActionType(Key.KeyNull, GamePadKey.rightTrigger, MouseKey.leftButton));
+            Actions.Add("Fire", new KeyActionType(Key.KeyNull, GamePadKey.rightShoulder, MouseKey.leftButton));
+            Actions.Add("Aim", new KeyActionType(Key.KeyNull, GamePadKey.leftShoulder, MouseKey.rightButton));
+            Actions.Add("Interactions", new KeyActionType(KeyBoardKey.tKey, GamePadKey.yButton, Key.KeyNull));
+            Actions.Add("Reload", new KeyActionType(KeyBoardKey.rKey, GamePadKey.xButton, Key.KeyNull));
+            Actions.Add("Crouch", new KeyActionType(KeyBoardKey.leftCtrlKey, GamePadKey.bButton, Key.KeyNull));
+            Actions.Add("Run", new KeyActionType(KeyBoardKey.leftShiftKey, GamePadKey.aButton, Key.KeyNull));
+            Actions.Add("Jump", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.leftTrigger, Key.KeyNull));
+            //Actions.Add("MouseX", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.rightTrigger, Key.KeyNull));
+            //Actions.Add("MouseY", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.rightTrigger, Key.KeyNull));
         }
 
         #region [GetButtonMethods]

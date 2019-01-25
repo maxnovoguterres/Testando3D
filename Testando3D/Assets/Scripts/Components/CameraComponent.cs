@@ -14,7 +14,9 @@ namespace Assets.Scripts.Components
         public float YSensibility = 1f;
         public bool Smooth = true;
         public float SmoothTime = 15f;
-
+        public float VerticaltoHorizontalRatio = 2f;
+        public float HorizontalBobRange = 0.01f;
+        public float VerticalBobRange = 0.01f;
 
         [HideInInspector] public AnimationCurve Bobcurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(0.5f, 1f),
                                                             new Keyframe(1f, 0f), new Keyframe(1.5f, -1f),
