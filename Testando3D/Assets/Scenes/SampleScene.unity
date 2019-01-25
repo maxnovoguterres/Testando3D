@@ -341,8 +341,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea40c5490ca46f488949012461c49c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controls:
-    m_Asset: {fileID: 11400000, guid: 9ef68c457f70afe44acdd8581798f302, type: 3}
+  controls2:
+    m_Asset: {fileID: 11400000, guid: f71514655e397d74a9730860c11c7d76, type: 3}
 --- !u!114 &76343709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5009,8 +5009,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f12ee006f360344e86cf3792a70e166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XSensibility: 1
-  YSensibility: 1
+  XSensibility: 0.05
+  YSensibility: 0.05
   Smooth: 1
   SmoothTime: 15
   Bobcurve:

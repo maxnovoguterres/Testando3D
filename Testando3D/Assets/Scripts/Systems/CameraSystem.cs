@@ -99,8 +99,10 @@ namespace Assets.Scripts.Systems
 
         public void LookRotation(Transform character, Transform camera, CameraComponent cameraComponent)
         {
-            float yRot = Input.GetAxis("Mouse X") * cameraComponent.XSensibility;
-            float xRot = Input.GetAxis("Mouse Y") * cameraComponent.YSensibility;
+            //float yRot = Input.GetAxis("Mouse X") * cameraComponent.XSensibility;
+            //float xRot = Input.GetAxis("Mouse Y") * cameraComponent.YSensibility;
+            float yRot = NewInputManager.mouseX * cameraComponent.XSensibility; //XSensibility = 1
+            float xRot = NewInputManager.mouseY * cameraComponent.YSensibility; //YSensibility = 1
 
             cameraComponent.m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
             cameraComponent.m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);

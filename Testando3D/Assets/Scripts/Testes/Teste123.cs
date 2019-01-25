@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Teste : MonoBehaviour
+public class Teste123 : MonoBehaviour
 {
     float m_MaxDistance;
     //float m_Speed;

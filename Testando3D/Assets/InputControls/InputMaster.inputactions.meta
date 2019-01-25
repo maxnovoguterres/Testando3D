@@ -6,17 +6,17 @@ ScriptedImporter:
     11400002: Player2/Vertical
     11400004: Player2/Fire
     11400006: Player2/Aim
-    11400008: Player2/PickupItemsAndEquipments
     11400010: Player2/Reload
     11400012: Player2/Crouch
     11400014: Player2/Run
     11400016: Player2/Jump
+    11400018: Player1/Interactions
     11400020: Player2/Horizontal
     11400022: Player1/Horizontal
     11400024: Player1/Vertical
     11400026: Player1/Fire
     11400028: Player1/Aim
-    11400030: Player1/PickupItemsAndEquipments
+    11400030: Player2/Interactions
     11400032: Player1/Reload
     11400034: Player1/Crouch
     11400036: Player1/Run

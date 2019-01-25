@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Teste2 : MonoBehaviour
+public class Teste1234 : MonoBehaviour
 {
     public GameObject prefab;
     

@@ -24,7 +24,7 @@ public class InputMaster : InputActionAssetReference
         m_Player1_Vertical = m_Player1.GetAction("Vertical");
         m_Player1_Fire = m_Player1.GetAction("Fire");
         m_Player1_Aim = m_Player1.GetAction("Aim");
-        m_Player1_PickupItemsAndEquipments = m_Player1.GetAction("PickupItemsAndEquipments");
+        m_Player1_Interactions = m_Player1.GetAction("Interactions");
         m_Player1_Reload = m_Player1.GetAction("Reload");
         m_Player1_Crouch = m_Player1.GetAction("Crouch");
         m_Player1_Run = m_Player1.GetAction("Run");
@@ -35,7 +35,7 @@ public class InputMaster : InputActionAssetReference
         m_Player2_Vertical = m_Player2.GetAction("Vertical");
         m_Player2_Fire = m_Player2.GetAction("Fire");
         m_Player2_Aim = m_Player2.GetAction("Aim");
-        m_Player2_PickupItemsAndEquipments = m_Player2.GetAction("PickupItemsAndEquipments");
+        m_Player2_Interactions = m_Player2.GetAction("Interactions");
         m_Player2_Reload = m_Player2.GetAction("Reload");
         m_Player2_Crouch = m_Player2.GetAction("Crouch");
         m_Player2_Run = m_Player2.GetAction("Run");
@@ -49,7 +49,7 @@ public class InputMaster : InputActionAssetReference
         m_Player1_Vertical = null;
         m_Player1_Fire = null;
         m_Player1_Aim = null;
-        m_Player1_PickupItemsAndEquipments = null;
+        m_Player1_Interactions = null;
         m_Player1_Reload = null;
         m_Player1_Crouch = null;
         m_Player1_Run = null;
@@ -59,7 +59,7 @@ public class InputMaster : InputActionAssetReference
         m_Player2_Vertical = null;
         m_Player2_Fire = null;
         m_Player2_Aim = null;
-        m_Player2_PickupItemsAndEquipments = null;
+        m_Player2_Interactions = null;
         m_Player2_Reload = null;
         m_Player2_Crouch = null;
         m_Player2_Run = null;
@@ -82,7 +82,7 @@ public class InputMaster : InputActionAssetReference
     private InputAction m_Player1_Vertical;
     private InputAction m_Player1_Fire;
     private InputAction m_Player1_Aim;
-    private InputAction m_Player1_PickupItemsAndEquipments;
+    private InputAction m_Player1_Interactions;
     private InputAction m_Player1_Reload;
     private InputAction m_Player1_Crouch;
     private InputAction m_Player1_Run;
@@ -95,7 +95,7 @@ public class InputMaster : InputActionAssetReference
         public InputAction @Vertical { get { return m_Wrapper.m_Player1_Vertical; } }
         public InputAction @Fire { get { return m_Wrapper.m_Player1_Fire; } }
         public InputAction @Aim { get { return m_Wrapper.m_Player1_Aim; } }
-        public InputAction @PickupItemsAndEquipments { get { return m_Wrapper.m_Player1_PickupItemsAndEquipments; } }
+        public InputAction @Interactions { get { return m_Wrapper.m_Player1_Interactions; } }
         public InputAction @Reload { get { return m_Wrapper.m_Player1_Reload; } }
         public InputAction @Crouch { get { return m_Wrapper.m_Player1_Crouch; } }
         public InputAction @Run { get { return m_Wrapper.m_Player1_Run; } }
@@ -121,7 +121,7 @@ public class InputMaster : InputActionAssetReference
     private InputAction m_Player2_Vertical;
     private InputAction m_Player2_Fire;
     private InputAction m_Player2_Aim;
-    private InputAction m_Player2_PickupItemsAndEquipments;
+    private InputAction m_Player2_Interactions;
     private InputAction m_Player2_Reload;
     private InputAction m_Player2_Crouch;
     private InputAction m_Player2_Run;
@@ -134,7 +134,7 @@ public class InputMaster : InputActionAssetReference
         public InputAction @Vertical { get { return m_Wrapper.m_Player2_Vertical; } }
         public InputAction @Fire { get { return m_Wrapper.m_Player2_Fire; } }
         public InputAction @Aim { get { return m_Wrapper.m_Player2_Aim; } }
-        public InputAction @PickupItemsAndEquipments { get { return m_Wrapper.m_Player2_PickupItemsAndEquipments; } }
+        public InputAction @Interactions { get { return m_Wrapper.m_Player2_Interactions; } }
         public InputAction @Reload { get { return m_Wrapper.m_Player2_Reload; } }
         public InputAction @Crouch { get { return m_Wrapper.m_Player2_Crouch; } }
         public InputAction @Run { get { return m_Wrapper.m_Player2_Run; } }

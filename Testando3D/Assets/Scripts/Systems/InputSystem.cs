@@ -61,8 +61,11 @@ namespace Assets.Scripts.Systems
                 playerMovement.previouslyGrounded = (byte)(_player.characterController[i].isGrounded ? 1 : 0);
 
                 Vector3 moveDir = new Vector3();
-                var ver = Input.GetAxis("Vertical");
-                var hor = Input.GetAxis("Horizontal");
+                //var ver = Input.GetAxis("Vertical");
+                //var hor = Input.GetAxis("Horizontal");
+                var ver = NewInputManager.vertical;
+                var hor = NewInputManager.horizontal;
+
                 moveDir = new float3(ver, 0, hor);
 
                 Vector3 desiredMove = _player.transform[i].forward * moveDir.x + _player.transform[i].right * moveDir.z;
@@ -72,18 +75,22 @@ namespace Assets.Scripts.Systems
                 desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
                 var wal = ver != 0 || hor != 0;
-                var spr = Input.GetButton("Sprint");
+                //var spr = Input.GetButton("Sprint");
+                //var spr = NewInputManager.kb.leftShiftKey.isPressed;
+                var spr = NewInputManager.run;
                 playerMovement.isWalking = (byte)(wal && !spr ? 1 : 0);
                 playerMovement.isRunning = (byte)(wal && spr ? 1 : 0);
 
 
-                if (Input.GetButtonDown("Crouch"))
+                //if (Input.GetButtonDown("Crouch"))
+                if (NewInputManager.crouch == 1)
                 {
                     playerMovement.isCrouching = 1;
                     _player.characterController[i].center = new Vector3(playerComponent.playerCenter.x, playerComponent.playerCenter.y / 2, playerComponent.playerCenter.z);
                     _player.characterController[i].height = playerComponent.playerHeight / 2;
                 }
-                if (Input.GetButtonUp("Crouch"))
+                //if (Input.GetButtonUp("Crouch"))
+                if (NewInputManager.crouch == 0)
                 {
                     playerMovement.isCrouching = 0;
                     _player.characterController[i].center = playerComponent.playerCenter;
@@ -107,7 +114,8 @@ namespace Assets.Scripts.Systems
                 {
                     playerInput.movement.y = Physics.gravity.y;
 
-                    if (Input.GetButtonDown("Jump") && _player.movementComponent[i].jumping == 0)
+                    //if (Input.GetButtonDown("Jump") && _player.movementComponent[i].jumping == 0)
+                    if (NewInputManager.jump == 1 && _player.movementComponent[i].jumping == 0)
                     {
                         playerInput.movement.y = _player.movementComponent[i].jumpSpeed;
                         //PlayJumpSound();
@@ -126,27 +134,38 @@ namespace Assets.Scripts.Systems
                 float speedPercent = _player.characterController[i].velocity.magnitude / _player.movementComponent[i].runSpeed;
                 _player.animator[i].SetFloat("speedPercent", speedPercent, .1f, Time.deltaTime);
 
-                if (Input.GetButtonDown("Fire1") && playerInput.isReloading == 0)
+                //if (Input.GetButtonDown("Fire1") && playerInput.isReloading == 0)
+                if (NewInputManager.fire == 1)
                 {
                     playerInput.shoot = 1;
                 }
-                if (Input.GetButtonUp("Fire1"))
+                //if (Input.GetButtonUp("Fire1"))
+                if (NewInputManager.fire == 0)
                 {
                     playerInput.shoot = 0;
                 }
 
-                if (Input.GetButtonDown("Fire2") && playerInput.isReloading == 0)
+                //if (Input.GetButtonDown("Fire2") && playerInput.isReloading == 0)
+                if (NewInputManager.aim == 1)
                 {
+                    Debug.Log("mirando");
                     playerInput.aim = 1;
+                    NewInputManager.aim = 2;
                 }
-                if (Input.GetButtonUp("Fire2"))
+                //if (Input.GetButtonUp("Fire2"))
+                if (NewInputManager.aim == 0)
                 {
+                    Debug.Log("parou de mirar");
                     playerInput.aim = 0;
+                    NewInputManager.aim = 2;
                 }
 
-                if (Input.GetKeyDown(KeyCode.R) && playerInput.aim == 0)
+                //if (Input.GetKeyDown(KeyCode.R) && playerInput.aim == 0)
+                if (NewInputManager.reload == 1 && playerInput.aim == 0)
                 {
+                    Debug.Log("reloading");
                     playerInput.isReloading = 1;
+                    NewInputManager.reload = 0;
                 }
 
                 _player.inputComponent[i] = playerInput;
