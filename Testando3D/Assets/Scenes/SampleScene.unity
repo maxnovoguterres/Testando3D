@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 76343702}
   - component: {fileID: 76343703}
   - component: {fileID: 76343705}
+  - component: {fileID: 76343708}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -281,6 +282,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedData:
     PlayerLocalID: 0
+    playerHeight: 0
+    playerCenter:
+      x: 0
+      y: 0
+      z: 0
+    cameraY: 0
 --- !u!4 &76343706
 Transform:
   m_ObjectHideFlags: 0
@@ -322,6 +329,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &76343708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 76343701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ea40c5490ca46f488949012461c49c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controls:
+    m_Asset: {fileID: 11400000, guid: 9ef68c457f70afe44acdd8581798f302, type: 3}
 --- !u!114 &76343709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4215,7 +4236,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.869, y: 0.058333334}
   m_AnchorMax: {x: 0.9595187, y: 0.09}
-  m_AnchoredPosition: {x: -0.89941406, y: 0.08984375}
+  m_AnchoredPosition: {x: -0.8984375, y: 0.08984375}
   m_SizeDelta: {x: -0.30999756, y: -0.42999268}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &397777042
@@ -5049,6 +5070,7 @@ MonoBehaviour:
   _CharacterTransform: {fileID: 76343706}
   lockCursor: 1
   m_cursorIsLocked: 1
+  jumpOffSet: 0
 --- !u!114 &534669907
 MonoBehaviour:
   m_ObjectHideFlags: 0
