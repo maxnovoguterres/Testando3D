@@ -17,7 +17,6 @@ namespace Assets.Scripts.Components
         public byte shoot;
         public byte aim;
         public byte isReloading;
-        public byte crouch;
     }
 
     public class InputComponent : ComponentDataWrapper<_Input> { }
