@@ -19,7 +19,9 @@ public class GameManager : MonoBehaviour
 
     public static EntityManager entityManager;
 
-    //[Header("Prefabs")]
+    [Header("Player")]
+    public GameObject Player;
+
     [HideInInspector] public Mesh bullet;
 
     [Header("Canvas")]

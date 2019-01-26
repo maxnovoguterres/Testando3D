@@ -66,7 +66,6 @@ namespace Assets.Scripts.Systems
                 //var hor = Input.GetAxis("Horizontal");
                 var ver = NewInputManager.vertical;
                 var hor = NewInputManager.horizontal;
-                Debug.Log(ver + "/" + hor);
                 moveDir = new float3(ver, 0, hor);
 
                 Vector3 desiredMove = _player.transform[i].forward * moveDir.x + _player.transform[i].right * moveDir.z;

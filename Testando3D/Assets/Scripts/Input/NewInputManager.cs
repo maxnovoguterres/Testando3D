@@ -22,7 +22,6 @@ public class NewInputManager : MonoBehaviour
     public static Keyboard kb;
     public Gamepad gp;
     //public static Dictionary<ActionMap, Entity> entityAction;
-
     public static float horizontal;
     public static float vertical;
     public static float crouch;

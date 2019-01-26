@@ -136,6 +136,8 @@ namespace Assets.Scripts.Input.Helper
         public static Key leftButton { get { return new Key { Name = "leftButton", Type = typeof(ButtonControl), Bit = 1 }; } }
         public static Key middleButton { get { return new Key { Name = "middleButton", Type = typeof(ButtonControl), Bit = 1 }; } }
         public static Key rightButton { get { return new Key { Name = "rightButton", Type = typeof(ButtonControl), Bit = 1 }; } }
+        public static Key deltaX { get { return new Key { Name = "delta", Type = typeof(Vector2Control), Bit = 0 }; } }
+        public static Key deltaY { get { return new Key { Name = "delta", Type = typeof(Vector2Control), Bit = 1 }; } }
     }
     #endregion
 
@@ -148,8 +150,10 @@ namespace Assets.Scripts.Input.Helper
         public static Key aButton { get { return new Key { Name = "aButton", Type = typeof(ButtonControl), Bit = 1 }; } }
         public static Key rightTrigger { get { return new Key { Name = "rightTrigger", Type = typeof(ButtonControl), Bit = 1 }; } }
         public static Key leftTrigger { get { return new Key { Name = "leftTrigger", Type = typeof(ButtonControl), Bit = 1 }; } }
-        public static Key rightStick { get { return new Key { Name = "rightStick", Type = typeof(ButtonControl), Bit = 1 }; } }
-        public static Key leftStick { get { return new Key { Name = "leftStick", Type = typeof(ButtonControl), Bit = 1 }; } }
+        public static Key rightStickX { get { return new Key { Name = "rightStickX", Type = typeof(StickControl), Bit = 0 }; } }
+        public static Key rightStickY { get { return new Key { Name = "rightStickY", Type = typeof(StickControl), Bit = 1 }; } }
+        public static Key leftStickX { get { return new Key { Name = "leftStickX", Type = typeof(StickControl), Bit = 0 }; } }
+        public static Key leftStickY { get { return new Key { Name = "leftStickY", Type = typeof(StickControl), Bit = 1 }; } }
         public static Key rightShoulder { get { return new Key { Name = "rightShoulder", Type = typeof(ButtonControl), Bit = 1 }; } }
         public static Key leftShoulder { get { return new Key { Name = "leftShoulder", Type = typeof(ButtonControl), Bit = 1 }; } }
         //public static Key dpad { get { return new Key { Name = "dpad", Type = typeof(ButtonControl), Bit = 1 }; } }

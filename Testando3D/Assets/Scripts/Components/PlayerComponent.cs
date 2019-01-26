@@ -18,8 +18,8 @@ namespace Assets.Scripts.Components
         public float3 playerCenter;
         public float cameraY;
         public Gamepad gamepad = null;
-        public Keyboard keyboard = Keyboard.current;
-        public Mouse mouse = Mouse.current;
+        public Keyboard keyboard = null;
+        public Mouse mouse = null;
     }
     //public class PlayerComponent : ComponentDataWrapper<_Player> { }
 }

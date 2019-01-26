@@ -30,7 +30,7 @@ namespace Assets.Scripts.Input.Shared
             Actions.Add("Reload", new KeyActionType(KeyBoardKey.rKey, GamePadKey.xButton, Key.KeyNull));
             Actions.Add("Crouch", new KeyActionType(KeyBoardKey.leftCtrlKey, GamePadKey.bButton, Key.KeyNull));
             Actions.Add("Run", new KeyActionType(KeyBoardKey.leftShiftKey, GamePadKey.aButton, Key.KeyNull));
-            Actions.Add("Jump", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.leftTrigger, Key.KeyNull));
+            Actions.Add("Jump", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.buttonSouth, Key.KeyNull));
             //Actions.Add("MouseX", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.rightTrigger, Key.KeyNull));
             //Actions.Add("MouseY", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.rightTrigger, Key.KeyNull));
         }
@@ -107,6 +107,29 @@ namespace Assets.Scripts.Input.Shared
                 return !string.IsNullOrWhiteSpace(keyActionType.Keyboard.Name) ? ((KeyControl)typeof(Keyboard).GetProperty(keyActionType.Keyboard.Name).GetValue(p.keyboard)).wasPressedThisFrame : false || !string.IsNullOrWhiteSpace(keyActionType.Mouse.Name) ? ((ButtonControl)typeof(Mouse).GetProperty(keyActionType.Mouse.Name).GetValue(p.mouse)).wasPressedThisFrame : false;
             }
         }
+
+        public static float GetAxis(this PlayerComponent p, string action)
+        {
+            if (!Actions.ContainsKey(action))
+            {
+                Debug.Log($"Action {action} não existente");
+                return 0;
+            }
+
+            var keyActionType = Actions[action];
+
+            if (p.gamepad != null)
+            {
+                var key = keyActionType.Gamepad;
+                return ((StickControl)typeof(Gamepad).GetProperty(key.Name).GetValue(p.gamepad)).GetAxis(key.Bit).ReadValue();
+            }
+            else
+            {
+                //!string.IsNullOrWhiteSpace(keyActionType.Keyboard.Name) ? ((KeyControl)typeof(Keyboard).GetProperty(keyActionType.Keyboard.Name).GetValue(p.keyboard)).wasPressedThisFrame : false ||
+                var mouseKey = keyActionType.Mouse;
+                return !string.IsNullOrWhiteSpace(mouseKey.Name) ? ((Vector2Control)typeof(Mouse).GetProperty(mouseKey.Name).GetValue(p.mouse)).GetAxis(mouseKey.Bit).ReadValue() : 0;
+            }
+        }
         #endregion
 
         #region [Helper]
@@ -123,6 +146,17 @@ namespace Assets.Scripts.Input.Shared
                     return dpad.left;
                 case 3:
                     return dpad.right;
+            }
+        }
+        private static AxisControl GetAxis(this Vector2Control v, int bit)
+        {
+            switch (bit)
+            {
+                default:
+                case 0:
+                    return v.x;
+                case 1:
+                    return v.y;
             }
         }
         #endregion
