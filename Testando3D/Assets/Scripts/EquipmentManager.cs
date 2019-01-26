@@ -57,6 +57,7 @@ public class EquipmentManager : MonoBehaviour {
         if (newItem.equipSlot == EquipmentSlot.Gun)
         {
             var camera = player.transform.Find("FirstPersonCamera");
+            var gunCamera = camera.Find("GunCamera").gameObject;
             var gunHolder = camera.Find("GunHolder").gameObject;
             var childs = gunHolder.GetComponentsInChildren<GunComponent>();
 
@@ -68,6 +69,7 @@ public class EquipmentManager : MonoBehaviour {
             ob.GetComponent<GunComponent>().playerEntity = player.GetComponent<GameObjectEntity>().Entity;
             ob.GetComponent<GunComponent>().animator = gunHolder.GetComponent<Animator>();
             ob.GetComponent<GunComponent>().firstPersonCamera = camera.GetComponent<Camera>();
+            ob.GetComponent<GunComponent>().gunCamera = gunCamera;
             GameManager.Instance.EnableRedDot(true);
 
             if (oldItem != null)

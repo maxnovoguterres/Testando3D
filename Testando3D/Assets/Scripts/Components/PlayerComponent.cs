@@ -20,6 +20,8 @@ namespace Assets.Scripts.Components
         public Gamepad gamepad = null;
         public Keyboard keyboard = null;
         public Mouse mouse = null;
+        public Camera firstPersonCamera;
+        public Camera gunCamera;
     }
     //public class PlayerComponent : ComponentDataWrapper<_Player> { }
 }

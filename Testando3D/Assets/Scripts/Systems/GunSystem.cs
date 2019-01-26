@@ -415,7 +415,7 @@ namespace Assets.Scripts.Systems
         void OnScoped(GunComponent gunComponent)
         {
             GameManager.Instance.scopeOverlay.enabled = true;
-            gunComponent.firstPersonCamera.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
+            gunComponent.gunCamera.SetActive(false);
             gunComponent.normalFOV = gunComponent.firstPersonCamera.fieldOfView;
             gunComponent.firstPersonCamera.fieldOfView = gunComponent.scopedFOV;
         }
@@ -423,7 +423,7 @@ namespace Assets.Scripts.Systems
         void OnUnscoped(GunComponent gunComponent)
         {
             GameManager.Instance.scopeOverlay.enabled = false;
-            gunComponent.firstPersonCamera.cullingMask ^= 1 << LayerMask.NameToLayer("Guns");
+            gunComponent.gunCamera.SetActive(true);
             gunComponent.firstPersonCamera.fieldOfView = gunComponent.normalFOV;
         }
 
