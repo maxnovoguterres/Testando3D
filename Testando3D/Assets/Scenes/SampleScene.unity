@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9d0522ffda61b4c801d5ec0cd9a432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 5934058492814105058, guid: 5dc2f08023d349a44bdf16bc4a66b1bf, type: 3}
+  Player: {fileID: 1639948905773304770, guid: f84f37e08f9e9ab4fb040eee53164b49, type: 3}
   bullet: {fileID: 4300000, guid: d5f6d0e3aa478714890ec2611ce38bad, type: 3}
   redDot: {fileID: 1533754220}
   arrows: []
@@ -7002,7 +7002,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0222ef2d2ad4b5b42852631de414d3b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPref: {fileID: 5934058492814105058, guid: 5dc2f08023d349a44bdf16bc4a66b1bf,
+  playerPref: {fileID: 1639948905773304770, guid: f84f37e08f9e9ab4fb040eee53164b49,
     type: 3}
   index: 0
 --- !u!4 &1504781248

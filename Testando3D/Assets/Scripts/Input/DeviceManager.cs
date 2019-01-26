@@ -32,17 +32,18 @@ public class DeviceManager : ComponentSystem
                 pc.gamepad = Gamepad.all.Single(x => x.id == device.id);
                 pc.PlayerLocalID = players.Length;
                 devices.Add(device);
-                CameraRect();
+                CameraRect(player);
             }
             else if (change == InputDeviceChange.Removed && devices.Contains(device))
             {
                 for (int i = 0; i < players.Length; i++)
                 {
                     if (players.playerComponent[i].gamepad == null) continue;
-                    if (players.playerComponent[i].gamepad.id == device.id) {
+                    if (players.playerComponent[i].gamepad.id == device.id)
+                    {
                         Object.Destroy(players.playerComponent[i].gameObject);
                         GameManager.entityManager.DestroyEntity(players.Entity[i]);
-                        CameraRect();
+                        CameraRect(null);
                         break;
                     }
                 }
@@ -61,30 +62,28 @@ public class DeviceManager : ComponentSystem
         pc.mouse = Mouse.current;
     }
 
-    void CameraRect()
+    void CameraRect(GameObject player)
     {
+        List<Rect> rects = new List<Rect>();
+        var playerLength = players.Length + (player == null ? -1 : 1);
+        if (playerLength == 1) rects = PlayerUtils.oneCameraRects;
+        if (playerLength == 2) rects = PlayerUtils.twoCameraRects;
+        if (playerLength == 3) rects = PlayerUtils.threeCameraRects;
+        if (playerLength == 4) rects = PlayerUtils.fourCameraRects;
+
         for (int i = 0; i < players.Length; i++)
         {
-            if (players.Length == 1)
-            {
-                players.playerComponent[i].firstPersonCamera.rect = PlayerUtils.oneCameraRects[i];
-                players.playerComponent[i].gunCamera.rect = PlayerUtils.oneCameraRects[i];
-            }
-            else if (players.Length == 2)
-            {
-                players.playerComponent[i].firstPersonCamera.rect = PlayerUtils.twoCameraRects[i];
-                players.playerComponent[i].gunCamera.rect = PlayerUtils.twoCameraRects[i];
-            }
-            else if (players.Length == 3)
-            {
-                players.playerComponent[i].firstPersonCamera.rect = PlayerUtils.threeCameraRects[i];
-                players.playerComponent[i].gunCamera.rect = PlayerUtils.threeCameraRects[i];
-            }
-            else if (players.Length == 4)
-            {
-                players.playerComponent[i].firstPersonCamera.rect = PlayerUtils.fourCameraRects[i];
-                players.playerComponent[i].gunCamera.rect = PlayerUtils.fourCameraRects[i];
-            }
+            Debug.Log(rects[i]);
+            players.playerComponent[i].firstPersonCamera.rect = rects[i];
+            players.playerComponent[i].gunCamera.rect = rects[i];
+        }
+
+        if (player != null)
+        {
+            var playerComponent = player.GetComponent<PlayerComponent>();
+
+            playerComponent.firstPersonCamera.rect = rects[players.Length];
+            playerComponent.gunCamera.rect = rects[players.Length];
         }
     }
 }
