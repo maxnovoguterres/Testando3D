@@ -121,13 +121,13 @@ namespace Assets.Scripts.Input.Shared
             if (p.gamepad != null)
             {
                 var key = keyActionType.Gamepad;
-                return ((StickControl)typeof(Gamepad).GetProperty(key.Name).GetValue(p.gamepad)).GetAxis(key.Bit).ReadValue();
+                return ((StickControl)typeof(Gamepad).GetProperty(key.Name).GetValue(p.gamepad)).GetAxis(key.Bit).ReadValue() / 100;
             }
             else
             {
                 //!string.IsNullOrWhiteSpace(keyActionType.Keyboard.Name) ? ((KeyControl)typeof(Keyboard).GetProperty(keyActionType.Keyboard.Name).GetValue(p.keyboard)).wasPressedThisFrame : false ||
                 var mouseKey = keyActionType.Mouse;
-                return !string.IsNullOrWhiteSpace(mouseKey.Name) ? ((Vector2Control)typeof(Mouse).GetProperty(mouseKey.Name).GetValue(p.mouse)).GetAxis(mouseKey.Bit).ReadValue() : 0;
+                return !string.IsNullOrWhiteSpace(mouseKey.Name) ? ((Vector2Control)typeof(Mouse).GetProperty(mouseKey.Name).GetValue(p.mouse)).GetAxis(mouseKey.Bit).ReadValue() / 100 : 0;
             }
         }
         #endregion
