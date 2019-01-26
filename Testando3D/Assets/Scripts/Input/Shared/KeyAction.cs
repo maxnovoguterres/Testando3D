@@ -31,8 +31,10 @@ namespace Assets.Scripts.Input.Shared
             Actions.Add("Crouch", new KeyActionType(KeyBoardKey.leftCtrlKey, GamePadKey.bButton, Key.KeyNull));
             Actions.Add("Run", new KeyActionType(KeyBoardKey.leftShiftKey, GamePadKey.aButton, Key.KeyNull));
             Actions.Add("Jump", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.buttonSouth, Key.KeyNull));
-            Actions.Add("MouseX", new KeyActionType(Key.KeyNull, GamePadKey.rightTrigger, MouseKey.deltaX));
-            Actions.Add("MouseY", new KeyActionType(Key.KeyNull, GamePadKey.rightTrigger, MouseKey.deltaY));
+            Actions.Add("MouseX", new KeyActionType(Key.KeyNull, GamePadKey.rightStickX, MouseKey.deltaX));
+            Actions.Add("MouseY", new KeyActionType(Key.KeyNull, GamePadKey.rightStickY, MouseKey.deltaY));
+            Actions.Add("CursorOn", new KeyActionType(KeyBoardKey.escapeKey, GamePadKey.startButton, Key.KeyNull));
+            Actions.Add("CursorOff", new KeyActionType(Key.KeyNull, GamePadKey.selectButton, MouseKey.leftButton));
         }
 
         #region [GetButtonMethods]
@@ -127,7 +129,7 @@ namespace Assets.Scripts.Input.Shared
             {
                 //!string.IsNullOrWhiteSpace(keyActionType.Keyboard.Name) ? ((KeyControl)typeof(Keyboard).GetProperty(keyActionType.Keyboard.Name).GetValue(p.keyboard)).wasPressedThisFrame : false ||
                 var mouseKey = keyActionType.Mouse;
-                return !string.IsNullOrWhiteSpace(mouseKey.Name) ? ((Vector2Control)typeof(Mouse).GetProperty(mouseKey.Name).GetValue(p.mouse)).GetAxis(mouseKey.Bit).ReadValue() / 100 : 0;
+                return !string.IsNullOrWhiteSpace(mouseKey.Name) ? ((Vector2Control)typeof(Mouse).GetProperty(mouseKey.Name).GetValue(p.mouse)).GetAxis(mouseKey.Bit).ReadValue() / 50 : 0;
             }
         }
         #endregion

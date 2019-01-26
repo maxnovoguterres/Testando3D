@@ -103,8 +103,8 @@ namespace Assets.Scripts.Systems
         {
             //float yRot = Input.GetAxis("Mouse X") * cameraComponent.XSensibility;
             //float xRot = Input.GetAxis("Mouse Y") * cameraComponent.YSensibility;
-            float yRot = playerComponent.GetAxis("MouseX") * cameraComponent.XSensibility; //XSensibility = 1
-            float xRot = playerComponent.GetAxis("MouseY") * cameraComponent.YSensibility; //YSensibility = 1
+            float yRot = playerComponent.GetAxis("MouseX") * (playerComponent.gamepad != null ? 40 : 1) * cameraComponent.XSensibility; //XSensibility = 1
+            float xRot = playerComponent.GetAxis("MouseY") * (playerComponent.gamepad != null ? 40 : 1) * cameraComponent.YSensibility; //YSensibility = 1
 
             cameraComponent.m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
             cameraComponent.m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
@@ -124,7 +124,7 @@ namespace Assets.Scripts.Systems
                 camera.localRotation = cameraComponent.m_CameraTargetRot;
             }
 
-            UpdateCursorLock(cameraComponent);
+            UpdateCursorLock(cameraComponent, playerComponent);
         }
 
         public void SetCursorLock(bool value, CameraComponent cameraComponent)
@@ -137,23 +137,25 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        public void UpdateCursorLock(CameraComponent cameraComponent)
+        public void UpdateCursorLock(CameraComponent cameraComponent, PlayerComponent playerComponent)
         {
             //if the user set "lockCursor" we check & properly lock the cursos
             if (cameraComponent.lockCursor)
-                InternalLockUpdate(cameraComponent);
+                InternalLockUpdate(cameraComponent, playerComponent);
         }
 
-        private void InternalLockUpdate(CameraComponent cameraComponent)
+        private void InternalLockUpdate(CameraComponent cameraComponent, PlayerComponent playerComponent)
         {
             //if (Input.GetKeyUp(KeyCode.Escape))
-            //{
+            if (playerComponent.GetButtonUp("CursorOn"))
+            {
                 cameraComponent.m_cursorIsLocked = false;
-            //}
+            }
             //else if (Input.GetMouseButtonUp(0))
-            //{
-            //    cameraComponent.m_cursorIsLocked = true;
-            //}
+            else if (playerComponent.GetButtonUp("CursorOff"))
+            {
+                cameraComponent.m_cursorIsLocked = true;
+            }
 
             if (cameraComponent.m_cursorIsLocked)
             {

@@ -42,7 +42,7 @@ namespace Assets.Scripts.Systems
                 {
                     player.playerComponent[i].playerHeight = player.characterController[i].height;
                     player.playerComponent[i].playerCenter = player.characterController[i].center;
-                    player.playerComponent[i].cameraY = player.transform[i].Find("FirstPersonCamera").transform.position.y;
+                    player.playerComponent[i].cameraY = player.transform[i].Find("FirstPersonCamera").transform.localPosition.y;
                 }
 
                 var playerInput = _player.inputComponent[i];
