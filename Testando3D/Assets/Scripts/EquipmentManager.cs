@@ -17,7 +17,6 @@ public class EquipmentManager : MonoBehaviour {
     
     public Equipment[] defaultItems;
     public SkinnedMeshRenderer targetMesh;
-    public GameObject gunHover;
     public Transform gunsParent;
     Equipment[] currentEquipment;
     SkinnedMeshRenderer[] currentMeshes;
@@ -57,16 +56,18 @@ public class EquipmentManager : MonoBehaviour {
 
         if (newItem.equipSlot == EquipmentSlot.Gun)
         {
-            var childs = gunHover.GetComponentsInChildren<GunComponent>();
+            var camera = player.transform.Find("FirstPersonCamera");
+            var gunHolder = camera.Find("GunHolder").gameObject;
+            var childs = gunHolder.GetComponentsInChildren<GunComponent>();
 
             var ob = Instantiate(newItem.ob);
-            ob.transform.parent = gunHover.transform;
+            ob.transform.parent = gunHolder.transform;
             ob.transform.localPosition = new Vector3(0, 0, 0);
             ob.transform.localRotation = Quaternion.identity;
             ob.GetComponent<GunComponent>().player = player;
             ob.GetComponent<GunComponent>().playerEntity = player.GetComponent<GameObjectEntity>().Entity;
-            ob.GetComponent<GunComponent>().animator = gunHover.GetComponent<Animator>();
-            ob.GetComponent<GunComponent>().firstPersonCamera = player.transform.Find("FirstPersonCamera").GetComponent<Camera>();
+            ob.GetComponent<GunComponent>().animator = gunHolder.GetComponent<Animator>();
+            ob.GetComponent<GunComponent>().firstPersonCamera = camera.GetComponent<Camera>();
             GameManager.Instance.EnableRedDot(true);
 
             if (oldItem != null)

@@ -28,8 +28,6 @@ public class DeviceManager : ComponentSystem
             {
                 var player = Object.Instantiate(GameManager.Instance.Player, new Vector3(), new Quaternion());
                 var pc = player.GetComponent<PlayerComponent>();
-                Debug.Log(string.Join(", ", Gamepad.all.Select(x => x.id)));
-                Debug.Log(device.id);
                 pc.gamepad = Gamepad.all.Single(x => x.id == device.id);
                 pc.PlayerLocalID = players.Length;
                 devices.Add(device);

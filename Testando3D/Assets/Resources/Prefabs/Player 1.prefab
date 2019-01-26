@@ -163,6 +163,9 @@ MonoBehaviour:
   YSensibility: 0.05
   Smooth: 1
   SmoothTime: 15
+  VerticaltoHorizontalRatio: 2
+  HorizontalBobRange: 0.01
+  VerticalBobRange: 0.01
   Bobcurve:
     serializedVersion: 2
     m_Curve:
@@ -236,7 +239,6 @@ GameObject:
   - component: {fileID: 7350027053931466527}
   - component: {fileID: 7350027053931466513}
   - component: {fileID: 7350027053931466512}
-  - component: {fileID: 7350027053931466523}
   - component: {fileID: 7350027053931466526}
   m_Layer: 8
   m_Name: Player 1
@@ -378,20 +380,6 @@ MonoBehaviour:
     isWalking: 0
     isRunning: 0
     isCrouching: 0
---- !u!114 &7350027053931466523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7350027053931466514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ea40c5490ca46f488949012461c49c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controls2:
-    m_Asset: {fileID: 11400000, guid: f71514655e397d74a9730860c11c7d76, type: 3}
 --- !u!114 &7350027053931466526
 MonoBehaviour:
   m_ObjectHideFlags: 0

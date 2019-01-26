@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
         SetObjectInScene();
     }
 
+    #region [ECS Objects]
     void SetObjectInScene()
     {
         var meshes = new Dictionary<MeshInfo, Mesh>();
@@ -92,6 +93,7 @@ public class GameManager : MonoBehaviour
 
         e.Dispose();
     }
+    #endregion
 
     public void EnableRedDot(bool enable)
     {

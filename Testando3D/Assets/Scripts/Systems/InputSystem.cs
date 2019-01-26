@@ -66,6 +66,7 @@ namespace Assets.Scripts.Systems
                 //var hor = Input.GetAxis("Horizontal");
                 var ver = player.playerComponent[i].GetAxis("Vertical");
                 var hor = player.playerComponent[i].GetAxis("Horizontal");
+
                 moveDir = new float3(ver, 0, hor);
 
                 Vector3 desiredMove = _player.transform[i].forward * moveDir.x + _player.transform[i].right * moveDir.z;
@@ -167,7 +168,8 @@ namespace Assets.Scripts.Systems
 
                 if (player.playerComponent[i].GetButtonDown("Interactions") && GameManager.Instance.canEquip)
                 {
-                    EquipmentManager.instance.Equip(GameManager.Instance.gunToEquip, player.transform[0].gameObject);
+                    EquipmentManager.instance.Equip(GameManager.Instance.gunToEquip, player.transform[i].gameObject);
+                    GameManager.entityManager.DestroyEntity(GameManager.Instance.gunToDestroy.GetComponent<GameObjectEntity>().Entity);
                     UnityEngine.Object.Destroy(GameManager.Instance.gunToDestroy);
                     GameManager.Instance.pickUpText.text = "";
                     GameManager.Instance.canEquip = false;

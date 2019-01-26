@@ -53,12 +53,12 @@ namespace Assets.Scripts.Systems
                 if (!camera.cameraComponent[i].bobCycleCD.ReturnedToZero)
                     DoBobCycleStep1(camera.cameraComponent[i]);
 
-                UpdateCameraPosition(player.characterController[i], playerMovement, camera.transform[i], camera.cameraComponent[i]);
+                UpdateCameraPosition(player.characterController[i], playerMovement, camera.transform[i], camera.cameraComponent[i], player.playerComponent[i]);
                 LookRotation(player.transform[i], camera.transform[i], camera.cameraComponent[i], player.playerComponent[i]);
             }
         }
 
-        private void UpdateCameraPosition(CharacterController characterController, PlayerMovement movementComponent, Transform transform, CameraComponent cameraComponent)
+        private void UpdateCameraPosition(CharacterController characterController, PlayerMovement movementComponent, Transform transform, CameraComponent cameraComponent, PlayerComponent playerComponent)
         {
             Vector3 newCameraPosition;
 
@@ -66,7 +66,7 @@ namespace Assets.Scripts.Systems
             {
                 transform.localPosition =
                     DoHeadBob(characterController.velocity.magnitude +
-                                      (movementComponent.walkSpeed * (NewInputManager.run? 1f : 0.5f)), transform, cameraComponent);
+                                      (movementComponent.walkSpeed * (playerComponent.GetButton("Run") ? 1f : 0.5f)), transform, cameraComponent);
                 newCameraPosition = transform.localPosition;
                 newCameraPosition.y = transform.localPosition.y - cameraComponent.jumpOffSet;
             }
