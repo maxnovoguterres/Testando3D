@@ -157,9 +157,10 @@ namespace Assets.Scripts.Systems
 
             for (var i = 0; i < gun.Length; i++)
             {
-                if (p.Length > 0)
-                    gun.gunComponent[i].player.transform.Find("FirstPersonCamera").transform.rotation = r[i];
-
+                //if (p.Length > 0)
+                //{
+                //    gun.gunComponent[i].player.transform.Find("FirstPersonCamera").transform.rotation = r[i];
+                //}
                 if (gun.gunComponent[i].animator != null)
                     gun.gunComponent[i].animator.SetBool("isReloading", input[i].isReloading == 1);
 
@@ -302,7 +303,8 @@ namespace Assets.Scripts.Systems
 
             public void Execute(int i)
             {
-                var _ia = ia[i] * m[iUsed[i]];
+                var _i = iUsed[i];
+                var _ia = ia[i] * m[_i];
                 ca[iUsed[i]] = (ca[iUsed[i]] >= 1 || ca[iUsed[i]] + _ia > 1) ? 1 : ca[iUsed[i]] + _ia;
             }
         }
@@ -330,7 +332,8 @@ namespace Assets.Scripts.Systems
 
             public void Execute(int i)
             {
-                var _iRe = iRe[i] * m[iUsed[i]];
+                var _i = iUsed[i];
+                var _iRe = iRe[i] * m[_i];
                 var _ro = ro[i];
                 _ro.value.x -= (re[i] >= .002f || re[i] + _iRe > .002f) ? .002f : re[i] + _iRe;
                 ro[i] = _ro;

@@ -33,7 +33,19 @@ public class DeviceManager : ComponentSystem
                 devices.Add(device);
             }
             else if (change == InputDeviceChange.Removed && devices.Contains(device))
+            {
+                for (int i = 0; i < players.Length; i++)
+                {
+                    if (players.playerComponent[i].gamepad == null) continue;
+                    if (players.playerComponent[i].gamepad.id == device.id) {
+                        Object.Destroy(players.playerComponent[i].gameObject);
+                        GameManager.entityManager.DestroyEntity(players.Entity[i]);
+                        break;
+                    }
+                }
                 devices.Remove(device);
+            }
+
         };
     }
 
