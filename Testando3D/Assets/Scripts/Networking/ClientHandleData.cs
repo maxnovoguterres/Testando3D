@@ -107,7 +107,7 @@ namespace Assets.Scripts.Networking
             buffer.WriteBytes(data);
             packetNum = buffer.ReadLong();
             int index = buffer.ReadInteger();
-            networkManager.myIndex = index;
+            networkManager.index = index;
             networkManager.InstantiatePlayer(index);
             buffer = null;
         }
@@ -120,7 +120,7 @@ namespace Assets.Scripts.Networking
             packetNum = buffer.ReadLong();
             int index = buffer.ReadInteger();
 
-            if (index == networkManager.myIndex) return;
+            if (index == networkManager.index) return;
 
             networkManager.InstantiatePlayer(index);
             buffer = null;

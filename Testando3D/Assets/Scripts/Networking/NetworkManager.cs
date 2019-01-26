@@ -9,7 +9,7 @@ namespace Assets.Scripts.Networking
         private ClientTCP ClientTCP = new ClientTCP();
         [SerializeField] private GameObject playerPref;
         private Dictionary<int, GameObject> playerList = new Dictionary<int, GameObject>();
-        public int myIndex;
+        public int index;
 
         private void Awake()
         {

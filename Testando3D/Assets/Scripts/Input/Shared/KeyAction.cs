@@ -13,30 +13,27 @@ using Assets.Scripts.Input.Helper;
 
 namespace Assets.Scripts.Input.Shared
 {
-    [InitializeOnLoad]
+    //[InitializeOnLoad]
     public static class KeyAction
     {
-        public static Dictionary<string, KeyActionType> Actions;
-
-        static KeyAction()
+        #region [Actions]
+        public static Dictionary<string, KeyActionType> Actions = new Dictionary<string, KeyActionType>
         {
-            Actions = new Dictionary<string, KeyActionType>();
-            #region [Actions]
-            Actions.Add("Horizontal", new KeyActionType(Key.KeyNull, GamePadKey.leftStickX, Key.KeyNull));
-            Actions.Add("Vertical", new KeyActionType(Key.KeyNull, GamePadKey.leftStickY, Key.KeyNull));
-            Actions.Add("Fire", new KeyActionType(Key.KeyNull, GamePadKey.rightTrigger, MouseKey.leftButton));
-            Actions.Add("Aim", new KeyActionType(Key.KeyNull, GamePadKey.leftTrigger, MouseKey.rightButton));
-            Actions.Add("Interactions", new KeyActionType(KeyBoardKey.tKey, GamePadKey.yButton, Key.KeyNull));
-            Actions.Add("Reload", new KeyActionType(KeyBoardKey.rKey, GamePadKey.xButton, Key.KeyNull));
-            Actions.Add("Crouch", new KeyActionType(KeyBoardKey.leftCtrlKey, GamePadKey.bButton, Key.KeyNull));
-            Actions.Add("Run", new KeyActionType(KeyBoardKey.leftShiftKey, GamePadKey.leftStickButton, Key.KeyNull));
-            Actions.Add("Jump", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.buttonSouth, Key.KeyNull));
-            Actions.Add("MouseX", new KeyActionType(Key.KeyNull, GamePadKey.rightStickX, MouseKey.deltaX));
-            Actions.Add("MouseY", new KeyActionType(Key.KeyNull, GamePadKey.rightStickY, MouseKey.deltaY));
-            Actions.Add("CursorOn", new KeyActionType(KeyBoardKey.escapeKey, GamePadKey.startButton, Key.KeyNull));
-            Actions.Add("CursorOff", new KeyActionType(Key.KeyNull, GamePadKey.selectButton, MouseKey.leftButton));
-            #endregion
-        }
+            {"Horizontal", new KeyActionType(Key.KeyNull, GamePadKey.leftStickX, Key.KeyNull) },
+            {"Vertical", new KeyActionType(Key.KeyNull, GamePadKey.leftStickY, Key.KeyNull)},
+            {"Fire", new KeyActionType(Key.KeyNull, GamePadKey.rightTrigger, MouseKey.leftButton)},
+            {"Aim", new KeyActionType(Key.KeyNull, GamePadKey.leftTrigger, MouseKey.rightButton)},
+            {"Interactions", new KeyActionType(KeyBoardKey.tKey, GamePadKey.yButton, Key.KeyNull)},
+            {"Reload", new KeyActionType(KeyBoardKey.rKey, GamePadKey.xButton, Key.KeyNull)},
+            {"Crouch", new KeyActionType(KeyBoardKey.leftCtrlKey, GamePadKey.bButton, Key.KeyNull)},
+            {"Run", new KeyActionType(KeyBoardKey.leftShiftKey, GamePadKey.leftStickButton, Key.KeyNull)},
+            {"Jump", new KeyActionType(KeyBoardKey.spaceKey, GamePadKey.buttonSouth, Key.KeyNull)},
+            {"MouseX", new KeyActionType(Key.KeyNull, GamePadKey.rightStickX, MouseKey.deltaX)},
+            {"MouseY", new KeyActionType(Key.KeyNull, GamePadKey.rightStickY, MouseKey.deltaY)},
+            {"CursorOn", new KeyActionType(KeyBoardKey.escapeKey, GamePadKey.startButton, Key.KeyNull)},
+            {"CursorOff", new KeyActionType(Key.KeyNull, GamePadKey.selectButton, MouseKey.leftButton)}
+        };
+        #endregion
 
         #region [GetButtonMethods]
         public static bool GetButton(this PlayerComponent p, string action)

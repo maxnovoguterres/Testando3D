@@ -87,8 +87,6 @@ namespace Assets.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            Debug.Log(player.Length);
-
             int _length = gun.Length * player.Length;
             gunPos = new NativeArray<Vector3>(_length, Allocator.TempJob);
             charPos = new NativeArray<Vector3>(_length, Allocator.TempJob);
@@ -184,7 +182,6 @@ namespace Assets.Scripts.Systems
                 var _i = gunIndex[i];
                 if (_i != -1)
                 {
-                    Debug.Log($"Player {i} Near of {gun.transform[_i].name}");
                     GameManager.Instance.pickUpText.text = "Press T to PICK " + gun.transform[_i].name;
                     GameManager.Instance.gunToEquip = gun.pickupComponent[_i].equipment;
                     GameManager.Instance.canEquip = true;
