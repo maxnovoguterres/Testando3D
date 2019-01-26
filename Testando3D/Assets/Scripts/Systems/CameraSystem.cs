@@ -7,6 +7,7 @@ using Unity.Entities;
 using Assets.Scripts.Components;
 using UnityEngine;
 using Assets.Scripts.Helpers;
+using Assets.Scripts.Input.Shared;
 
 namespace Assets.Scripts.Systems
 {
@@ -21,6 +22,7 @@ namespace Assets.Scripts.Systems
 
         public struct Player
         {
+            public ComponentArray<PlayerComponent> playerComponent;
             public ComponentDataArray<_Input> inputComponent;
             public ComponentDataArray<PlayerMovement> movementComponent;
             public ComponentArray<Transform> transform;
@@ -52,7 +54,7 @@ namespace Assets.Scripts.Systems
                     DoBobCycleStep1(camera.cameraComponent[i]);
 
                 UpdateCameraPosition(player.characterController[i], playerMovement, camera.transform[i], camera.cameraComponent[i]);
-                LookRotation(player.transform[i], camera.transform[i], camera.cameraComponent[i]);
+                LookRotation(player.transform[i], camera.transform[i], camera.cameraComponent[i], player.playerComponent[i]);
             }
         }
 
@@ -97,12 +99,12 @@ namespace Assets.Scripts.Systems
             return new Vector3(xPos, yPos, 0.3f);
         }
 
-        public void LookRotation(Transform character, Transform camera, CameraComponent cameraComponent)
+        public void LookRotation(Transform character, Transform camera, CameraComponent cameraComponent, PlayerComponent playerComponent)
         {
             //float yRot = Input.GetAxis("Mouse X") * cameraComponent.XSensibility;
             //float xRot = Input.GetAxis("Mouse Y") * cameraComponent.YSensibility;
-            float yRot = NewInputManager.mouseX * cameraComponent.XSensibility; //XSensibility = 1
-            float xRot = NewInputManager.mouseY * cameraComponent.YSensibility; //YSensibility = 1
+            float yRot = playerComponent.GetAxis("MouseX") * cameraComponent.XSensibility; //XSensibility = 1
+            float xRot = playerComponent.GetAxis("MouseY") * cameraComponent.YSensibility; //YSensibility = 1
 
             cameraComponent.m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
             cameraComponent.m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);

@@ -64,8 +64,8 @@ namespace Assets.Scripts.Systems
                 Vector3 moveDir = new Vector3();
                 //var ver = Input.GetAxis("Vertical");
                 //var hor = Input.GetAxis("Horizontal");
-                var ver = NewInputManager.vertical;
-                var hor = NewInputManager.horizontal;
+                var ver = player.playerComponent[i].GetAxis("Vertical");
+                var hor = player.playerComponent[i].GetAxis("Horizontal");
                 moveDir = new float3(ver, 0, hor);
 
                 Vector3 desiredMove = _player.transform[i].forward * moveDir.x + _player.transform[i].right * moveDir.z;
